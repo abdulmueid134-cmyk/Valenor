@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": null,
+  "outputDirectory": "frontend",
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "node_modules/chart.js/dist/chart.umd.js"
+    }
+  },
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index.js" },
+    { "source": "/admin/vendor/chart.umd.js", "destination": "/api/index.js" }
+  ]
+}
