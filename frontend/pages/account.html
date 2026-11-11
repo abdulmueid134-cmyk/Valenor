@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Account Dashboard — VALENOR Horology</title>
+  <meta name="description" content="Manage your profile, saved delivery addresses, wishlist, orders, tracking, and account settings.">
+  <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+</head>
+<body data-nav="account">
+  <div id="shared-header-host"></div>
+
+  <main>
+    <section class="page-hero-strip">
+      <div class="container">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <a href="../index.html">Home</a> <span>/</span> <span>My Account</span>
+        </nav>
+        <h1 class="section-title" id="dash-welcome-title">Collector Dashboard</h1>
+        <p class="section-subtitle">Manage your profile, saved delivery addresses, wishlist, orders, and preferences.</p>
+      </div>
+    </section>
+
+    <section class="container dashboard-layout">
+      <!-- Dashboard Sidebar -->
+      <aside class="dashboard-sidebar" aria-label="Account Sections">
+        <div class="dashboard-user-head">
+          <div style="font-weight:700;font-size:15px;" id="dash-sidebar-name">Collector</div>
+          <div style="font-size:12.5px;color:var(--ink-muted);" id="dash-sidebar-email"></div>
+        </div>
+        <nav class="dashboard-nav">
+          <button type="button" class="dashboard-nav-btn active" data-dash-tab="overview">Profile Information</button>
+          <button type="button" class="dashboard-nav-btn" data-dash-tab="edit-profile">Edit Profile</button>
+          <button type="button" class="dashboard-nav-btn" data-dash-tab="password">Change Password</button>
+          <button type="button" class="dashboard-nav-btn" data-dash-tab="addresses">Saved Addresses</button>
+          <button type="button" class="dashboard-nav-btn" data-dash-tab="wishlist">Wishlist</button>
+          <button type="button" class="dashboard-nav-btn" data-dash-tab="orders">My Orders</button>
+          <button type="button" class="dashboard-nav-btn" data-dash-tab="tracking">Order Tracking</button>
+          <button type="button" class="dashboard-nav-btn" data-dash-tab="returns">Return Requests</button>
+          <button type="button" class="dashboard-nav-btn" data-dash-tab="settings">Account Settings</button>
+          <button type="button" class="dashboard-nav-btn logout-btn" id="btn-logout">Logout</button>
+        </nav>
+      </aside>
+
+      <!-- Dashboard Panels -->
+      <div>
+        <div class="form-alert" id="dash-alert" role="alert"></div>
+
+        <!-- 1. Profile Information -->
+        <section class="dashboard-panel active" id="panel-overview">
+          <div class="section-eyebrow">Account Overview</div>
+          <h2 class="section-title" style="font-size:32px;">Profile Information</h2>
+          <div class="dash-stats-grid">
+            <div class="dash-stat-box">
+              <span class="dash-stat-val" id="stat-addresses">0</span>
+              <span style="font-size:12.5px;color:var(--ink-muted);">Saved Addresses</span>
+            </div>
+            <div class="dash-stat-box">
+              <span class="dash-stat-val" id="stat-wishlist">0</span>
+              <span style="font-size:12.5px;color:var(--ink-muted);">Wishlisted Watches</span>
+            </div>
+            <div class="dash-stat-box">
+              <span class="dash-stat-val" id="stat-orders">0</span>
+              <span style="font-size:12.5px;color:var(--ink-muted);">Placed Orders</span>
+            </div>
+          </div>
+          <table class="specs-table">
+            <tbody>
+              <tr><th>Full Name</th><td id="info-fullname">—</td></tr>
+              <tr><th>Email Address</th><td id="info-email">—</td></tr>
+              <tr><th>Phone Number</th><td id="info-phone">—</td></tr>
+              <tr><th>Account Role</th><td id="info-role">Customer</td></tr>
+              <tr><th>Member Since</th><td id="info-joined">—</td></tr>
+            </tbody>
+          </table>
+          <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
+            <button type="button" class="btn btn-primary" data-jump-tab="edit-profile">Edit Profile</button>
+            <button type="button" class="btn btn-outline" data-jump-tab="addresses">Manage Addresses</button>
+          </div>
+        </section>
+
+        <!-- 2. Edit Profile -->
+        <section class="dashboard-panel" id="panel-edit-profile">
+          <div class="section-eyebrow">Personal Details</div>
+          <h2 class="section-title" style="font-size:32px;margin-bottom:18px;">Edit Profile</h2>
+          <form id="form-edit-profile" class="form-grid" novalidate>
+            <div class="field-group">
+              <label for="edit-fullname">Full Name</label>
+              <input type="text" id="edit-fullname" class="field-control" required>
+            </div>
+            <div class="form-grid-2">
+              <div class="field-group">
+                <label for="edit-email">Email Address</label>
+                <input type="email" id="edit-email" class="field-control" required>
+              </div>
+              <div class="field-group">
+                <label for="edit-phone">Phone Number</label>
+                <input type="tel" id="edit-phone" class="field-control" required>
+              </div>
+            </div>
+            <div>
+              <button type="submit" class="btn btn-primary">Save Profile Changes</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- 3. Change Password -->
+        <section class="dashboard-panel" id="panel-password">
+          <div class="section-eyebrow">Account Security</div>
+          <h2 class="section-title" style="font-size:32px;margin-bottom:18px;">Change Password</h2>
+          <form id="form-change-password" class="form-grid" novalidate>
+            <div class="field-group">
+              <label for="cur-password">Current Password</label>
+              <input type="password" id="cur-password" class="field-control" required>
+            </div>
+            <div class="form-grid-2">
+              <div class="field-group">
+                <label for="new-password">New Password (min 8 chars)</label>
+                <input type="password" id="new-password" class="field-control" minlength="8" required>
+              </div>
+              <div class="field-group">
+                <label for="confirm-new-password">Confirm New Password</label>
+                <input type="password" id="confirm-new-password" class="field-control" minlength="8" required>
+              </div>
+            </div>
+            <div>
+              <button type="submit" class="btn btn-primary">Update Password</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- 4. Saved Addresses -->
+        <section class="dashboard-panel" id="panel-addresses">
+          <div class="section-header" style="margin-bottom:16px;">
+            <div>
+              <div class="section-eyebrow">Delivery Book</div>
+              <h2 class="section-title" style="font-size:32px;">Saved Addresses</h2>
+            </div>
+            <button type="button" class="btn btn-gold" id="btn-new-address">+ Add Address</button>
+          </div>
+
+          <form id="form-address" class="form-grid" style="display:none;background:var(--bg-surface);padding:20px;border-radius:var(--radius-md);margin-bottom:20px;" novalidate>
+            <input type="hidden" id="addr-edit-id">
+            <div class="form-grid-2">
+              <div class="field-group">
+                <label for="addr-fullname">Recipient Full Name</label>
+                <input type="text" id="addr-fullname" class="field-control" required>
+              </div>
+              <div class="field-group">
+                <label for="addr-phone">Phone Number</label>
+                <input type="tel" id="addr-phone" class="field-control" placeholder="+92 300 1234567" required>
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="field-group">
+                <label for="addr-city">City</label>
+                <input type="text" id="addr-city" class="field-control" placeholder="e.g. Lahore, Karachi, Islamabad" required>
+              </div>
+              <div class="field-group">
+                <label for="addr-area">Area / Sector</label>
+                <input type="text" id="addr-area" class="field-control" placeholder="e.g. DHA Phase 5, Clifton Block 4" required>
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="field-group">
+                <label for="addr-street">Street Address</label>
+                <input type="text" id="addr-street" class="field-control" placeholder="House #, Street #, Landmark" required>
+              </div>
+              <div class="field-group">
+                <label for="addr-postal">Postal Code</label>
+                <input type="text" id="addr-postal" class="field-control" placeholder="e.g. 54792">
+              </div>
+            </div>
+            <div class="field-group">
+              <label for="addr-instructions">Delivery Instructions (Optional)</label>
+              <input type="text" id="addr-instructions" class="field-control" placeholder="Call on arrival, open-parcel inspection requested">
+            </div>
+            <label style="display:inline-flex;align-items:center;gap:8px;font-size:13.5px;">
+              <input type="checkbox" id="addr-default"> Set as default delivery address
+            </label>
+            <div style="display:flex;gap:10px;">
+              <button type="submit" class="btn btn-primary">Save Address</button>
+              <button type="button" class="btn btn-outline" id="btn-cancel-address">Cancel</button>
+            </div>
+          </form>
+
+          <div class="address-grid" id="address-list-grid"></div>
+        </section>
+
+        <!-- 5. Wishlist -->
+        <section class="dashboard-panel" id="panel-wishlist">
+          <div class="section-eyebrow">Saved Collection</div>
+          <h2 class="section-title" style="font-size:32px;margin-bottom:18px;">My Wishlist</h2>
+          <div class="catalog-grid-3" id="dash-wishlist-grid"></div>
+        </section>
+
+        <!-- 6. My Orders -->
+        <section class="dashboard-panel" id="panel-orders">
+          <div class="section-eyebrow">Order History</div>
+          <h2 class="section-title" style="font-size:32px;margin-bottom:14px;">My Orders</h2>
+          <div id="dash-orders-body"></div>
+        </section>
+
+        <!-- 7. Order Tracking -->
+        <section class="dashboard-panel" id="panel-tracking">
+          <div class="section-eyebrow">Shipment Status</div>
+          <h2 class="section-title" style="font-size:32px;margin-bottom:14px;">Order Tracking</h2>
+          <form id="form-track-lookup" style="display:flex;gap:10px;max-width:460px;margin-bottom:18px;">
+            <input type="text" id="track-order-input" class="field-control" placeholder="Enter Order Number (e.g. VAL-2026-1001)" required>
+            <button type="submit" class="btn btn-primary">Track</button>
+          </form>
+          <div id="dash-tracking-result" style="color:var(--ink-secondary);font-size:14px;">
+            Enter your order number above to check dispatch status, courier tracking ID, and delivery milestones.
+          </div>
+        </section>
+
+        <!-- 8. Return Requests -->
+        <section class="dashboard-panel" id="panel-returns">
+          <div class="section-eyebrow">7-Day Return Guarantee</div>
+          <h2 class="section-title" style="font-size:32px;margin-bottom:14px;">Return Requests</h2>
+          <div id="dash-returns-body" style="color:var(--ink-secondary);font-size:14px;"></div>
+        </section>
+
+        <!-- 9. Account Settings -->
+        <section class="dashboard-panel" id="panel-settings">
+          <div class="section-eyebrow">Preferences</div>
+          <h2 class="section-title" style="font-size:32px;margin-bottom:18px;">Account Settings</h2>
+          <form id="form-account-settings" class="form-grid" novalidate>
+            <label style="display:flex;align-items:center;gap:10px;font-size:14px;">
+              <input type="checkbox" id="setting-newsletter"> Receive early access emails for 11.11 sales &amp; limited watch drops
+            </label>
+            <div class="field-group" style="max-width:260px;">
+              <label for="setting-currency">Preferred Storefront Currency</label>
+              <select id="setting-currency" class="field-control">
+                <option value="PKR">PKR (Pakistani Rupee)</option>
+              </select>
+            </div>
+            <div>
+              <button type="submit" class="btn btn-primary">Save Settings</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div id="shared-footer-host"></div>
+  <div id="shared-overlays-host"></div>
+
+  <script src="../assets/js/home-data.js"></script>
+  <script src="../components/ui-components.js"></script>
+  <script src="../assets/js/auth-service.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/account.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Store Policies — VALENOR Horology</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+</head>
+<body data-nav="policies">
+  <div id="shared-header-host"></div>
+
+  <main>
+    <section class="page-hero-strip">
+      <div class="container">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <a href="../index.html">Home</a> <span>/</span> <span>Policies &amp; Terms</span>
+        </nav>
+        <h1 class="section-title" id="pol-site-title">VALENOR Policies &amp; Collector Guarantee</h1>
+        <p class="section-subtitle" id="pol-contact-line">Questions? Reach our watch concierge anytime.</p>
+      </div>
+    </section>
+
+    <section class="container" style="padding:36px 24px 72px;display:grid;gap:22px;">
+      <article class="tracker-card">
+        <div class="section-eyebrow">Guarantee</div>
+        <h2 style="font-family:var(--font-display);font-size:28px;margin:4px 0 10px;">7-Day Return &amp; Refund Policy</h2>
+        <p id="pol-return" style="line-height:1.7;color:var(--ink-secondary);"></p>
+      </article>
+
+      <article class="tracker-card">
+        <div class="section-eyebrow">Data Stewardship</div>
+        <h2 style="font-family:var(--font-display);font-size:28px;margin:4px 0 10px;">Privacy Policy</h2>
+        <p id="pol-privacy" style="line-height:1.7;color:var(--ink-secondary);"></p>
+      </article>
+
+      <article class="tracker-card">
+        <div class="section-eyebrow">Terms of Sale</div>
+        <h2 style="font-family:var(--font-display);font-size:28px;margin:4px 0 10px;">Terms &amp; Conditions</h2>
+        <p id="pol-terms" style="line-height:1.7;color:var(--ink-secondary);"></p>
+      </article>
+    </section>
+  </main>
+
+  <div id="shared-footer-host"></div>
+  <div id="shared-overlays-host"></div>
+
+  <script src="../assets/js/home-data.js"></script>
+  <script src="../components/ui-components.js"></script>
+  <script src="../assets/js/auth-service.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script>
+    fetch("/api/storefront/config")
+      .then((r) => r.json())
+      .then((j) => {
+        const c = j?.config;
+        if (!c) return;
+        document.getElementById("pol-site-title").textContent = `${c.website_name || "VALENOR Horology"} — Policies & Terms`;
+        document.getElementById("pol-contact-line").textContent = `${c.contact_email || ""} • ${c.contact_phone || ""} • ${c.contact_info || ""}`;
+        document.getElementById("pol-return").textContent = c.return_policy || "";
+        document.getElementById("pol-privacy").textContent = c.privacy_policy || "";
+        document.getElementById("pol-terms").textContent = c.terms_conditions || "";
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>
+

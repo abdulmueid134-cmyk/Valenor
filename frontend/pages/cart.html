@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Bag — VALENOR Horology</title>
+  <meta name="description" content="Review your selected luxury watches, apply discount codes, and proceed to checkout.">
+  <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+</head>
+<body data-nav="cart">
+  <div id="shared-header-host"></div>
+
+  <main>
+    <section class="page-hero-strip">
+      <div class="container">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <a href="../index.html">Home</a> <span>/</span> <span>Shopping Bag</span>
+        </nav>
+        <h1 class="section-title">Your Shopping Bag</h1>
+        <p class="section-subtitle">Verify variants, adjust quantities, apply promo codes (WELCOME10, SALE20, FREESHIP), and continue to checkout.</p>
+      </div>
+    </section>
+
+    <section class="container cart-layout">
+      <div class="cart-list-card" id="cart-items-host"></div>
+
+      <aside class="summary-card" aria-label="Cart Summary">
+        <h2 style="font-family:var(--font-display);font-size:28px;margin:0 0 16px;">Order Summary</h2>
+
+        <form id="cart-coupon-form" style="display:flex;gap:8px;margin-bottom:10px;" novalidate>
+          <input type="text" id="cart-coupon-input" class="field-control" placeholder="Coupon code (e.g. SALE20)" style="text-transform:uppercase;">
+          <button type="submit" class="btn btn-outline" style="padding:10px 14px;font-size:12px;">Apply</button>
+        </form>
+        <div id="cart-coupon-msg" style="font-size:12.5px;margin-bottom:14px;"></div>
+
+        <div class="summary-row"><span>Subtotal</span><strong id="sum-subtotal">PKR 0</strong></div>
+        <div class="summary-row"><span>Product Savings</span><span id="sum-product-discount" style="color:var(--accent-emerald);">PKR 0</span></div>
+        <div class="summary-row"><span>Coupon Discount</span><span id="sum-coupon-discount" style="color:var(--accent-emerald);">PKR 0</span></div>
+        <div class="summary-row"><span>Estimated Delivery</span><span id="sum-delivery">PKR 0</span></div>
+        <div class="summary-row"><span>Estimated Tax</span><span id="sum-tax">PKR 0</span></div>
+        <div class="summary-row summary-total"><span>Total Payable</span><span id="sum-total">PKR 0</span></div>
+
+        <div style="margin-top:20px;display:grid;gap:10px;">
+          <a href="checkout.html" class="btn btn-primary" id="btn-cart-checkout" style="width:100%;">Proceed to Checkout</a>
+          <a href="catalog.html" class="btn btn-outline" style="width:100%;">Continue Shopping</a>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div id="shared-footer-host"></div>
+  <div id="shared-overlays-host"></div>
+
+  <script src="../assets/js/home-data.js"></script>
+  <script src="../components/ui-components.js"></script>
+  <script src="../assets/js/auth-service.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/cart.js"></script>
+</body>
+</html>
+

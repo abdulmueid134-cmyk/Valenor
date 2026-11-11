@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — VALENOR Horology</title>
+  <meta name="description" content="Complete your luxury watch order securely with Cash on Delivery or Bank Transfer.">
+  <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+</head>
+<body data-nav="checkout">
+  <div id="shared-header-host"></div>
+
+  <main>
+    <section class="page-hero-strip">
+      <div class="container">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <a href="../index.html">Home</a> <span>/</span>
+          <a href="cart.html">Shopping Bag</a> <span>/</span>
+          <span>Checkout</span>
+        </nav>
+        <h1 class="section-title" id="checkout-page-title">Secure Checkout</h1>
+        <p class="section-subtitle">Confirm delivery address, choose courier &amp; payment method, and place your insured order.</p>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="form-alert" id="checkout-alert" role="alert" style="margin-top:24px;"></div>
+    </div>
+
+    <!-- Active Checkout Form View -->
+    <section class="container checkout-layout" id="checkout-form-section">
+      <form id="checkout-form" style="display:grid;gap:22px;" novalidate>
+        <!-- 1. Customer Information -->
+        <div class="checkout-card">
+          <div class="section-eyebrow">Step 1</div>
+          <h2 style="font-family:var(--font-display);font-size:26px;margin:2px 0 14px;">Customer Information</h2>
+          <div class="form-grid-2">
+            <div class="field-group">
+              <label for="co-fullname">Full Name</label>
+              <input type="text" id="co-fullname" class="field-control" required>
+            </div>
+            <div class="field-group">
+              <label for="co-phone">Phone Number</label>
+              <input type="tel" id="co-phone" class="field-control" placeholder="+92 300 1234567" required>
+            </div>
+          </div>
+          <div class="field-group" style="margin-top:14px;">
+            <label for="co-email">Email Address (for order confirmation &amp; tracking)</label>
+            <input type="email" id="co-email" class="field-control" required>
+          </div>
+        </div>
+
+        <!-- 2. Delivery Address -->
+        <div class="checkout-card">
+          <div class="section-eyebrow">Step 2</div>
+          <h2 style="font-family:var(--font-display);font-size:26px;margin:2px 0 14px;">Delivery Address</h2>
+          <div id="co-saved-addresses" style="display:none;margin-bottom:16px;"></div>
+          <div class="form-grid">
+            <div class="form-grid-2">
+              <div class="field-group">
+                <label for="co-city">City</label>
+                <input type="text" id="co-city" class="field-control" placeholder="e.g. Lahore, Karachi, Islamabad" required>
+              </div>
+              <div class="field-group">
+                <label for="co-area">Area / Sector</label>
+                <input type="text" id="co-area" class="field-control" placeholder="e.g. DHA Phase 5" required>
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="field-group">
+                <label for="co-street">Street Address</label>
+                <input type="text" id="co-street" class="field-control" placeholder="House #, Street #, Landmark" required>
+              </div>
+              <div class="field-group">
+                <label for="co-postal">Postal Code</label>
+                <input type="text" id="co-postal" class="field-control" placeholder="Optional">
+              </div>
+            </div>
+            <div class="field-group">
+              <label for="co-instructions">Delivery Instructions (Optional)</label>
+              <input type="text" id="co-instructions" class="field-control" placeholder="Open-parcel check requested, call before delivery">
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Delivery Method -->
+        <div class="checkout-card">
+          <div class="section-eyebrow">Step 3</div>
+          <h2 style="font-family:var(--font-display);font-size:26px;margin:2px 0 14px;">Delivery Method</h2>
+          <label class="choice-option selected" data-delivery-card="standard">
+            <span style="display:flex;gap:10px;align-items:flex-start;">
+              <input type="radio" name="deliveryMethod" value="standard" checked>
+              <span>
+                <strong>Standard Insured Delivery (2–4 Business Days)</strong><br>
+                <small style="color:var(--ink-muted);">Free on orders PKR 15,000+ (or with FREESHIP)</small>
+              </span>
+            </span>
+            <strong id="label-standard-fee">PKR 250</strong>
+          </label>
+          <label class="choice-option" data-delivery-card="express">
+            <span style="display:flex;gap:10px;align-items:flex-start;">
+              <input type="radio" name="deliveryMethod" value="express">
+              <span>
+                <strong>Express Priority Courier (24–48 Hours)</strong><br>
+                <small style="color:var(--ink-muted);">Dedicated insured dispatch &amp; SMS alerts</small>
+              </span>
+            </span>
+            <strong id="label-express-fee">PKR 550</strong>
+          </label>
+        </div>
+
+        <!-- 4. Payment Method -->
+        <div class="checkout-card">
+          <div class="section-eyebrow">Step 4</div>
+          <h2 style="font-family:var(--font-display);font-size:26px;margin:2px 0 14px;">Payment Method</h2>
+
+          <label class="choice-option selected" id="pay-card-cod">
+            <span style="display:flex;gap:10px;align-items:flex-start;">
+              <input type="radio" name="paymentMethod" value="cod" checked>
+              <span>
+                <strong>Cash on Delivery (COD)</strong><br>
+                <small style="color:var(--ink-muted);">Pay in cash at your doorstep with open-parcel inspection.</small>
+              </span>
+            </span>
+            <span class="stock-pill">Available</span>
+          </label>
+
+          <label class="choice-option" id="pay-card-bank">
+            <span style="display:flex;gap:10px;align-items:flex-start;">
+              <input type="radio" name="paymentMethod" value="bank_transfer">
+              <span>
+                <strong>Bank Transfer (IBFT / Raast)</strong><br>
+                <small style="color:var(--ink-muted);">Transfer after placing order using our official Meezan Bank IBAN.</small>
+              </span>
+            </span>
+            <span class="stock-pill">Available</span>
+          </label>
+
+          <div class="bank-info-box" id="bank-details-box" style="display:none;">
+            <div style="margin-bottom:8px;"><strong>Bank Details:</strong> <span id="co-bank-details">Meezan Bank · VALENOR Horology · IBAN: PK12MEZN0002140105551111</span></div>
+            <label for="co-bank-ref" style="display:block;font-weight:600;margin-bottom:4px;">Transfer Reference / Transaction ID (Optional)</label>
+            <input type="text" id="co-bank-ref" class="field-control" placeholder="e.g. IBFT-984312 (or share later via WhatsApp)">
+          </div>
+
+          <label class="choice-option disabled" id="pay-card-online" style="margin-top:10px;">
+            <span style="display:flex;gap:10px;align-items:flex-start;">
+              <input type="radio" name="paymentMethod" value="online_gateway" disabled>
+              <span>
+                <strong>Online Card / Wallet Gateway</strong><br>
+                <small id="co-online-status" style="color:var(--ink-muted);">Configurable in Admin Settings — gateway merchant keys not yet connected. Select Cash on Delivery or Bank Transfer.</small>
+              </span>
+            </span>
+            <span style="font-size:11px;color:var(--ink-muted);font-weight:600;">Not Connected</span>
+          </label>
+        </div>
+      </form>
+
+      <!-- Order Summary Sidebar -->
+      <aside class="summary-card" aria-label="Checkout Summary">
+        <h2 style="font-family:var(--font-display);font-size:28px;margin:0 0 14px;">Order Summary</h2>
+        <div id="co-items-list" style="display:grid;gap:10px;margin-bottom:16px;"></div>
+
+        <form id="co-coupon-form" style="display:flex;gap:8px;margin-bottom:8px;" novalidate>
+          <input type="text" id="co-coupon-input" class="field-control" placeholder="Promo code (SALE20, WELCOME10)" style="text-transform:uppercase;">
+          <button type="submit" class="btn btn-outline" style="padding:10px 14px;font-size:12px;">Apply</button>
+        </form>
+        <div id="co-coupon-msg" style="font-size:12.5px;margin-bottom:14px;"></div>
+
+        <div class="summary-row"><span>Subtotal</span><strong id="co-sum-subtotal">PKR 0</strong></div>
+        <div class="summary-row"><span>Product Savings</span><span id="co-sum-prod-disc" style="color:var(--accent-emerald);">PKR 0</span></div>
+        <div class="summary-row"><span>Coupon Discount</span><span id="co-sum-coupon" style="color:var(--accent-emerald);">PKR 0</span></div>
+        <div class="summary-row"><span>Delivery Charge</span><span id="co-sum-delivery">PKR 0</span></div>
+        <div class="summary-row"><span>Tax</span><span id="co-sum-tax">PKR 0</span></div>
+        <div class="summary-row summary-total"><span>Total Payable</span><span id="co-sum-total">PKR 0</span></div>
+
+        <button type="submit" form="checkout-form" class="btn btn-gold" id="btn-place-order" style="width:100%;margin-top:18px;padding:14px 20px;">
+          Place Order
+        </button>
+        <p style="font-size:12px;color:var(--ink-muted);text-align:center;margin:10px 0 0;">
+          We never store card numbers or CVV credentials.
+        </p>
+      </aside>
+    </section>
+
+    <!-- Order Confirmation View -->
+    <section class="container" id="checkout-confirmation-section" style="display:none;"></section>
+  </main>
+
+  <div id="shared-footer-host"></div>
+  <div id="shared-overlays-host"></div>
+
+  <script src="../assets/js/home-data.js"></script>
+  <script src="../components/ui-components.js"></script>
+  <script src="../assets/js/auth-service.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/checkout.js"></script>
+</body>
+</html>
+

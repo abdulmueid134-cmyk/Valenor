@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watch Catalog — VALENOR Horology</title>
+  <meta name="description" content="Browse, filter, and sort luxury men's, women's, couple, kids', automatic, and smart watches in PKR.">
+  <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+</head>
+<body data-nav="catalog">
+  <div id="shared-header-host"></div>
+
+  <main>
+    <section class="page-hero-strip">
+      <div class="container">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <a href="../index.html">Home</a> <span>/</span> <span>Watch Catalog</span>
+        </nav>
+        <h1 class="section-title" id="catalog-heading">All Timepieces</h1>
+        <p class="section-subtitle" id="catalog-subheading">Filter across 14 horology categories, brands, materials, dynamic PKR price range, and ratings.</p>
+      </div>
+    </section>
+
+    <section class="container catalog-layout">
+      <!-- Filter Sidebar (Desktop sticky / Mobile drawer) -->
+      <aside class="filter-sidebar" id="filter-sidebar" aria-label="Catalog Filters">
+        <div class="filter-sidebar-header">
+          <h2>Filters</h2>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button type="button" class="btn btn-outline" id="btn-reset-all" style="padding:5px 12px;font-size:11px;">Reset All</button>
+            <button type="button" class="close-btn mobile-filter-toggle" id="btn-close-filters" aria-label="Close filters">&times;</button>
+          </div>
+        </div>
+
+        <!-- 1. Dynamic Price Range Filter -->
+        <div class="filter-group">
+          <h3 class="filter-group-title">Price Range (<span id="price-currency-label">PKR</span>)</h3>
+          <div class="price-slider-wrap">
+            <div class="price-track-bg"></div>
+            <div class="price-track-fill" id="price-track-fill"></div>
+            <input type="range" id="range-min" class="price-range-input" aria-label="Minimum price slider">
+            <input type="range" id="range-max" class="price-range-input" aria-label="Maximum price slider">
+          </div>
+          <div class="price-inputs-row">
+            <div class="price-num-field">
+              <label for="input-min-price">Min Price</label>
+              <input type="number" id="input-min-price">
+            </div>
+            <div class="price-num-field">
+              <label for="input-max-price">Max Price</label>
+              <input type="number" id="input-max-price">
+            </div>
+          </div>
+          <div class="price-actions-row">
+            <button type="button" class="btn btn-primary" id="btn-apply-price" style="padding:8px 10px;font-size:11.5px;">Apply</button>
+            <button type="button" class="btn btn-outline" id="btn-reset-price" style="padding:8px 10px;font-size:11.5px;">Reset</button>
+          </div>
+        </div>
+
+        <!-- 2. Category (14 Categories) -->
+        <div class="filter-group">
+          <h3 class="filter-group-title">Category</h3>
+          <select id="filter-category" class="filter-select" aria-label="Filter by category"></select>
+        </div>
+
+        <!-- 3. Gender -->
+        <div class="filter-group">
+          <h3 class="filter-group-title">Gender</h3>
+          <div class="filter-list" id="filter-gender-list"></div>
+        </div>
+
+        <!-- 4. Brand -->
+        <div class="filter-group">
+          <h3 class="filter-group-title">Brand</h3>
+          <div class="filter-list" id="filter-brand-list"></div>
+        </div>
+
+        <!-- 5. Watch Type -->
+        <div class="filter-group">
+          <h3 class="filter-group-title">Watch Type</h3>
+          <div class="filter-list" id="filter-type-list"></div>
+        </div>
+
+        <!-- 6. Strap Material -->
+        <div class="filter-group">
+          <h3 class="filter-group-title">Strap Material</h3>
+          <div class="filter-list" id="filter-strap-list"></div>
+        </div>
+
+        <!-- 7. Color -->
+        <div class="filter-group">
+          <h3 class="filter-group-title">Color</h3>
+          <div class="filter-list" id="filter-color-list"></div>
+        </div>
+
+        <!-- 8. Discount -->
+        <div class="filter-group">
+          <h3 class="filter-group-title">Discount</h3>
+          <select id="filter-discount" class="filter-select" aria-label="Filter by minimum discount">
+            <option value="">All Discounts</option>
+            <option value="20">20% OFF &amp; more</option>
+            <option value="30">30% OFF &amp; more</option>
+            <option value="40">40% OFF &amp; more</option>
+            <option value="50">50% OFF</option>
+          </select>
+        </div>
+
+        <!-- 9. Rating -->
+        <div class="filter-group">
+          <h3 class="filter-group-title">Customer Rating</h3>
+          <select id="filter-rating" class="filter-select" aria-label="Filter by minimum rating">
+            <option value="">All Ratings</option>
+            <option value="4.8">4.8 ★ &amp; up</option>
+            <option value="4.5">4.5 ★ &amp; up</option>
+            <option value="4.0">4.0 ★ &amp; up</option>
+          </select>
+        </div>
+
+        <!-- 10. Availability -->
+        <div class="filter-group">
+          <h3 class="filter-group-title">Availability</h3>
+          <select id="filter-availability" class="filter-select" aria-label="Filter by availability">
+            <option value="">All Availability</option>
+            <option value="in_stock">In Stock</option>
+            <option value="limited">Limited Stock</option>
+            <option value="out_of_stock">Out of Stock</option>
+          </select>
+        </div>
+      </aside>
+
+      <!-- Results Area -->
+      <div>
+        <div class="catalog-toolbar">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button type="button" class="btn btn-outline mobile-filter-toggle" id="btn-open-filters" style="padding:8px 14px;font-size:12px;">Filters</button>
+            <span id="catalog-count" style="font-size:14px;font-weight:600;">Showing 0 watches</span>
+          </div>
+
+          <form class="catalog-search-inline" id="catalog-search-form">
+            <input type="search" id="catalog-search-input" placeholder="Search model, SKU, brand..." aria-label="Search catalog">
+            <button type="submit" class="btn btn-primary" style="padding:9px 14px;font-size:12px;">Search</button>
+          </form>
+
+          <div style="display:flex;align-items:center;gap:8px;">
+            <label for="catalog-sort" style="font-size:13px;color:var(--ink-muted);">Sort:</label>
+            <select id="catalog-sort" class="filter-select" style="width:auto;min-width:190px;" aria-label="Sort watches">
+              <option value="featured">Featured</option>
+              <option value="best_selling">Best Selling</option>
+              <option value="newest">Newest</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+              <option value="rating_desc">Highest Rated</option>
+              <option value="discount_desc">Biggest Discount</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="active-chips" id="active-filter-chips"></div>
+        <div class="catalog-grid-3" id="catalog-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="shared-footer-host"></div>
+  <div id="shared-overlays-host"></div>
+
+  <script src="../assets/js/home-data.js"></script>
+  <script src="../components/ui-components.js"></script>
+  <script src="../assets/js/auth-service.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/catalog.js"></script>
+</body>
+</html>
+

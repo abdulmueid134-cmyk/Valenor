@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 44" fill="none">
+  <polygon points="22,3 38,12 38,32 22,41 6,32 6,12" stroke="#B8934A" stroke-width="2" stroke-linejoin="round"/>
+  <polygon points="22,8.5 24,11.5 22,13 20,11.5" fill="#B8934A"/>
+  <path d="M15.5 18L22 22.5L29 16" stroke="#FFFFFF" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="22" cy="22.5" r="2" fill="#B8934A"/>
+  <text x="50" y="24" fill="#FFFFFF" font-family="Georgia, 'Times New Roman', serif" font-size="19" font-weight="600" letter-spacing="5">VALENOR</text>
+  <text x="51" y="36" fill="#B8934A" font-family="system-ui, -apple-system, sans-serif" font-size="8.5" font-weight="600" letter-spacing="3.5">GENÈVE · HOROLOGY</text>
+</svg>
+

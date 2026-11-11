@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VALENOR — Fine Horology | Luxury Watches Storefront</title>
+  <meta name="description"
+    content="VALENOR Horology — Shop Swiss-caliber men's, women's, couple, kids, and smart watches with insured nationwide delivery and Cash on Delivery.">
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet" media="print" onload="this.media='all'">
+</head>
+
+<body id="top">
+
+  <!-- ======================================================================
+       A. TOP ANNOUNCEMENT BAR (Configurable Campaign + Dynamic Countdown)
+       ====================================================================== -->
+  <div class="announcement-bar" role="region" aria-label="Promotional Announcement">
+    <div class="announcement-inner">
+      <div class="announcement-promo">
+        <span class="promo-pill">11.11 Horology Sale</span>
+        <span>Up to <strong>50% OFF</strong> Selected Watches &bull; Extra 20% with <strong>SALE20</strong></span>
+        <span class="announcement-trust">&bull; 4.9/5 Rating from 18,000+ Collectors</span>
+      </div>
+      <div class="announcement-right">
+        <div class="countdown" aria-label="Sale countdown timer">
+          <span class="countdown-label">Ends in</span>
+          <span class="countdown-box" id="cd-days">02d</span>
+          <span class="countdown-box" id="cd-hours">14h</span>
+          <span class="countdown-box" id="cd-mins">35m</span>
+          <span class="countdown-box" id="cd-secs">00s</span>
+        </div>
+        <a href="#special-offers" class="announcement-cta">Shop Now</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       B. BLACK MAIN NAVIGATION HEADER
+       ====================================================================== -->
+  <header class="site-header" role="banner">
+    <div class="navbar">
+      <a href="#top" class="brand-logo" aria-label="VALENOR Home">
+        <svg class="brand-logo-svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <polygon points="32,7 51,18 51,46 32,57 13,46 13,18" stroke="#B8934A" stroke-width="2.5"
+            stroke-linejoin="round" />
+          <circle cx="32" cy="32" r="14" stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="1.2" />
+          <polygon points="32,14 34.5,18 32,20 29.5,18" fill="#B8934A" />
+          <path d="M23.5 25.5L32 32L41.5 23.5" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round"
+            stroke-linejoin="round" />
+          <circle cx="32" cy="32" r="2.6" fill="#B8934A" />
+        </svg>
+        <div class="brand-wordmark">
+          <span class="brand-name">VALENOR</span>
+          <span class="brand-tag">Genève · Horology</span>
+        </div>
+      </a>
+
+      <nav aria-label="Primary Navigation">
+        <ul class="nav-links">
+          <li><a href="#top" class="nav-link active">Home</a></li>
+          <li><a href="#featured-collections" class="nav-link">Collections</a></li>
+          <li><a href="#special-offers" class="nav-link nav-link-sale">50% Sale</a></li>
+          <li class="nav-item-dropdown" data-dept-dropdown="mens">
+            <button type="button" class="nav-link nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+              Men's Watches <span class="nav-caret" aria-hidden="true">&#9662;</span>
+            </button>
+            <div class="nav-dropdown-menu" data-dept-menu="mens"></div>
+          </li>
+          <li class="nav-item-dropdown" data-dept-dropdown="womens">
+            <button type="button" class="nav-link nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+              Women's Watches <span class="nav-caret" aria-hidden="true">&#9662;</span>
+            </button>
+            <div class="nav-dropdown-menu" data-dept-menu="womens"></div>
+          </li>
+          <li class="nav-item-dropdown" data-dept-dropdown="kids">
+            <button type="button" class="nav-link nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+              Kids' Watches <span class="nav-caret" aria-hidden="true">&#9662;</span>
+            </button>
+            <div class="nav-dropdown-menu" data-dept-menu="kids"></div>
+          </li>
+          <li class="nav-item-dropdown" data-dept-dropdown="couple">
+            <button type="button" class="nav-link nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+              Couple Watches <span class="nav-caret" aria-hidden="true">&#9662;</span>
+            </button>
+            <div class="nav-dropdown-menu" data-dept-menu="couple"></div>
+          </li>
+          <li class="nav-item-dropdown" data-dept-dropdown="smart">
+            <button type="button" class="nav-link nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+              Smart Watches <span class="nav-caret" aria-hidden="true">&#9662;</span>
+            </button>
+            <div class="nav-dropdown-menu" data-dept-menu="smart"></div>
+          </li>
+          <li><a href="#new-arrivals" class="nav-link">New Arrivals</a></li>
+          <li><a href="#best-sellers" class="nav-link">Best Sellers</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" class="icon-btn" id="btn-open-account" aria-label="Customer Account" title="Account">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+        </button>
+
+        <button type="button" class="icon-btn" id="btn-open-search" aria-label="Search Watches" title="Search">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+        </button>
+
+        <button type="button" class="icon-btn" id="btn-open-wishlist" aria-label="Wishlist" title="Wishlist">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
+          <span class="icon-badge" id="wishlist-count-badge">0</span>
+        </button>
+
+        <button type="button" class="icon-btn" id="btn-open-cart" aria-label="Shopping Bag" title="Shopping Bag">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <path d="M16 10a4 4 0 0 1-8 0" />
+          </svg>
+          <span class="icon-badge" id="cart-count-badge">0</span>
+        </button>
+
+        <button type="button" class="hamburger-btn" id="mobile-menu-btn" aria-label="Toggle Menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+      <ul class="mobile-nav-list">
+        <li><a href="#top">Home</a></li>
+        <li><a href="#featured-collections">Collections</a></li>
+        <li><a href="#special-offers" style="color:#ff8e8e;">50% Sale</a></li>
+        <li><a href="#new-arrivals">New Arrivals</a></li>
+        <li><a href="#best-sellers">Best Sellers</a></li>
+        <li class="mobile-dept-group" data-mobile-dept="mens">
+          <button type="button" class="mobile-dept-trigger">Men's Watches <span>&#9662;</span></button>
+          <div class="mobile-subcat-list" data-mobile-subcats="mens"></div>
+        </li>
+        <li class="mobile-dept-group" data-mobile-dept="womens">
+          <button type="button" class="mobile-dept-trigger">Women's Watches <span>&#9662;</span></button>
+          <div class="mobile-subcat-list" data-mobile-subcats="womens"></div>
+        </li>
+        <li class="mobile-dept-group" data-mobile-dept="kids">
+          <button type="button" class="mobile-dept-trigger">Kids' Watches <span>&#9662;</span></button>
+          <div class="mobile-subcat-list" data-mobile-subcats="kids"></div>
+        </li>
+        <li class="mobile-dept-group" data-mobile-dept="couple">
+          <button type="button" class="mobile-dept-trigger">Couple Watches <span>&#9662;</span></button>
+          <div class="mobile-subcat-list" data-mobile-subcats="couple"></div>
+        </li>
+        <li class="mobile-dept-group" data-mobile-dept="smart">
+          <button type="button" class="mobile-dept-trigger">Smart Watches <span>&#9662;</span></button>
+          <div class="mobile-subcat-list" data-mobile-subcats="smart"></div>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <!-- ====================================================================
+         1. HERO BANNER
+         ==================================================================== -->
+    <section class="hero" aria-label="Featured Watch Campaign">
+      <div class="hero-bg">
+        <img src="assets/images/hero-banner.jpg" alt="VALENOR Signature Chronograph Timepiece on Dark Slate"
+          class="hero-media">
+        <div class="hero-scrim"></div>
+        <div class="container">
+          <div class="hero-content">
+            <div class="hero-eyebrow">11.11 Signature Release &bull; Limited Archive</div>
+            <h1 class="hero-title">Precision Crafted for Every Second</h1>
+            <p class="hero-subtitle">
+              Sapphire-crystal chronographs, exhibition automatics, and timeless dress watches curated for collectors
+              across Pakistan and beyond.
+            </p>
+            <div class="hero-cta-row">
+              <a href="pages/catalog.html" class="btn btn-gold">Browse Full Catalog</a>
+              <a href="pages/catalog.html?minDiscount=50" class="btn btn-outline-light">View 50% Sale</a>
+            </div>
+            <div class="hero-metrics">
+              <div>
+                <span class="metric-value">Up to 50%</span>
+                <span class="metric-label">Seasonal Privilege</span>
+              </div>
+              <div>
+                <span class="metric-value">2–3 Years</span>
+                <span class="metric-label">Movement Warranty</span>
+              </div>
+              <div>
+                <span class="metric-value">100% COD</span>
+                <span class="metric-label">Open-Parcel Inspection</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="trust-strip">
+        <div class="container trust-grid">
+          <div class="trust-item">
+            <div class="trust-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <div>
+              <span class="trust-title">Official Warranty Card</span>
+              <span class="trust-desc">Up to 3 years movement cover</span>
+            </div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="1" y="3" width="15" height="13" />
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                <circle cx="5.5" cy="18.5" r="2.5" />
+                <circle cx="18.5" cy="18.5" r="2.5" />
+              </svg>
+            </div>
+            <div>
+              <span class="trust-title">Free Insured Shipping</span>
+              <span class="trust-desc">On orders above PKR 15,000</span>
+            </div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8">
+                <polyline points="23 4 23 10 17 10" />
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+              </svg>
+            </div>
+            <div>
+              <span class="trust-title">7-Day Easy Returns</span>
+              <span class="trust-desc">Hassle-free exchange &amp; refund</span>
+            </div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </div>
+            <div>
+              <span class="trust-title">4.9 / 5 Collector Rating</span>
+              <span class="trust-desc">18,000+ delivered timepieces</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         2. SHOP BY CATEGORY
+         ==================================================================== -->
+    <section class="section" id="shop-by-category">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="section-eyebrow">Curated Departments</div>
+            <h2 class="section-title">Shop by Category</h2>
+            <p class="section-subtitle">Explore six signature horology departments crafted for every wrist and occasion.
+            </p>
+          </div>
+          <a href="pages/catalog.html" class="section-link">All 14 Categories &rarr;</a>
+        </div>
+        <div class="category-grid" id="category-grid"></div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         3. BEST SELLERS
+         ==================================================================== -->
+    <section class="section section-surface" id="best-sellers">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="section-eyebrow">Collector Favorites</div>
+            <h2 class="section-title">Best Sellers</h2>
+            <p class="section-subtitle">Our highest-rated wristwatches trusted for daily precision and timeless
+              proportion.</p>
+          </div>
+          <a href="pages/catalog.html?sort=best_selling" class="section-link">View All Best Sellers &rarr;</a>
+        </div>
+        <div class="product-grid" id="grid-best-sellers"></div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         4. NEW ARRIVALS
+         ==================================================================== -->
+    <section class="section" id="new-arrivals">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="section-eyebrow">2026 Studio Releases</div>
+            <h2 class="section-title">New Arrivals</h2>
+            <p class="section-subtitle">Freshly calibrated automatic divers, dress leather editions, and AMOLED titanium
+              smartwatches.</p>
+          </div>
+          <a href="pages/catalog.html?sort=newest" class="section-link">Shop New Arrivals &rarr;</a>
+        </div>
+        <div class="product-grid" id="grid-new-arrivals"></div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         5. MEN'S COLLECTION
+         ==================================================================== -->
+    <section class="section section-surface" id="mens-collection">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="section-eyebrow">Command &amp; Craft</div>
+            <h2 class="section-title">Men's Collection</h2>
+            <p class="section-subtitle">Explore Chronograph, Phillipes, Stiveson, ceramic divers, and classic leather
+              watches.</p>
+          </div>
+          <a href="pages/catalog.html?category=mens-watches" class="section-link">Filter All Men's &rarr;</a>
+        </div>
+        <div class="subcat-tabs" id="subcat-bar-mens" role="tablist" aria-label="Men's watch subcategories"></div>
+        <div class="product-grid" id="grid-mens"></div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         6. WOMEN'S COLLECTION
+         ==================================================================== -->
+    <section class="section" id="womens-collection">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="section-eyebrow">Effortless Refinement</div>
+            <h2 class="section-title">Women's Collection</h2>
+            <p class="section-subtitle">Choose Phillipes, Stiveson, Chronograph, minimalist Milanese mesh, and classic
+              leather styles.</p>
+          </div>
+          <a href="#couple-collection" class="section-link">Pair With Couple Sets &rarr;</a>
+        </div>
+        <div class="subcat-tabs" id="subcat-bar-womens" role="tablist" aria-label="Women's watch subcategories"></div>
+        <div class="product-grid" id="grid-womens"></div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         7. KIDS' COLLECTION
+         ==================================================================== -->
+    <section class="section section-surface" id="kids-collection">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="section-eyebrow">Junior Timekeepers</div>
+            <h2 class="section-title">Kids' Collection</h2>
+            <p class="section-subtitle">Select Analog Easy-Read, Digital &amp; Hybrid, Swim &amp; Sport, or Junior
+              Chronograph watches.</p>
+          </div>
+          <a href="#special-offers" class="section-link">Kids Sale Offers &rarr;</a>
+        </div>
+        <div class="subcat-tabs" id="subcat-bar-kids" role="tablist" aria-label="Kids' watch subcategories"></div>
+        <div class="product-grid" id="grid-kids"></div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         8. COUPLE WATCHES
+         ==================================================================== -->
+    <section class="section" id="couple-collection">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="section-eyebrow">Celebration &amp; Gifting</div>
+            <h2 class="section-title">Couple Watches</h2>
+            <p class="section-subtitle">Browse Phillipes Pairs, Stiveson Pairs, Chronograph Sets, and Gold &amp; Mesh
+              gift boxes.</p>
+          </div>
+          <a href="#featured-collections" class="section-link">View Gift Sets &rarr;</a>
+        </div>
+        <div class="subcat-tabs" id="subcat-bar-couple" role="tablist" aria-label="Couple watch subcategories"></div>
+        <div class="product-grid" id="grid-couple"></div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         9. SMART WATCHES
+         ==================================================================== -->
+    <section class="section section-surface" id="smart-collection">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="section-eyebrow">Connected Horology</div>
+            <h2 class="section-title">Smart Watches</h2>
+            <p class="section-subtitle">Explore Men's Smart, Women's Smart, Kids' GPS Smart, AMOLED Calling, and Fitness
+              Hybrid models.</p>
+          </div>
+          <a href="pages/catalog.html?category=smart-watches" class="section-link">Explore All Smart &rarr;</a>
+        </div>
+        <div class="subcat-tabs" id="subcat-bar-smart" role="tablist" aria-label="Smart watch subtypes"></div>
+        <div class="product-grid" id="grid-smart"></div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         10. SPECIAL DISCOUNT OFFERS
+         ==================================================================== -->
+    <section class="section" id="special-offers">
+      <div class="container">
+        <div class="promo-split">
+          <div class="promo-split-media">
+            <img src="assets/images/promo-sale-banner.jpg" alt="VALENOR 11.11 Special Offers Editorial Showcase"
+              onerror="this.onerror=null; this.src='assets/images/hero-banner.jpg';">
+          </div>
+          <div class="promo-split-body">
+            <div class="section-eyebrow">Limited-Time Privilege</div>
+            <h2 class="section-title">Special Discount Offers — Up to 50% OFF</h2>
+            <p style="color:var(--ink-secondary);margin:14px 0 0;">
+              Save up to half price on flagship chronographs, mother-of-pearl dress watches, couple boxes, and titanium
+              smartwatches during our 11.11 Horology Event.
+            </p>
+            <div class="promo-code-box">
+              <span>Use Coupon Code:</span>
+              <span class="promo-code-value">SALE20</span>
+              <button type="button" class="btn btn-outline" id="btn-copy-promo"
+                style="padding:5px 12px;font-size:11px;">Copy Code</button>
+            </div>
+            <div>
+              <a href="#grid-special-offers" class="btn btn-primary">Shop 50% Sale Below</a>
+            </div>
+          </div>
+        </div>
+        <div class="product-grid" id="grid-special-offers"></div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         11. FEATURED COLLECTIONS
+         ==================================================================== -->
+    <section class="section section-surface" id="featured-collections">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="section-eyebrow">Signature Capsules</div>
+            <h2 class="section-title">Featured Collections</h2>
+            <p class="section-subtitle">Four enduring watchmaking pillars engineered with sapphire glass and
+              surgical-grade metals.</p>
+          </div>
+          <a href="#best-sellers" class="section-link">Shop Best Sellers &rarr;</a>
+        </div>
+        <div class="featured-capsules-grid" id="featured-capsules-grid"></div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         12. CUSTOMER REVIEWS
+         ==================================================================== -->
+    <section class="section" id="customer-reviews">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="section-eyebrow">4.9 / 5 Verified Collector Satisfaction</div>
+            <h2 class="section-title">Customer Reviews</h2>
+            <p class="section-subtitle">Real feedback from watch buyers across Lahore, Karachi, Islamabad, and
+              international deliveries.</p>
+          </div>
+          <a href="#newsletter" class="section-link">Join Collector Club &rarr;</a>
+        </div>
+        <div class="reviews-grid" id="reviews-grid"></div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         13. NEWSLETTER SUBSCRIPTION
+         ==================================================================== -->
+    <section class="section section-surface" id="newsletter">
+      <div class="container">
+        <div class="newsletter-box">
+          <div>
+            <div class="section-eyebrow">Private Collectors List</div>
+            <h2>Unlock 10% OFF Your First Timepiece</h2>
+            <p>Receive early access to limited caliber drops, seasonal sales, and private code
+              <strong>WELCOME10</strong>.
+            </p>
+          </div>
+          <form class="newsletter-form" id="newsletter-form" novalidate>
+            <label for="newsletter-email" class="sr-only">Email address</label>
+            <input type="email" id="newsletter-email" class="newsletter-input" placeholder="Enter your email address"
+              required>
+            <button type="submit" class="btn btn-gold">Subscribe</button>
+            <div class="newsletter-status" id="newsletter-status" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================================================================
+       14. PROFESSIONAL FOOTER
+       ====================================================================== -->
+  <footer class="site-footer" id="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <a href="#top" class="brand-logo" style="margin-bottom:14px;">
+            <svg class="brand-logo-svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+              <polygon points="32,7 51,18 51,46 32,57 13,46 13,18" stroke="#B8934A" stroke-width="2.5"
+                stroke-linejoin="round" />
+              <path d="M23.5 25.5L32 32L41.5 23.5" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round"
+                stroke-linejoin="round" />
+              <circle cx="32" cy="32" r="2.6" fill="#B8934A" />
+            </svg>
+            <div class="brand-wordmark">
+              <span class="brand-name">VALENOR</span>
+              <span class="brand-tag">Genève · Horology</span>
+            </div>
+          </a>
+          <p style="font-size:13.5px;color:#a1a1aa;max-width:300px;margin:0;">
+            Independent luxury watch house delivering Swiss-caliber precision, transparent PKR pricing, and Cash on
+            Delivery nationwide.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Collections</h4>
+          <ul class="footer-links">
+            <li><a href="#mens-collection">Men's Watches</a></li>
+            <li><a href="#womens-collection">Women's Watches</a></li>
+            <li><a href="#couple-collection">Couple Watches</a></li>
+            <li><a href="#kids-collection">Kids' Watches</a></li>
+            <li><a href="#smart-collection">Smart Watches</a></li>
+            <li><a href="#special-offers">50% Sale Offers</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Customer Care</h4>
+          <ul class="footer-links">
+            <li><a href="#best-sellers">Best Sellers</a></li>
+            <li><a href="#new-arrivals">New Arrivals</a></li>
+            <li><a href="#customer-reviews">Verified Reviews</a></li>
+            <li><a href="pages/track-order.html">Track Order &amp; Returns</a></li>
+            <li><a href="#newsletter">Warranty &amp; Care</a></li>
+            <li><a href="pages/policies.html">Return, Privacy &amp; Terms</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Concierge &amp; Boutiques</h4>
+          <ul class="footer-links">
+            <li>Email: concierge@valenor.pk</li>
+            <li>WhatsApp / Phone: +92 300 048 1111</li>
+            <li>Lahore · Karachi · Islamabad</li>
+            <li>Mon–Sat: 10:00 AM – 8:00 PM PKT</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 VALENOR Horology. All rights reserved. Prices shown in PKR.</span>
+        <div class="payment-badges">
+          <span class="payment-pill">Cash on Delivery</span>
+          <span class="payment-pill">Bank Transfer</span>
+          <span class="payment-pill">Insured Courier</span>
+          <span class="payment-pill">2–3 Yr Warranty</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ======================================================================
+       INTERACTIVE OVERLAYS (Search, Wishlist Drawer, Bag Drawer, Quick View, Account)
+       ====================================================================== -->
+  <div class="overlay-backdrop" id="overlay-backdrop"></div>
+
+  <div class="search-bar-overlay" id="search-overlay" role="dialog" aria-label="Search Watches">
+    <div class="container">
+      <form id="global-search-form" style="display:flex;align-items:center;gap:12px;">
+        <input type="search" id="search-input"
+          placeholder="Search watches by name, brand, strap, movement, or category (e.g. chronograph, phillipes, stiveson)..."
+          style="flex:1;padding:13px 16px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);font-size:15px;">
+        <button type="submit" class="btn btn-primary" style="padding:13px 18px;">View All</button>
+        <button type="button" class="close-btn" data-close-overlays aria-label="Close search">&times;</button>
+      </form>
+      <div class="search-results-grid" id="search-results"></div>
+    </div>
+  </div>
+
+  <aside class="drawer" id="wishlist-drawer" role="dialog" aria-label="Saved Wishlist">
+    <div class="drawer-header">
+      <h3>Saved Wishlist</h3>
+      <button type="button" class="close-btn" data-close-overlays aria-label="Close wishlist">&times;</button>
+    </div>
+    <div class="drawer-body" id="wishlist-drawer-body"></div>
+  </aside>
+
+  <aside class="drawer" id="cart-drawer" role="dialog" aria-label="Shopping Bag">
+    <div class="drawer-header">
+      <h3>Shopping Bag</h3>
+      <button type="button" class="close-btn" data-close-overlays aria-label="Close shopping bag">&times;</button>
+    </div>
+    <div class="drawer-body" id="cart-drawer-body"></div>
+    <div class="drawer-footer">
+      <div style="display:flex;justify-content:space-between;font-weight:700;font-size:16px;margin-bottom:12px;">
+        <span>Estimated Subtotal</span>
+        <span id="cart-drawer-subtotal">PKR 0</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <a href="pages/cart.html" class="btn btn-outline" style="padding:11px 12px;">View Cart</a>
+        <button type="button" class="btn btn-primary" id="btn-proceed-checkout"
+          style="padding:11px 12px;">Checkout</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="modal" id="quick-view-modal" role="dialog" aria-label="Watch Quick View">
+    <div id="quick-view-content"></div>
+  </div>
+
+  <div class="modal" id="account-modal" role="dialog" aria-label="Customer Account"
+    style="width:min(460px,92vw);padding:32px;">
+    <button type="button" class="close-btn" style="position:absolute;top:16px;right:16px;" data-close-overlays
+      aria-label="Close account modal">&times;</button>
+    <div class="section-eyebrow">Customer Portal</div>
+    <h3 style="font-family:var(--font-display);font-size:30px;margin:4px 0 10px;">VALENOR Collector Account</h3>
+    <p style="color:var(--ink-secondary);font-size:14px;margin:0 0 18px;">
+      Full registration, sign-in, saved delivery addresses, and live order tracking will connect to MySQL in Phase 3.
+      Meanwhile, your Wishlist and Shopping Bag stay saved right here on your device.
+    </p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <a href="#best-sellers" class="btn btn-primary" data-close-overlays>Browse Timepieces</a>
+      <button type="button" class="btn btn-outline" data-close-overlays>Close</button>
+    </div>
+  </div>
+
+  <div class="toast" id="site-toast" role="status" aria-live="polite"></div>
+
+  <script src="assets/js/home-data.js"></script>
+  <script src="components/ui-components.js"></script>
+  <script src="assets/js/auth-service.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — VALENOR Horology</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
+  <link rel="stylesheet" href="./admin.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <script src="/admin/vendor/chart.umd.js"></script>
+</head>
+<body>
+  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+  <div class="admin-shell">
+    <!-- Left Sidebar (All 17 Required Navigation Items) -->
+    <aside class="admin-sidebar" id="admin-sidebar" aria-label="Admin Navigation">
+      <div class="sidebar-logo">
+        <div>
+          <div class="sidebar-logo-title">VALENOR</div>
+          <div class="sidebar-logo-sub">Admin Console</div>
+        </div>
+        <button type="button" class="mobile-nav-btn" id="btn-close-sidebar" aria-label="Close sidebar" style="background:#17171B;color:#fff;border-color:#2A2A32;">&times;</button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="sidebar-group-label">Overview</div>
+        <button type="button" class="sidebar-link active" data-section="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+          <span>Dashboard</span>
+        </button>
+
+        <div class="sidebar-group-label">Catalog &amp; Stock</div>
+        <button type="button" class="sidebar-link" data-section="products">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="6"/><polyline points="12 9 12 12 14 14"/><path d="M9 2h6l1 4H8l1-4zM8 18h8l-1 4H9l-1-4z"/></svg>
+          <span>Products</span>
+        </button>
+        <button type="button" class="sidebar-link" data-section="watch-types">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          <span>Product Types</span>
+        </button>
+        <button type="button" class="sidebar-link" data-section="categories">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+          <span>Categories</span>
+        </button>
+        <button type="button" class="sidebar-link" data-section="brands">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7l3-7z"/></svg>
+          <span>Brands</span>
+        </button>
+        <button type="button" class="sidebar-link" data-section="inventory">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          <span>Inventory</span>
+        </button>
+
+        <div class="sidebar-group-label">Commerce &amp; Fulfillment</div>
+        <button type="button" class="sidebar-link" data-section="orders">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+          <span>Orders</span>
+        </button>
+        <button type="button" class="sidebar-link" data-section="customers">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>Customers</span>
+        </button>
+        <button type="button" class="sidebar-link" data-section="payments">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          <span>Payments</span>
+        </button>
+        <button type="button" class="sidebar-link" data-section="deliveries">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          <span>Deliveries</span>
+        </button>
+        <button type="button" class="sidebar-link" data-section="returns">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          <span>Returns</span>
+        </button>
+        <button type="button" class="sidebar-link" data-section="refunds">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <span>Refunds</span>
+        </button>
+
+        <div class="sidebar-group-label">Growth &amp; Governance</div>
+        <button type="button" class="sidebar-link" data-section="promotions">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span>Promotions</span>
+        </button>
+        <button type="button" class="sidebar-link" data-section="coupons">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/></svg>
+          <span>Coupons</span>
+        </button>
+        <button type="button" class="sidebar-link" data-section="reviews">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span>Reviews</span>
+        </button>
+        <button type="button" class="sidebar-link" data-section="reports">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span>Reports</span>
+        </button>
+        <button type="button" class="sidebar-link" data-section="settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.78 1 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>Website Settings</span>
+        </button>
+        <button type="button" class="sidebar-link" data-section="admin-users">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>Admin Users</span>
+        </button>
+
+        <button type="button" class="sidebar-link logout" id="btn-admin-logout">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>Logout</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Workspace -->
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div class="topbar-left">
+          <button type="button" class="mobile-nav-btn" id="btn-open-sidebar" aria-label="Open menu">&#9776;</button>
+          <div>
+            <h1 class="topbar-title" id="topbar-heading">Executive Dashboard</h1>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <span class="panel-sub" id="topbar-window-label">Window: Last 30 Days</span>
+          <span class="role-pill" id="admin-role-badge">ADMIN</span>
+          <span style="font-size:13px;font-weight:600;" id="admin-user-name">Administrator</span>
+          <a href="../index.html" target="_blank" rel="noopener" class="btn btn-outline btn-sm">View Storefront</a>
+        </div>
+      </header>
+
+      <main class="admin-content">
+        <div id="admin-global-alert" class="form-alert" role="alert"></div>
+
+        <!-- VIEW A: MAIN ANALYTICS DASHBOARD -->
+        <div id="view-dashboard" style="display:flex;flex-direction:column;gap:22px;">
+          <!-- Date Range Filter Toolbar -->
+          <section class="filter-toolbar" aria-label="Date Filters">
+            <div class="preset-pills" id="date-preset-pills">
+              <button type="button" class="preset-btn" data-range="today">Today</button>
+              <button type="button" class="preset-btn" data-range="yesterday">Yesterday</button>
+              <button type="button" class="preset-btn" data-range="7d">Last 7 Days</button>
+              <button type="button" class="preset-btn active" data-range="30d">Last 30 Days</button>
+              <button type="button" class="preset-btn" data-range="this_month">This Month</button>
+              <button type="button" class="preset-btn" data-range="prev_month">Previous Month</button>
+              <button type="button" class="preset-btn" data-range="this_year">This Year</button>
+            </div>
+            <form id="form-custom-range" class="custom-range-inputs">
+              <label for="filter-start-date" class="panel-sub">Custom:</label>
+              <input type="date" id="filter-start-date" class="field-control field-control-sm">
+              <span class="panel-sub">to</span>
+              <input type="date" id="filter-end-date" class="field-control field-control-sm">
+              <button type="submit" class="btn btn-primary btn-sm">Apply</button>
+            </form>
+          </section>
+
+          <!-- 12 KPI Cards -->
+          <section class="kpi-grid" id="kpi-grid" aria-label="Key Performance Indicators"></section>
+
+          <!-- 8 Interactive Chart.js Graphs -->
+          <section class="charts-grid" aria-label="Sales and Operations Analytics">
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>1. Daily Sales Graph</h3>
+                <span class="panel-sub">Daily revenue &amp; order count</span>
+              </div>
+              <div class="chart-canvas-wrap"><canvas id="chart-daily-sales"></canvas></div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>2. Weekly Sales Graph</h3>
+                <span class="panel-sub">ISO week revenue progression</span>
+              </div>
+              <div class="chart-canvas-wrap"><canvas id="chart-weekly-sales"></canvas></div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>3. Monthly Sales Graph</h3>
+                <span class="panel-sub">Monthly revenue breakdown</span>
+              </div>
+              <div class="chart-canvas-wrap"><canvas id="chart-monthly-sales"></canvas></div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>4. Yearly Sales Graph</h3>
+                <span class="panel-sub">Annual revenue performance</span>
+              </div>
+              <div class="chart-canvas-wrap"><canvas id="chart-yearly-sales"></canvas></div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>5. Orders Overview</h3>
+                <span class="panel-sub">Distribution across order statuses</span>
+              </div>
+              <div class="chart-canvas-wrap"><canvas id="chart-orders-overview"></canvas></div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>6. Revenue Overview</h3>
+                <span class="panel-sub">Gross sales vs discounts, refunds &amp; net</span>
+              </div>
+              <div class="chart-canvas-wrap"><canvas id="chart-revenue-overview"></canvas></div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>7. Product Performance</h3>
+                <span class="panel-sub">Top watches by sales revenue</span>
+              </div>
+              <div class="chart-canvas-wrap"><canvas id="chart-product-perf"></canvas></div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>8. Category Performance</h3>
+                <span class="panel-sub">Revenue by primary watch category</span>
+              </div>
+              <div class="chart-canvas-wrap"><canvas id="chart-category-perf"></canvas></div>
+            </div>
+          </section>
+
+          <!-- Business Analytics Panel -->
+          <section class="panel-card" aria-label="Business Financial Analytics">
+            <div class="panel-head">
+              <h3>Business Analytics &amp; Unit Economics</h3>
+              <span class="panel-sub" id="profit-distinction-note">Revenue is distinguished from Profit (calculated only where unit cost_price is recorded)</span>
+            </div>
+            <div class="biz-metrics-grid" id="biz-metrics-grid"></div>
+            <div class="biz-lists-grid" id="biz-lists-grid"></div>
+          </section>
+
+          <!-- 6 Dashboard Operational Tables with View All Links -->
+          <section class="tables-grid" aria-label="Operational Summary Tables">
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>Recent Orders</h3>
+                <button type="button" class="btn btn-outline btn-sm view-all-btn" data-section="orders">View All &rarr;</button>
+              </div>
+              <div class="table-scroll" id="tbl-recent-orders"></div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>Latest Customers</h3>
+                <button type="button" class="btn btn-outline btn-sm view-all-btn" data-section="customers">View All &rarr;</button>
+              </div>
+              <div class="table-scroll" id="tbl-latest-customers"></div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>Best Selling Products</h3>
+                <button type="button" class="btn btn-outline btn-sm view-all-btn" data-section="products">View All &rarr;</button>
+              </div>
+              <div class="table-scroll" id="tbl-best-products"></div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>Low Stock Products</h3>
+                <button type="button" class="btn btn-outline btn-sm view-all-btn" data-section="inventory">View All &rarr;</button>
+              </div>
+              <div class="table-scroll" id="tbl-low-stock"></div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>Recent Return Requests</h3>
+                <button type="button" class="btn btn-outline btn-sm view-all-btn" data-section="returns">View All &rarr;</button>
+              </div>
+              <div class="table-scroll" id="tbl-recent-returns"></div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-head">
+                <h3>Recent Cancelled Orders</h3>
+                <button type="button" class="btn btn-outline btn-sm view-all-btn" data-section="orders">View All &rarr;</button>
+              </div>
+              <div class="table-scroll" id="tbl-recent-cancelled"></div>
+            </div>
+          </section>
+        </div>
+
+        <!-- VIEW B: LIVE SIDEBAR SECTION EXPLORER -->
+        <section id="view-section" class="panel-card" style="display:none;">
+          <div class="panel-head" style="flex-wrap:wrap;">
+            <div>
+              <h3 id="section-view-title">Section Directory</h3>
+              <div class="panel-sub" id="section-view-sub"></div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <div id="section-actions-host" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+              <input type="search" id="section-search-input" class="field-control field-control-sm" placeholder="Filter records...">
+              <button type="button" id="btn-section-search" class="btn btn-primary btn-sm">Filter</button>
+              <button type="button" id="btn-back-dashboard" class="btn btn-outline btn-sm">&larr; Dashboard</button>
+            </div>
+          </div>
+          <div id="section-subbar-host" style="margin-bottom:12px;"></div>
+          <div class="table-scroll" id="section-table-host"></div>
+          <div id="section-extra-host" style="margin-top:24px;"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Reusable Admin CRUD Modal -->
+  <div class="admin-modal-overlay" id="admin-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="admin-modal-title">
+    <div class="admin-modal-card" id="admin-modal-card">
+      <div class="admin-modal-head">
+        <h3 id="admin-modal-title">Edit Item</h3>
+        <button type="button" class="btn btn-outline btn-sm" id="btn-close-modal" aria-label="Close modal">&times; Close</button>
+      </div>
+      <div class="admin-modal-body" id="admin-modal-body"></div>
+    </div>
+  </div>
+
+  <script src="./admin-dashboard.js"></script>
+</body>
+</html>
+

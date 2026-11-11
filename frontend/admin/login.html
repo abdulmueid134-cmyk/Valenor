@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal Sign In — VALENOR Horology</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
+  <link rel="stylesheet" href="./admin.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+</head>
+<body>
+  <main class="admin-login-shell">
+    <section class="admin-login-brand">
+      <div>
+        <div class="sidebar-logo-title">VALENOR</div>
+        <div class="sidebar-logo-sub">Gen&egrave;ve &bull; Executive Control</div>
+      </div>
+
+      <div>
+        <div class="sidebar-logo-sub" style="margin-bottom:8px;">Protected Operations Suite</div>
+        <h1>Horology Commerce &amp; Analytics Command</h1>
+        <p style="color:#A1A1AA;font-size:14.5px;line-height:1.65;max-width:440px;">
+          Monitor real-time store sales, fulfillment status, courier tracking, stock alerts, returns, and role-governed metrics powered directly by MySQL.
+        </p>
+      </div>
+
+      <div style="font-size:12.5px;color:#71717A;">
+        Authorized staff only &bull; Role-Based Access Enforced
+      </div>
+    </section>
+
+    <section class="admin-login-panel">
+      <div class="admin-login-card">
+        <div class="sidebar-logo-sub" style="margin-bottom:6px;">Administrator Access</div>
+        <h2 style="font-family:var(--font-display);font-size:32px;margin:0 0 6px;">Sign In</h2>
+        <p style="color:var(--ink-secondary);font-size:13.5px;margin:0 0 22px;">
+          Enter your administrator email or phone number and password.
+        </p>
+
+        <div id="admin-login-alert" class="form-alert" role="alert"></div>
+
+        <form id="form-admin-login" novalidate>
+          <div class="field-group">
+            <label for="admin-identifier">Email or Phone Number</label>
+            <input type="text" id="admin-identifier" class="field-control" placeholder="e.g. admin@valenor.pk" autocomplete="username" required>
+          </div>
+
+          <div class="field-group">
+            <label for="admin-password">Password</label>
+            <input type="password" id="admin-password" class="field-control" placeholder="Enter administrator password" autocomplete="current-password" required>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;margin:6px 0 18px;font-size:13px;">
+            <label style="display:inline-flex;align-items:center;gap:7px;cursor:pointer;">
+              <input type="checkbox" id="admin-remember"> Keep session active
+            </label>
+            <a href="../index.html" style="color:var(--accent-gold);font-weight:600;">Return to Storefront</a>
+          </div>
+
+          <button type="submit" id="btn-admin-signin" class="btn btn-primary" style="width:100%;padding:11px;">
+            Access Admin Dashboard
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script src="./admin-login.js"></script>
+</body>
+</html>
+
