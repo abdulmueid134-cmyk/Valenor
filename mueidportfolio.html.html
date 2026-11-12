@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portfolio of Abdul Mueid, software developer focused on thoughtful, reliable digital experiences.">
+  <title>Abdul Mueid — Software Developer</title>
+  <style>
+    :root {
+      --ink: #17212b;
+      --muted: #65717d;
+      --paper: #f5f7f8;
+      --white: #ffffff;
+      --line: #e3e8ec;
+      --accent: #176b68;
+      --accent-dark: #105451;
+      --soft: #eaf3f2;
+      --shadow: 0 18px 50px rgba(23, 33, 43, .07);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+    }
+    a { color: inherit; text-decoration: none; }
+    .wrap { width: min(1080px, calc(100% - 44px)); margin: 0 auto; }
+    .topbar {
+      background: rgba(255,255,255,.92);
+      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0; z-index: 10;
+      backdrop-filter: blur(12px);
+    }
+    nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { font-weight: 800; letter-spacing: -.04em; font-size: 19px; }
+    .brand span { color: var(--accent); }
+    .navlinks { display: flex; gap: 28px; align-items: center; color: #53606b; font-size: 13px; font-weight: 600; }
+    .navlinks a:hover { color: var(--accent); }
+    .nav-cta, .button {
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 7px; padding: 11px 17px; font-size: 13px; font-weight: 700;
+      transition: .2s ease; cursor: pointer;
+    }
+    .nav-cta, .button.primary { background: var(--accent); color: white; }
+    .nav-cta:hover, .button.primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+    .button.secondary { border: 1px solid #cbd5db; color: var(--ink); background: white; }
+    .button.secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .hero { padding: 92px 0 78px; }
+    .hero-grid { display: grid; grid-template-columns: 1.45fr .75fr; align-items: center; gap: 64px; }
+    .eyebrow { display: inline-flex; gap: 9px; align-items: center; color: var(--accent); text-transform: uppercase; letter-spacing: .13em; font-size: 11px; font-weight: 800; margin-bottom: 22px; }
+    .eyebrow:before { content: ""; width: 25px; height: 2px; background: var(--accent); }
+    h1 { font-size: clamp(43px, 6.4vw, 72px); letter-spacing: -.065em; line-height: 1.04; max-width: 690px; }
+    h1 span { color: var(--accent); }
+    .lead { color: var(--muted); font-size: 17px; max-width: 610px; margin: 25px 0 30px; line-height: 1.8; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .profile-card {
+      background: var(--white); border: 1px solid var(--line); border-radius: 14px;
+      padding: 28px; box-shadow: var(--shadow); position: relative; overflow: hidden;
+    }
+    .profile-card:before { content: ""; position: absolute; width: 180px; height: 180px; border-radius: 50%; background: var(--soft); top: -95px; right: -70px; }
+    .monogram {
+      width: 76px; height: 76px; border-radius: 18px; display: grid; place-items: center;
+      background: var(--accent); color: white; font-size: 25px; font-weight: 800; letter-spacing: -.06em;
+      position: relative; margin-bottom: 25px;
+    }
+    .profile-card h2 { font-size: 19px; letter-spacing: -.03em; }
+    .profile-card .role { color: var(--accent); font-size: 13px; font-weight: 700; margin: 4px 0 18px; }
+    .profile-detail { border-top: 1px solid var(--line); padding: 12px 0 0; margin-top: 12px; }
+    .profile-detail small { display: block; color: #8a959e; text-transform: uppercase; letter-spacing: .1em; font-size: 9px; font-weight: 800; }
+    .profile-detail strong { display: block; font-size: 13px; margin-top: 3px; }
+    .section { padding: 76px 0; border-top: 1px solid var(--line); }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 25px; margin-bottom: 30px; }
+    .section-kicker { color: var(--accent); text-transform: uppercase; letter-spacing: .14em; font-size: 10px; font-weight: 800; margin-bottom: 8px; }
+    h2.section-title { font-size: 32px; letter-spacing: -.05em; line-height: 1.2; }
+    .section-intro { max-width: 470px; color: var(--muted); font-size: 14px; }
+    .about-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 55px; }
+    .about-copy { color: var(--muted); font-size: 15px; }
+    .about-copy p + p { margin-top: 15px; }
+    .principles { display: grid; gap: 12px; }
+    .principle { display: flex; gap: 13px; align-items: flex-start; background: white; border: 1px solid var(--line); border-radius: 9px; padding: 15px; }
+    .check { color: var(--accent); font-weight: 900; }
+    .principle strong { display: block; font-size: 13px; }
+    .principle span:last-child { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .card { background: white; border: 1px solid var(--line); border-radius: 11px; padding: 23px; transition: .2s ease; }
+    .card:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: #c7d9d7; }
+    .card-number { color: var(--accent); font-size: 11px; font-weight: 800; letter-spacing: .1em; }
+    .card h3 { font-size: 17px; margin: 14px 0 8px; letter-spacing: -.025em; }
+    .card p { color: var(--muted); font-size: 13px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 17px; }
+    .tags span { background: var(--soft); color: var(--accent-dark); border-radius: 4px; padding: 4px 8px; font-size: 10px; font-weight: 700; }
+    .skills-layout { display: grid; grid-template-columns: .8fr 1.2fr; gap: 55px; }
+    .skills-copy { color: var(--muted); font-size: 14px; }
+    .skill-groups { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+    .skill-group { background: white; border: 1px solid var(--line); border-radius: 9px; padding: 18px; }
+    .skill-group h3 { font-size: 12px; margin-bottom: 11px; }
+    .skill-group p { color: var(--muted); font-size: 12px; }
+    .education { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .education-item { background: white; border: 1px solid var(--line); border-radius: 10px; padding: 23px; }
+    .education-item .label { color: var(--accent); font-size: 10px; text-transform: uppercase; letter-spacing: .12em; font-weight: 800; }
+    .education-item h3 { font-size: 17px; margin: 10px 0 5px; }
+    .education-item p { color: var(--muted); font-size: 13px; }
+    .contact-box {
+      background: #142b2b; color: white; border-radius: 14px; padding: 42px;
+      display: flex; justify-content: space-between; align-items: center; gap: 30px;
+    }
+    .contact-box .section-kicker { color: #9dd4cf; }
+    .contact-box h2 { font-size: clamp(27px, 4vw, 40px); letter-spacing: -.05em; line-height: 1.15; }
+    .contact-box p { color: #c2d0cf; font-size: 13px; margin-top: 12px; }
+    .contact-box .button { background: white; color: #142b2b; white-space: nowrap; }
+    .contact-box .button:hover { background: #dcebea; }
+    footer { padding: 25px 0 35px; display: flex; justify-content: space-between; gap: 15px; color: #849099; font-size: 11px; }
+    @media (max-width: 780px) {
+      .hero-grid, .about-grid, .skills-layout { grid-template-columns: 1fr; gap: 32px; }
+      .hero { padding: 65px 0 55px; }
+      .profile-card { max-width: 420px; }
+      .cards { grid-template-columns: 1fr; }
+      .section { padding: 58px 0; }
+      .section-head { display: block; }
+      .section-intro { margin-top: 12px; }
+      .contact-box { align-items: flex-start; flex-direction: column; padding: 30px; }
+    }
+    @media (max-width: 560px) {
+      .wrap { width: min(100% - 30px, 1080px); }
+      nav { min-height: 68px; }
+      .navlinks { gap: 13px; }
+      .navlinks a { font-size: 11px; }
+      .navlinks a:nth-child(2), .navlinks a:nth-child(3) { display: none; }
+      .nav-cta { padding: 9px 12px; font-size: 11px; }
+      .lead { font-size: 15px; }
+      .skill-groups, .education { grid-template-columns: 1fr; }
+      footer { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <nav aria-label="Main navigation">
+        <a class="brand" href="#home">ABDUL MUEID<span>.</span></a>
+        <div class="navlinks">
+          <a href="#about">About</a>
+          <a href="#work">Work</a>
+          <a href="#skills">Skills</a>
+          <a href="#education">Education</a>
+        </div>
+        <a class="nav-cta" href="#contact">Let's talk ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow">Software development · Portfolio</div>
+          <h1>Building useful<br>digital products<br><span>with purpose.</span></h1>
+          <p class="lead">
+            I'm Abdul Mueid, a software developer interested in creating
+            clear, reliable and user-focused digital experiences. I bring
+            together thoughtful problem-solving, modern web technologies
+            and attention to detail.
+          </p>
+          <div class="actions">
+            <a class="button primary" href="#work">View selected work ↗</a>
+            <a class="button secondary" href="#contact">Get in touch</a>
+          </div>
+        </div>
+        <aside class="profile-card" aria-label="Profile summary">
+          <div class="monogram">AM</div>
+          <h2>Abdul Mueid</h2>
+          <div class="role">Software Developer</div>
+          <div class="profile-detail">
+            <small>Qualification</small>
+            <strong>Master's Degree</strong>
+          </div>
+          <div class="profile-detail">
+            <small>Focus</small>
+            <strong>Web & Software Development</strong>
+          </div>
+          <div class="profile-detail">
+            <small>Approach</small>
+            <strong>Quality · Clarity · Continuous learning</strong>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">01 / About</div>
+            <h2 class="section-title">A thoughtful approach<br>to software.</h2>
+          </div>
+          <p class="section-intro">Good development is more than writing code. It is understanding a problem and delivering a solution people can use with confidence.</p>
+        </div>
+        <div class="about-grid">
+          <div class="about-copy">
+            <p>
+              I am Abdul Mueid. My interest in software development comes
+              from the opportunity to turn ideas into practical digital
+              solutions. I value clean structure, accessible interfaces,
+              maintainable code and a dependable user experience.
+            </p>
+            <p>
+              I enjoy learning new tools, exploring better ways to solve
+              problems and improving each project through planning,
+              implementation and testing.
+            </p>
+          </div>
+          <div class="principles">
+            <div class="principle"><span class="check">✓</span><div><strong>Problem-solving</strong><span>Break complex requirements into clear steps.</span></div></div>
+            <div class="principle"><span class="check">✓</span><div><strong>Clean implementation</strong><span>Build organised, readable and maintainable work.</span></div></div>
+            <div class="principle"><span class="check">✓</span><div><strong>User-focused design</strong><span>Keep interfaces intuitive and responsive.</span></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="work">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">02 / Selected work</div>
+            <h2 class="section-title">Projects & practice</h2>
+          </div>
+          <p class="section-intro">A selection of project types that demonstrate practical software and web development skills. Replace these examples with your completed work before publishing.</p>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <div class="card-number">PROJECT 01</div>
+            <h3>E-commerce experience</h3>
+            <p>A responsive storefront concept with product discovery, clear product details and a streamlined shopping journey.</p>
+            <div class="tags"><span>HTML</span><span>CSS</span><span>JavaScript</span></div>
+          </article>
+          <article class="card">
+            <div class="card-number">PROJECT 02</div>
+            <h3>Management dashboard</h3>
+            <p>An interface concept for presenting information, organising records and making common management tasks easier.</p>
+            <div class="tags"><span>JavaScript</span><span>UI Design</span><span>MySQL</span></div>
+          </article>
+          <article class="card">
+            <div class="card-number">PROJECT 03</div>
+            <h3>Full-stack web application</h3>
+            <p>A web application concept connecting a user interface with server-side logic and structured data.</p>
+            <div class="tags"><span>Node.js</span><span>MySQL</span><span>REST APIs</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="skills">
+      <div class="wrap skills-layout">
+        <div>
+          <div class="section-kicker">03 / Capabilities</div>
+          <h2 class="section-title">Tools for building<br>better solutions.</h2>
+          <p class="skills-copy" style="margin-top:17px">My technical interests span front-end interfaces, application logic and data management. The list below can be adjusted to match the technologies you have genuinely used.</p>
+        </div>
+        <div class="skill-groups">
+          <div class="skill-group"><h3>Front-end</h3><p>HTML5 · CSS3 · JavaScript · Responsive design</p></div>
+          <div class="skill-group"><h3>Back-end</h3><p>Node.js · Server-side fundamentals · REST APIs</p></div>
+          <div class="skill-group"><h3>Database</h3><p>MySQL · Relational data · SQL fundamentals</p></div>
+          <div class="skill-group"><h3>Workflow</h3><p>Git · Debugging · Testing · Documentation</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="education">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">04 / Education</div>
+            <h2 class="section-title">Academic background</h2>
+          </div>
+        </div>
+        <div class="education">
+          <article class="education-item">
+            <div class="label">Qualification</div>
+            <h3>Master's Degree</h3>
+            <p>Add your degree title, major, university and graduation year here.</p>
+          </article>
+          <article class="education-item">
+            <div class="label">Professional development</div>
+            <h3>Continuous learning</h3>
+            <p>Developing practical skills through independent learning, technical practice and project work.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="wrap">
+        <div class="contact-box">
+          <div>
+            <div class="section-kicker">05 / Contact</div>
+            <h2>Have a project in mind?<br>Let's start a conversation.</h2>
+            <p>For professional enquiries, collaborations or opportunities, feel free to reach out.</p>
+          </div>
+          <a class="button" href="mailto:your.email@example.com">Email Abdul ↗</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <span>© <span id="year"></span> Abdul Mueid. All rights reserved.</span>
+    <span>Designed with clarity and purpose.</span>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
