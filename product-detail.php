@@ -1,7 +1,8 @@
 <?php
 // =============================================================================
-// VALENOR HOROLOGY — PRODUCT DETAIL PAGE (Section 3.D)
-// 1–10 Image Gallery with Interactive Thumbnail Switcher, Specs, Reviews & Actions
+// VALENOR HOROLOGY — PRODUCT DETAIL PAGE (Section 3.D & Section 4)
+// Professional 1–10 Image Gallery with Interactive Thumbnails, Zoom, Variants, 
+// Specs, Customer Reviews & Verified Buyer Submission Modal
 // =============================================================================
 
 require_once __DIR__ . '/config/config.php';
@@ -39,10 +40,11 @@ if (!$product) {
     $pageTitle = "Product Not Found";
     require_once INCLUDES_PATH . '/header.php';
     require_once INCLUDES_PATH . '/navbar.php';
-    echo '<div class="container py-5 text-center">' .
+    echo '<div class="container py-5 text-center my-5">' .
+         '<i class="bi bi-watch fs-1 text-muted d-block mb-3"></i>' .
          '<h2 class="font-serif">Timepiece Not Found</h2>' .
          '<p class="text-muted">The timepiece you requested is currently unavailable or does not exist.</p>' .
-         '<a href="' . BASE_URL . '/products.php" class="btn btn-dark rounded-pill px-4">Browse Collection</a>' .
+         '<a href="' . BASE_URL . '/products.php" class="btn btn-dark rounded-pill px-4 mt-2">Explore All Collections</a>' .
          '</div>';
     require_once INCLUDES_PATH . '/footer.php';
     exit;
@@ -50,7 +52,7 @@ if (!$product) {
 
 $productId = (int)$product['id'];
 
-// Increment views count
+// Increment views count in database
 $db->prepare("UPDATE products SET views_count = views_count + 1 WHERE id = ?")->execute([$productId]);
 
 // 1. Fetch all product images (1–10 images, Section 4)
@@ -58,13 +60,13 @@ $imgStmt = $db->prepare("SELECT * FROM product_images WHERE product_id = ? ORDER
 $imgStmt->execute([$productId]);
 $images = $imgStmt->fetchAll();
 
-// 2. Fetch product tags & hashtags
-$tagStmt = $db->prepare("SELECT tag_name, tag_type FROM product_tags WHERE product_id = ?");
+// 2. Fetch product tags & hashtags (Section 5)
+$tagStmt = $db->prepare("SELECT tag_name, tag_type FROM product_tags WHERE product_id = ? ORDER BY tag_type DESC, id ASC");
 $tagStmt->execute([$productId]);
 $tags = $tagStmt->fetchAll();
 
 // 3. Fetch product variants (colors/sizes)
-$varStmt = $db->prepare("SELECT * FROM product_variants WHERE product_id = ?");
+$varStmt = $db->prepare("SELECT * FROM product_variants WHERE product_id = ? ORDER BY id ASC");
 $varStmt->execute([$productId]);
 $variants = $varStmt->fetchAll();
 
@@ -79,17 +81,19 @@ $revStmt = $db->prepare("
 $revStmt->execute([$productId]);
 $reviews = $revStmt->fetchAll();
 
-// Compute average rating
+// Compute average rating and count
 $totalRatings = count($reviews);
 $avgRating = $totalRatings > 0 ? array_sum(array_column($reviews, 'rating')) / $totalRatings : 5.0;
 
 // Specifications array
 $specs = !empty($product['specifications']) ? json_decode($product['specifications'], true) : [];
 
-// Related products
+// Related products in same category
 $relStmt = $db->prepare("
     SELECT p.*, c.name AS category_name, c.slug AS category_slug,
-           (SELECT image_path FROM product_images WHERE product_id = p.id AND is_primary = 1 LIMIT 1) AS primary_image
+           (SELECT image_path FROM product_images WHERE product_id = p.id AND is_primary = 1 LIMIT 1) AS primary_image,
+           (SELECT AVG(rating) FROM product_reviews WHERE product_id = p.id AND status = 'approved') AS avg_rating,
+           (SELECT COUNT(*) FROM product_reviews WHERE product_id = p.id AND status = 'approved') AS reviews_count
     FROM products p
     JOIN categories c ON p.category_id = c.id
     WHERE p.category_id = ? AND p.id != ? AND p.status = 'active'
@@ -100,6 +104,9 @@ $related = $relStmt->fetchAll();
 
 $pageTitle = $product['name'] . ' — ' . $product['category_name'];
 $pageDesc  = $product['short_description'];
+
+$isWishlisted = is_wishlisted($productId);
+$isCompared   = is_compared($productId);
 
 require_once INCLUDES_PATH . '/header.php';
 require_once INCLUDES_PATH . '/navbar.php';
@@ -122,23 +129,33 @@ require_once INCLUDES_PATH . '/navbar.php';
 <div class="container py-5">
     <div class="row g-5">
 
-        <!-- Left: Image Gallery (1–10 Images, Section 4) -->
+        <!-- ==================================================================
+             LEFT: IMAGE GALLERY (Section 4: 1 to 10 Images + Interactive Zoom)
+             ================================================================== -->
         <div class="col-lg-6">
             <div class="sticky-top" style="top:90px; z-index:1;">
-                <!-- Main Showcase Image -->
-                <div class="main-gallery-view mb-3 rounded border overflow-hidden position-relative bg-white" style="border-color:var(--border-beige) !important; padding-top:95%;">
+                
+                <!-- Main Showcase Image with Zoom -->
+                <div class="main-gallery-view mb-3 rounded border overflow-hidden position-relative bg-white" id="mainGalleryBox" style="border-color:var(--border-beige) !important; padding-top:95%; cursor:zoom-in;">
                     <?php 
                     $primaryImg = !empty($images) ? $images[0]['image_path'] : 'assets/images/watch-mens-chronograph.jpg';
                     ?>
-                    <img id="main-product-img" src="<?= e(BASE_URL . '/' . ltrim($primaryImg, '/')) ?>" alt="<?= e($product['name']) ?>" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; transition:opacity 0.25s ease;">
+                    <img id="main-product-img" src="<?= e(BASE_URL . '/' . ltrim($primaryImg, '/')) ?>" alt="<?= e($product['name']) ?>" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; transition:transform 0.25s ease, opacity 0.2s ease;">
+                    
                     <?php if (!empty($product['discount_percentage']) && $product['discount_percentage'] > 0): ?>
                         <span class="valenor-badge valenor-badge-sale position-absolute top-0 start-0 m-3 fs-6">
                             -<?= (int)$product['discount_percentage'] ?>% PRIVILEGE
                         </span>
                     <?php endif; ?>
+
+                    <div class="position-absolute bottom-0 end-0 m-3 d-flex gap-2">
+                        <button type="button" class="btn btn-sm btn-light border rounded-circle shadow-sm" id="btn-zoom-modal" title="Click to Expand Fullscreen" style="width:36px; height:36px;">
+                            <i class="bi bi-arrows-fullscreen"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Thumbnails Strip (Section 4: thumbnail click changes main image) -->
+                <!-- Thumbnails Strip (1 to 10 images) -->
                 <?php if (count($images) > 1): ?>
                     <div class="d-flex flex-wrap gap-2 justify-content-start" id="gallery-thumbnails">
                         <?php foreach ($images as $idx => $img): ?>
@@ -147,60 +164,91 @@ require_once INCLUDES_PATH . '/navbar.php';
                             </button>
                         <?php endforeach; ?>
                     </div>
+                    <div class="text-muted small mt-2">
+                        <i class="bi bi-info-circle me-1"></i> Showing <?= count($images) ?> high-resolution angles of this timepiece. Hover image to zoom.
+                    </div>
                 <?php endif; ?>
             </div>
         </div>
 
-        <!-- Right: Product Information & Controls -->
+        <!-- ==================================================================
+             RIGHT: PRODUCT SPECIFICATION & ORDER CONTROLS (Section 3.D)
+             ================================================================== -->
         <div class="col-lg-6">
-            <span class="text-uppercase fw-bold" style="color:var(--caramel-primary); letter-spacing:0.18em; font-size:0.78rem;">
-                <?= e($product['brand']) ?> &bull; <?= e($product['category_name']) ?>
-            </span>
+            <!-- Brand & Category -->
+            <div class="d-flex align-items-center justify-content-between mb-1">
+                <span class="text-uppercase fw-bold" style="color:var(--caramel-primary); letter-spacing:0.18em; font-size:0.78rem;">
+                    <?= e($product['brand']) ?> &bull; <?= e($product['category_name']) ?>
+                </span>
+                <span class="badge bg-light text-muted border" style="font-size:0.75rem;">
+                    SKU: <strong id="product-sku-display"><?= e($product['sku']) ?></strong>
+                </span>
+            </div>
+
             <h1 class="display-6 font-serif fw-bold mt-1 mb-2" style="color:var(--text-charcoal); line-height:1.2;">
                 <?= e($product['name']) ?>
             </h1>
 
+            <!-- Ratings, Reviews & Views -->
             <div class="d-flex align-items-center gap-3 mb-3">
-                <?= star_rating_html($avgRating, $totalRatings) ?>
-                <span class="text-muted">&bull;</span>
-                <span class="text-muted small">SKU: <strong><?= e($product['sku']) ?></strong></span>
+                <a href="#reviews-pane" onclick="document.getElementById('reviews-tab').click();" class="text-decoration-none">
+                    <?= star_rating_html($avgRating, $totalRatings) ?>
+                </a>
                 <span class="text-muted">&bull;</span>
                 <span class="text-muted small"><i class="bi bi-eye me-1"></i><?= (int)$product['views_count'] ?> views</span>
+                <span class="text-muted">&bull;</span>
+                <span class="text-success small fw-semibold"><i class="bi bi-patch-check-fill me-1"></i>Official Warranty</span>
             </div>
 
-            <!-- Price Display -->
+            <!-- Price Display (Section 3.D) -->
             <div class="p-3 rounded mb-4" style="background-color:var(--bg-cream); border:1px solid var(--border-beige);">
                 <div class="d-flex align-items-baseline gap-3">
-                    <span class="fs-2 fw-bold" style="color:var(--caramel-dark);">
+                    <span class="fs-2 fw-bold" id="product-display-price" style="color:var(--caramel-dark);">
                         <?= format_price($product['discount_price'] ?: $product['regular_price']) ?>
                     </span>
                     <?php if (!empty($product['discount_price']) && $product['discount_price'] < $product['regular_price']): ?>
-                        <span class="fs-5 text-muted text-decoration-line-through">
+                        <span class="fs-5 text-muted text-decoration-line-through" id="product-regular-price">
                             <?= format_price($product['regular_price']) ?>
                         </span>
-                        <span class="badge bg-danger">Save <?= format_price($product['regular_price'] - $product['discount_price']) ?></span>
+                        <span class="badge bg-danger" id="product-save-badge">Save <?= format_price($product['regular_price'] - $product['discount_price']) ?></span>
                     <?php endif; ?>
                 </div>
-                <div class="mt-1 text-muted small">
-                    <i class="bi bi-shield-check text-success me-1"></i> Inclusive of insured BlueEx nationwide delivery and luxury presentation packaging.
+                <div class="mt-2 text-muted small d-flex flex-wrap gap-3">
+                    <span><i class="bi bi-truck text-success me-1"></i> Free Insured Delivery</span>
+                    <span><i class="bi bi-cash me-1 text-primary"></i> Cash on Delivery (COD) Eligible</span>
+                    <span><i class="bi bi-box-seam me-1 text-warning"></i> Luxury Presentation Box</span>
                 </div>
             </div>
 
-            <!-- Short Description -->
+            <!-- Short Description (Section 3.D) -->
             <p class="lead mb-4" style="font-size:1.02rem; line-height:1.7; color:#444;">
                 <?= e($product['short_description']) ?>
             </p>
 
-            <!-- Variants (Colors / Sizes) -->
+            <!-- Product Variants: Colors and Sizes (Section 3.D & 5) -->
             <?php if (!empty($variants)): ?>
-                <div class="mb-4">
-                    <label class="form-label fw-bold small text-uppercase" style="letter-spacing:0.1em; color:var(--text-charcoal);">Select Edition / Variant:</label>
-                    <div class="d-flex flex-wrap gap-2" id="variant-selector">
+                <div class="mb-4 p-3 bg-white rounded border" style="border-color:var(--border-beige) !important;">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label class="form-label fw-bold small text-uppercase mb-0" style="letter-spacing:0.08em; color:var(--text-charcoal);">
+                            Available Editions &amp; Straps:
+                        </label>
+                        <span class="small text-muted" id="selected-variant-label">Selected: <?= e($variants[0]['color'] ?: 'Standard') ?></span>
+                    </div>
+                    
+                    <div class="d-flex flex-wrap gap-2" id="variant-selector-group">
                         <?php foreach ($variants as $idx => $v): ?>
-                            <button type="button" class="btn btn-sm btn-outline-dark variant-pill <?= $idx === 0 ? 'active' : '' ?>" data-variant-id="<?= (int)$v['id'] ?>" data-additional="<?= (float)$v['additional_price'] ?>" style="font-size:0.82rem; border-color:var(--border-beige);">
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-dark variant-btn <?= $idx === 0 ? 'active' : '' ?>" 
+                                    data-variant-id="<?= (int)$v['id'] ?>" 
+                                    data-variant-name="<?= e($v['color'] ?: 'Standard') ?> <?= $v['size'] ? '— ' . e($v['size']) : '' ?>"
+                                    data-additional="<?= (float)$v['additional_price'] ?>"
+                                    data-stock="<?= (int)$v['stock_quantity'] ?>"
+                                    data-sku="<?= e($v['sku']) ?>"
+                                    style="font-size:0.84rem; border-color:var(--border-beige);">
+                                <i class="bi bi-circle-fill me-1 small" style="color:var(--caramel-primary);"></i>
                                 <?= e($v['color'] ?: 'Standard') ?> <?= $v['size'] ? '— ' . e($v['size']) : '' ?>
                                 <?php if ($v['additional_price'] > 0): ?>
-                                    (+<?= format_price($v['additional_price']) ?>)
+                                    <span class="badge bg-light text-dark ms-1">+<?= format_price($v['additional_price']) ?></span>
                                 <?php endif; ?>
                             </button>
                         <?php endforeach; ?>
@@ -208,20 +256,20 @@ require_once INCLUDES_PATH . '/navbar.php';
                 </div>
             <?php endif; ?>
 
-            <!-- Stock Status & Quantity Selector -->
+            <!-- Stock Availability & Quantity Selector (Section 3.D) -->
             <div class="row g-3 align-items-center mb-4">
                 <div class="col-auto">
-                    <label class="form-label fw-bold small text-uppercase mb-1" style="letter-spacing:0.1em;">Quantity:</label>
-                    <div class="input-group input-group-sm" style="width:120px;">
-                        <button class="btn btn-outline-secondary" type="button" id="qty-minus">-</button>
-                        <input type="number" id="detail-qty" class="form-control text-center" value="1" min="1" max="<?= max(1, (int)$product['stock_quantity']) ?>">
-                        <button class="btn btn-outline-secondary" type="button" id="qty-plus">+</button>
+                    <label class="form-label fw-bold small text-uppercase mb-1" style="letter-spacing:0.08em;">Quantity:</label>
+                    <div class="input-group input-group-sm" style="width:130px;">
+                        <button class="btn btn-outline-secondary px-3" type="button" id="qty-minus" aria-label="Decrease quantity">-</button>
+                        <input type="number" id="detail-qty" class="form-control text-center fw-bold" value="1" min="1" max="<?= max(1, (int)$product['stock_quantity']) ?>">
+                        <button class="btn btn-outline-secondary px-3" type="button" id="qty-plus" aria-label="Increase quantity">+</button>
                     </div>
                 </div>
                 <div class="col">
-                    <div class="small fw-semibold mt-3">
+                    <div class="small fw-semibold mt-3" id="stock-status-box">
                         <?php if ($product['stock_quantity'] > 0): ?>
-                            <span class="text-success"><i class="bi bi-check-circle-fill me-1"></i> In Stock (<?= (int)$product['stock_quantity'] ?> units ready for dispatch)</span>
+                            <span class="text-success"><i class="bi bi-check-circle-fill me-1"></i> In Stock (<span id="available-stock-count"><?= (int)$product['stock_quantity'] ?></span> timepieces available)</span>
                         <?php else: ?>
                             <span class="text-danger"><i class="bi bi-x-circle-fill me-1"></i> Temporarily Out of Stock</span>
                         <?php endif; ?>
@@ -229,50 +277,59 @@ require_once INCLUDES_PATH . '/navbar.php';
                 </div>
             </div>
 
-            <!-- Action Buttons (Add to Cart, Buy Now, Wishlist, Compare) -->
-            <div class="d-flex flex-wrap gap-3 mb-4">
-                <button type="button" class="btn-valenor-primary flex-grow-1 justify-content-center btn-add-cart" data-product-id="<?= $productId ?>" data-quantity="1">
+            <!-- Action Buttons: Add to Cart, Buy Now, Wishlist, Compare (Section 3.D) -->
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                <!-- Add to Cart (AJAX) -->
+                <button type="button" class="btn-valenor-primary flex-grow-1 justify-content-center btn-detail-add-cart" id="btn-detail-add" data-product-id="<?= $productId ?>">
                     <i class="bi bi-bag-plus"></i> Add to Shopping Bag
                 </button>
-                <a href="<?= BASE_URL ?>/cart.php" class="btn btn-dark rounded px-4 py-2 fw-semibold d-inline-flex align-items-center" style="font-size:0.85rem; letter-spacing:0.05em; text-transform:uppercase;">
-                    View Bag
-                </a>
-                <button type="button" class="btn btn-outline-dark rounded btn-toggle-wishlist <?= is_wishlisted($productId) ? 'active' : '' ?>" data-product-id="<?= $productId ?>" title="Save to Wishlist" style="border-color:var(--border-beige);">
-                    <i class="bi <?= is_wishlisted($productId) ? 'bi-heart-fill text-danger' : 'bi-heart' ?>"></i>
+
+                <!-- Buy Now (Direct Add & Redirect) -->
+                <button type="button" class="btn btn-dark rounded px-4 py-2 fw-semibold d-inline-flex align-items-center gap-2" id="btn-buy-now" style="font-size:0.85rem; letter-spacing:0.05em; text-transform:uppercase;">
+                    <i class="bi bi-lightning-charge-fill text-warning"></i> Buy Now
                 </button>
-                <button type="button" class="btn btn-outline-dark rounded btn-toggle-compare <?= is_compared($productId) ? 'active' : '' ?>" data-product-id="<?= $productId ?>" title="Add to Comparison" style="border-color:var(--border-beige);">
+
+                <!-- Wishlist Button -->
+                <button type="button" class="btn btn-outline-dark rounded btn-toggle-wishlist <?= $isWishlisted ? 'active' : '' ?>" data-product-id="<?= $productId ?>" title="<?= $isWishlisted ? 'Remove from Wishlist' : 'Save to Wishlist' ?>" style="border-color:var(--border-beige); min-width:44px;" aria-label="Add to Wishlist">
+                    <i class="bi <?= $isWishlisted ? 'bi-heart-fill text-danger' : 'bi-heart' ?>"></i>
+                </button>
+
+                <!-- Compare Button -->
+                <button type="button" class="btn btn-outline-dark rounded btn-toggle-compare <?= $isCompared ? 'active' : '' ?>" data-product-id="<?= $productId ?>" title="<?= $isCompared ? 'Remove from Comparison' : 'Add to Comparison' ?>" style="border-color:var(--border-beige); min-width:44px;" aria-label="Compare Product">
                     <i class="bi bi-arrow-left-right"></i>
                 </button>
             </div>
 
-            <!-- Tags & Hashtags (Section 5) -->
+            <!-- Product Tags & Hashtags (Section 3.D & 5) -->
             <?php if (!empty($tags)): ?>
                 <div class="mb-4">
-                    <span class="small text-muted me-2">Tags:</span>
+                    <span class="small text-muted me-2"><i class="bi bi-tags me-1"></i>Tags:</span>
                     <?php foreach ($tags as $t): ?>
-                        <span class="badge bg-light text-dark border me-1 mb-1" style="font-size:0.75rem; border-color:var(--border-beige) !important;">
+                        <a href="<?= BASE_URL ?>/products.php?q=<?= urlencode($t['tag_name']) ?>" class="badge bg-light text-dark border me-1 mb-1 text-decoration-none" style="font-size:0.75rem; border-color:var(--border-beige) !important;">
                             <?= e($t['tag_name']) ?>
-                        </span>
+                        </a>
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
 
-            <!-- Confidence Points -->
-            <div class="p-3 border rounded bg-white" style="border-color:var(--border-beige) !important; font-size:0.85rem;">
+            <!-- Trust Markers Banner -->
+            <div class="p-3 border rounded bg-white" style="border-color:var(--border-beige) !important; font-size:0.84rem;">
                 <div class="row g-2">
-                    <div class="col-6"><i class="bi bi-shield-check text-success me-1"></i> 100% Authentic Timepiece</div>
-                    <div class="col-6"><i class="bi bi-truck text-primary me-1"></i> Insured Courier Delivery</div>
-                    <div class="col-6"><i class="bi bi-arrow-counterclockwise text-warning me-1"></i> 14-Day Inspection Window</div>
-                    <div class="col-6"><i class="bi bi-cash-stack text-success me-1"></i> Cash on Delivery Allowed</div>
+                    <div class="col-sm-6"><i class="bi bi-patch-check-fill text-success me-1"></i> 100% Certified Authentic</div>
+                    <div class="col-sm-6"><i class="bi bi-truck text-primary me-1"></i> BlueEx Insured Courier Delivery</div>
+                    <div class="col-sm-6"><i class="bi bi-arrow-counterclockwise text-warning me-1"></i> 14-Day Complimentary Returns</div>
+                    <div class="col-sm-6"><i class="bi bi-shield-lock-fill text-success me-1"></i> 2-Year International Warranty</div>
                 </div>
             </div>
 
         </div>
     </div>
 
-    <!-- Product Full Description & Specifications Tabs -->
+    <!-- ==================================================================
+         TABS: DESCRIPTION, SPECIFICATIONS & REVIEWS (Section 3.D)
+         ================================================================== -->
     <div class="mt-5 pt-4 border-top" style="border-color:var(--border-beige) !important;">
-        <ul class="nav nav-tabs justify-content-center border-0 gap-3" id="productTabs" role="tablist">
+        <ul class="nav nav-tabs justify-content-center border-0 gap-3" id="productDetailTabs" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active px-4 py-2 fw-bold font-serif fs-5" id="desc-tab" data-bs-toggle="tab" data-bs-target="#desc-pane" type="button" role="tab" style="color:var(--text-charcoal); border:none; border-bottom:2px solid var(--caramel-primary);">
                     Full Description
@@ -285,70 +342,121 @@ require_once INCLUDES_PATH . '/navbar.php';
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link px-4 py-2 fw-bold font-serif fs-5 text-muted" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews-pane" type="button" role="tab" style="border:none;">
-                    Customer Reviews (<?= $totalRatings ?>)
+                    Client Reviews (<?= $totalRatings ?>)
                 </button>
             </li>
         </ul>
 
-        <div class="tab-content pt-4" id="productTabsContent">
-            <!-- Tab 1: Description -->
+        <div class="tab-content pt-4" id="productDetailTabsContent">
+            
+            <!-- Tab 1: Full Description -->
             <div class="tab-pane fade show active" id="desc-pane" role="tabpanel" tabindex="0">
-                <div class="mx-auto" style="max-width:800px; line-height:1.8; color:#333;">
+                <div class="mx-auto bg-white p-4 rounded border" style="max-width:850px; line-height:1.8; color:#333; border-color:var(--border-beige) !important;">
+                    <h4 class="font-serif fw-bold mb-3" style="color:var(--caramel-dark);">Master Craftsmanship &amp; Heritage</h4>
                     <p><?= nl2br(e($product['full_description'])) ?></p>
                 </div>
             </div>
 
-            <!-- Tab 2: Specifications -->
+            <!-- Tab 2: Specifications Table (Section 3.D) -->
             <div class="tab-pane fade" id="specs-pane" role="tabpanel" tabindex="0">
-                <div class="mx-auto" style="max-width:750px;">
-                    <table class="table table-bordered table-striped" style="border-color:var(--border-beige);">
-                        <tbody>
-                            <tr><th style="width:35%; background:var(--bg-cream);">Brand &amp; Model</th><td><?= e($product['brand'] . ' ' . $product['name']) ?></td></tr>
-                            <tr><th style="background:var(--bg-cream);">Master Category</th><td><?= e($product['category_name']) ?></td></tr>
-                            <tr><th style="background:var(--bg-cream);">Reference SKU</th><td><?= e($product['sku']) ?></td></tr>
-                            <?php if (!empty($specs)): ?>
-                                <?php foreach ($specs as $s): ?>
-                                    <tr>
-                                        <th style="background:var(--bg-cream);"><?= e($s['key']) ?></th>
-                                        <td><?= e($s['value']) ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
+                <div class="mx-auto" style="max-width:850px;">
+                    <div class="bg-white rounded border overflow-hidden" style="border-color:var(--border-beige) !important;">
+                        <table class="table table-bordered table-striped mb-0" style="border-color:var(--border-beige);">
+                            <tbody>
+                                <tr>
+                                    <th style="width:35%; background:var(--bg-cream); color:var(--text-charcoal);">Brand</th>
+                                    <td><?= e($product['brand']) ?></td>
+                                </tr>
+                                <tr>
+                                    <th style="background:var(--bg-cream); color:var(--text-charcoal);">Model / Series</th>
+                                    <td><?= e($product['name']) ?></td>
+                                </tr>
+                                <tr>
+                                    <th style="background:var(--bg-cream); color:var(--text-charcoal);">Master Category</th>
+                                    <td><?= e($product['category_name']) ?></td>
+                                </tr>
+                                <tr>
+                                    <th style="background:var(--bg-cream); color:var(--text-charcoal);">Model Reference (SKU)</th>
+                                    <td><?= e($product['sku']) ?></td>
+                                </tr>
+                                <?php if (!empty($specs)): ?>
+                                    <?php foreach ($specs as $s): ?>
+                                        <tr>
+                                            <th style="background:var(--bg-cream); color:var(--text-charcoal);"><?= e($s['key']) ?></th>
+                                            <td><?= e($s['value']) ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- Tab 3: Reviews -->
+            <!-- Tab 3: Customer Reviews & Submission Modal (Section 3.D) -->
             <div class="tab-pane fade" id="reviews-pane" role="tabpanel" tabindex="0">
-                <div class="mx-auto" style="max-width:800px;">
+                <div class="mx-auto" style="max-width:850px;">
+                    
+                    <!-- Review Aggregate Bar -->
+                    <div class="p-4 bg-white border rounded mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3" style="border-color:var(--border-beige) !important;">
+                        <div>
+                            <h4 class="mb-1 font-serif fw-bold" style="color:var(--caramel-dark);">Customer Experience</h4>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="display-6 fw-bold text-dark"><?= number_format($avgRating, 1) ?></span>
+                                <div>
+                                    <?= star_rating_html($avgRating) ?>
+                                    <div class="text-muted small">Based on <?= $totalRatings ?> verified reviews</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-dark rounded-pill px-4 py-2" data-bs-toggle="modal" data-bs-target="#reviewModal">
+                                <i class="bi bi-pencil-square me-1"></i> Write a Client Review
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Reviews List -->
                     <?php if (!empty($reviews)): ?>
                         <?php foreach ($reviews as $rev): ?>
-                            <div class="p-3 bg-white border rounded mb-3" style="border-color:var(--border-beige) !important;">
+                            <div class="p-4 bg-white border rounded mb-3" style="border-color:var(--border-beige) !important;">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <div class="d-flex align-items-center gap-2">
-                                        <strong style="color:var(--text-charcoal);"><?= e($rev['customer_name']) ?></strong>
-                                        <span class="badge bg-success-subtle text-success small"><i class="bi bi-patch-check-fill me-1"></i>Verified Purchase</span>
+                                        <div class="rounded-circle bg-light d-flex align-items-center justify-content-center fw-bold" style="width:36px; height:36px; color:var(--caramel-dark); border:1px solid var(--border-beige);">
+                                            <?= strtoupper(substr($rev['customer_name'], 0, 1)) ?>
+                                        </div>
+                                        <div>
+                                            <strong style="color:var(--text-charcoal);"><?= e($rev['customer_name']) ?></strong>
+                                            <?php if ($rev['is_verified_purchase']): ?>
+                                                <span class="badge bg-success-subtle text-success small ms-2"><i class="bi bi-patch-check-fill me-1"></i>Verified Buyer</span>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
                                     <span class="text-muted small"><?= format_date($rev['created_at'], 'M d, Y') ?></span>
                                 </div>
                                 <div class="mb-2"><?= star_rating_html($rev['rating']) ?></div>
-                                <h6 class="fw-bold mb-1"><?= e($rev['title']) ?></h6>
-                                <p class="text-muted small mb-0"><?= e($rev['review_text']) ?></p>
+                                <h6 class="fw-bold mb-1" style="color:var(--text-charcoal);"><?= e($rev['title']) ?></h6>
+                                <p class="text-muted small mb-0" style="line-height:1.6;"><?= e($rev['review_text']) ?></p>
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <div class="text-center py-4 text-muted">
-                            <i class="bi bi-chat-heart fs-2 d-block mb-2"></i>
-                            No reviews submitted yet for this timepiece. Verified buyers can submit reviews after delivery.
+                        <div class="text-center py-5 bg-white rounded border" style="border-color:var(--border-beige) !important;">
+                            <i class="bi bi-chat-heart fs-1 text-muted d-block mb-2"></i>
+                            <h5 class="font-serif">No Reviews Yet</h5>
+                            <p class="text-muted small mb-3">Be the first distinguished owner to share your experience with this timepiece.</p>
+                            <button type="button" class="btn btn-outline-dark rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#reviewModal">
+                                Leave the First Review
+                            </button>
                         </div>
                     <?php endif; ?>
+
                 </div>
             </div>
+
         </div>
     </div>
 
-    <!-- Related Products -->
+    <!-- Related Products Showcase -->
     <?php if (!empty($related)): ?>
         <div class="mt-5 pt-5 border-top" style="border-color:var(--border-beige) !important;">
             <div class="text-center mb-4">
@@ -367,25 +475,151 @@ require_once INCLUDES_PATH . '/navbar.php';
 
 </div>
 
+<!-- ======================================================================
+     FULLSCREEN IMAGE LIGHTBOX MODAL
+     ====================================================================== -->
+<div class="modal fade" id="imageLightboxModal" tabindex="-1" aria-labelledby="imageLightboxLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-transparent border-0">
+            <div class="modal-header border-0 pb-0">
+                <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-0">
+                <img id="lightboxImg" src="<?= e(BASE_URL . '/' . ltrim($primaryImg, '/')) ?>" alt="<?= e($product['name']) ?>" class="img-fluid rounded shadow-lg" style="max-height:85vh; object-fit:contain;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ======================================================================
+     REVIEW SUBMISSION MODAL
+     ====================================================================== -->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-color:var(--border-beige);">
+            <div class="modal-header" style="background-color:var(--bg-cream); border-color:var(--border-beige);">
+                <h5 class="modal-title font-serif fw-bold" id="reviewModalLabel">Submit Horological Review</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="reviewSubmitForm">
+                <div class="modal-body p-4">
+                    <input type="hidden" name="product_id" value="<?= $productId ?>">
+                    
+                    <?php if (!is_logged_in()): ?>
+                        <div class="alert alert-warning small mb-3">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i> Please <a href="<?= BASE_URL ?>/login.php?redirect=product-detail.php?id=<?= $productId ?>" class="fw-bold alert-link">sign in to your account</a> to submit a verified timepiece review.
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="mb-3 text-center">
+                        <label class="form-label fw-bold small text-uppercase d-block">Overall Rating</label>
+                        <div class="star-rating-selector fs-3" id="starSelector" style="color:var(--caramel-primary); cursor:pointer;">
+                            <i class="bi bi-star-fill" data-rating="1"></i>
+                            <i class="bi bi-star-fill" data-rating="2"></i>
+                            <i class="bi bi-star-fill" data-rating="3"></i>
+                            <i class="bi bi-star-fill" data-rating="4"></i>
+                            <i class="bi bi-star-fill" data-rating="5"></i>
+                        </div>
+                        <input type="hidden" name="rating" id="selectedRatingInput" value="5">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="reviewTitleInput" class="form-label small fw-bold text-uppercase">Review Headline</label>
+                        <input type="text" name="title" id="reviewTitleInput" class="form-control" placeholder="e.g. Masterful finish and exceptional precision" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="reviewTextInput" class="form-label small fw-bold text-uppercase">Your Detailed Experience</label>
+                        <textarea name="review_text" id="reviewTextInput" class="form-control" rows="4" placeholder="Detail your thoughts regarding case finishing, caliber accuracy, and strap comfort..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-color:var(--border-beige);">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-dark rounded-pill px-4" <?= !is_logged_in() ? 'disabled' : '' ?>>
+                        Publish Review
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
-// Thumbnail Switcher
+// State variables
+let currentSelectedVariantId = <?= !empty($variants) ? (int)$variants[0]['id'] : 'null' ?>;
+const baseRegularPrice = <?= (float)$product['regular_price'] ?>;
+const baseDiscountPrice = <?= !empty($product['discount_price']) ? (float)$product['discount_price'] : 0 ?>;
+
+// 1. Thumbnail Switcher
 document.querySelectorAll('.gallery-thumb-btn').forEach(btn => {
     btn.addEventListener('click', function () {
         const src = this.dataset.src;
         const mainImg = document.getElementById('main-product-img');
+        const lightboxImg = document.getElementById('lightboxImg');
         if (src && mainImg) {
             mainImg.style.opacity = '0.3';
             setTimeout(() => {
                 mainImg.src = src;
+                if (lightboxImg) lightboxImg.src = src;
                 mainImg.style.opacity = '1';
-            }, 150);
+            }, 120);
             document.querySelectorAll('.gallery-thumb-btn').forEach(b => b.classList.remove('border-primary'));
             this.classList.add('border-primary');
         }
     });
 });
 
-// Quantity Selector
+// 2. Interactive Image Zoom on Hover
+const galleryBox = document.getElementById('mainGalleryBox');
+const mainImg = document.getElementById('main-product-img');
+if (galleryBox && mainImg) {
+    galleryBox.addEventListener('mousemove', function (e) {
+        const rect = galleryBox.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        mainImg.style.transformOrigin = `${x}% ${y}%`;
+        mainImg.style.transform = 'scale(1.65)';
+    });
+    galleryBox.addEventListener('mouseleave', function () {
+        mainImg.style.transform = 'scale(1)';
+        mainImg.style.transformOrigin = 'center center';
+    });
+}
+
+// Lightbox modal toggle
+document.getElementById('btn-zoom-modal')?.addEventListener('click', () => {
+    const modal = new bootstrap.Modal(document.getElementById('imageLightboxModal'));
+    modal.show();
+});
+
+// 3. Variant Selector Interactions
+document.querySelectorAll('.variant-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+        document.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+
+        currentSelectedVariantId = parseInt(this.dataset.variantId);
+        const addPrice = parseFloat(this.dataset.additional) || 0;
+        const sku = this.dataset.sku;
+        const stock = parseInt(this.dataset.stock) || 0;
+        const vName = this.dataset.variantName;
+
+        // Update SKU display
+        if (sku) document.getElementById('product-sku-display').innerText = sku;
+        if (vName) document.getElementById('selected-variant-label').innerText = 'Selected: ' + vName;
+
+        // Update Price display
+        const displayPriceEl = document.getElementById('product-display-price');
+        const finalPrice = (baseDiscountPrice > 0 ? baseDiscountPrice : baseRegularPrice) + addPrice;
+        displayPriceEl.innerText = 'Rs. ' + finalPrice.toLocaleString('en-PK', {minimumFractionDigits: 2});
+
+        // Update Stock
+        const stockCountEl = document.getElementById('available-stock-count');
+        if (stockCountEl) stockCountEl.innerText = stock;
+    });
+});
+
+// 4. Quantity Controls
 const qtyInput = document.getElementById('detail-qty');
 document.getElementById('qty-minus')?.addEventListener('click', () => {
     let val = parseInt(qtyInput.value) || 1;
@@ -395,6 +629,99 @@ document.getElementById('qty-plus')?.addEventListener('click', () => {
     let val = parseInt(qtyInput.value) || 1;
     let max = parseInt(qtyInput.max) || 99;
     if (val < max) qtyInput.value = val + 1;
+});
+
+// 5. Add to Shopping Bag (AJAX)
+document.getElementById('btn-detail-add')?.addEventListener('click', function () {
+    const qty = parseInt(qtyInput.value) || 1;
+    const prodId = <?= $productId ?>;
+    
+    fetch('<?= BASE_URL ?>/ajax/cart.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+            action: 'add',
+            product_id: prodId,
+            variant_id: currentSelectedVariantId || '',
+            quantity: qty
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            document.querySelectorAll('.cart-badge').forEach(b => b.textContent = data.cart_count);
+            showValenorToast(data.message, 'success');
+        } else {
+            showValenorToast(data.message, 'danger');
+        }
+    })
+    .catch(() => showValenorToast('Could not add to shopping bag. Please try again.', 'danger'));
+});
+
+// 6. Buy Now (Direct Add & Redirect to Cart/Checkout)
+document.getElementById('btn-buy-now')?.addEventListener('click', function () {
+    const qty = parseInt(qtyInput.value) || 1;
+    const prodId = <?= $productId ?>;
+
+    fetch('<?= BASE_URL ?>/ajax/cart.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+            action: 'add',
+            product_id: prodId,
+            variant_id: currentSelectedVariantId || '',
+            quantity: qty
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = '<?= BASE_URL ?>/cart.php';
+        } else {
+            showValenorToast(data.message, 'danger');
+        }
+    })
+    .catch(() => {
+        window.location.href = '<?= BASE_URL ?>/cart.php';
+    });
+});
+
+// 7. Interactive Star Rating in Review Modal
+const stars = document.querySelectorAll('#starSelector i');
+stars.forEach(star => {
+    star.addEventListener('click', function () {
+        const rating = parseInt(this.dataset.rating);
+        document.getElementById('selectedRatingInput').value = rating;
+        stars.forEach((s, idx) => {
+            if (idx < rating) {
+                s.className = 'bi bi-star-fill';
+            } else {
+                s.className = 'bi bi-star';
+            }
+        });
+    });
+});
+
+// 8. Review Form Submission (AJAX)
+document.getElementById('reviewSubmitForm')?.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    
+    fetch('<?= BASE_URL ?>/ajax/review.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            showValenorToast(data.message, 'success');
+            bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
+            setTimeout(() => location.reload(), 1200);
+        } else {
+            showValenorToast(data.message, 'danger');
+        }
+    })
+    .catch(() => showValenorToast('Failed to submit review.', 'danger'));
 });
 </script>
 

@@ -73,3 +73,4 @@ if ($action === 'toggle') {
 }
 
 echo json_encode(['success' => false, 'message' => 'Invalid request.']);
+

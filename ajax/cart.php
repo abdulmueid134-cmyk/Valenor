@@ -112,3 +112,4 @@ if ($action === 'add') {
 }
 
 echo json_encode(['success' => false, 'message' => 'Unsupported action.']);
+

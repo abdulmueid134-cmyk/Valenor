@@ -19,3 +19,4 @@ echo json_encode([
     'success' => true,
     'message' => 'Thank you for subscribing to the VALENOR Horology Gazette. Welcome code <strong>WELCOME10</strong> is now active.'
 ]);
+

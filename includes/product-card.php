@@ -119,3 +119,4 @@ function render_product_card($product) {
     <?php
     return ob_get_clean();
 }
+

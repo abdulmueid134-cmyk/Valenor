@@ -25,3 +25,4 @@ if (is_file($target) && substr($target, -4) === '.php') {
 
 // Fallback to index.php
 require $rootDir . '/index.php';
+

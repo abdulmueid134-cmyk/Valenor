@@ -188,3 +188,4 @@ $cartUrl = is_logged_in() ? BASE_URL . '/cart.php' : BASE_URL . '/login.php?redi
         </div>
     </div>
 </div>
+

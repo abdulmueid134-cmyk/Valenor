@@ -111,3 +111,4 @@ $footAddress = $footerSettings['store_address'] ?? 'Suite 402, Executive Horolog
 <script src="<?= BASE_URL ?>/assets/js/main.js"></script>
 </body>
 </html>
+

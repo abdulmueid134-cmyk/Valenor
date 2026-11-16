@@ -174,3 +174,4 @@ require_once INCLUDES_PATH . '/navbar.php';
 </div>
 
 <?php require_once INCLUDES_PATH . '/footer.php'; ?>
+
