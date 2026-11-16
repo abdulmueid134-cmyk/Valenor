@@ -535,9 +535,10 @@ function upload_image($file, $destinationDir, $prefix = 'img') {
         return ['success' => false, 'error' => 'Failed to save uploaded file.'];
     }
 
-    // Compute path relative to uploads/
-    $relPath = str_replace(UPLOADS_PATH . DIRECTORY_SEPARATOR, '', $targetPath);
-    $relPath = str_replace('\\', '/', $relPath);
+    // Compute path relative to project root (e.g. uploads/products/...)
+    $normTarget = str_replace('\\', '/', $targetPath);
+    $normUploads = str_replace('\\', '/', UPLOADS_PATH);
+    $relPath = ltrim(str_replace($normUploads, '', $normTarget), '/');
 
     return [
         'success'   => true,

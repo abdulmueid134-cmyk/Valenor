@@ -93,3 +93,4 @@ try {
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => 'Failed to save review. Please try again.']);
 }
+
