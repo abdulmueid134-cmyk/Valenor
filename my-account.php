@@ -20,6 +20,40 @@ $ordCount = $db->prepare("SELECT COUNT(*) FROM orders WHERE customer_id = ?");
 $ordCount->execute([$customerId]);
 $totalOrders = (int)$ordCount->fetchColumn();
 
+// Handle profile update
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
+    if (!verify_csrf()) {
+        set_flash('danger', 'Security session expired.');
+    } else {
+        $fn = sanitize($_POST['first_name'] ?? '');
+        $ln = sanitize($_POST['last_name'] ?? '');
+        $ph = sanitize($_POST['phone'] ?? '');
+        $pw = $_POST['new_password'] ?? '';
+
+        if (!empty($fn) && !empty($ln) && !empty($ph)) {
+            if (!empty($pw)) {
+                if (strlen($pw) < 6) {
+                    set_flash('danger', 'New password must be at least 6 characters.');
+                } else {
+                    $db->prepare("UPDATE customers SET first_name = ?, last_name = ?, phone = ?, password_hash = ?, updated_at = NOW() WHERE id = ?")
+                       ->execute([$fn, $ln, $ph, password_hash($pw, PASSWORD_BCRYPT), $customerId]);
+                    $_SESSION['customer_name'] = $fn . ' ' . $ln;
+                    set_flash('success', 'Profile and password updated successfully.');
+                }
+            } else {
+                $db->prepare("UPDATE customers SET first_name = ?, last_name = ?, phone = ?, updated_at = NOW() WHERE id = ?")
+                   ->execute([$fn, $ln, $ph, $customerId]);
+                $_SESSION['customer_name'] = $fn . ' ' . $ln;
+                set_flash('success', 'Profile updated successfully.');
+            }
+        } else {
+            set_flash('danger', 'First name, last name, and phone cannot be empty.');
+        }
+    }
+    header('Location: ' . BASE_URL . '/my-account.php');
+    exit;
+}
+
 $pageTitle = 'Collector Account Profile';
 require_once INCLUDES_PATH . '/header.php';
 require_once INCLUDES_PATH . '/navbar.php';
@@ -90,7 +124,44 @@ require_once INCLUDES_PATH . '/navbar.php';
 
             <!-- Profile Overview Card -->
             <div class="card p-4 bg-white border mb-4" style="border-color:var(--border-beige) !important; border-radius:8px;">
-                <h4 class="font-serif fw-bold mb-3">Profile Details</h4>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="font-serif fw-bold mb-0">Profile Details</h4>
+                    <button class="btn btn-sm btn-outline-dark" type="button" data-bs-toggle="collapse" data-bs-target="#editProfileCollapse" style="border-color:var(--border-beige);">
+                        <i class="bi bi-pencil-square me-1"></i> Edit Profile
+                    </button>
+                </div>
+
+                <!-- Edit Profile Collapse -->
+                <div class="collapse mb-4" id="editProfileCollapse">
+                    <form method="POST" action="<?= BASE_URL ?>/my-account.php" class="p-3 bg-light rounded border" style="border-color:var(--border-beige) !important;">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="update_profile" value="1">
+
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <label class="form-label small fw-bold text-uppercase">First Name</label>
+                                <input type="text" name="first_name" class="form-control form-control-sm" value="<?= e($user['first_name']) ?>" required>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label small fw-bold text-uppercase">Last Name</label>
+                                <input type="text" name="last_name" class="form-control form-control-sm" value="<?= e($user['last_name']) ?>" required>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label small fw-bold text-uppercase">Phone</label>
+                                <input type="tel" name="phone" class="form-control form-control-sm" value="<?= e($user['phone']) ?>" required>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label small fw-bold text-uppercase">New Password (Optional)</label>
+                                <input type="password" name="new_password" class="form-control form-control-sm" placeholder="Leave blank to keep current">
+                            </div>
+                            <div class="col-12 text-end">
+                                <button type="button" class="btn btn-sm btn-secondary me-2" data-bs-toggle="collapse" data-bs-target="#editProfileCollapse">Cancel</button>
+                                <button type="submit" class="btn btn-sm btn-dark">Save Changes</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
                 <div class="row g-3">
                     <div class="col-sm-6">
                         <label class="text-muted small">First Name</label>

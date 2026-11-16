@@ -143,11 +143,15 @@ require_once INCLUDES_PATH . '/navbar.php';
                                             </div>
                                         </td>
                                         <td class="text-center">
-                                            <form method="POST" action="<?= BASE_URL ?>/cart.php" class="d-inline-flex align-items-center justify-content-center gap-1">
+                                            <form method="POST" action="<?= BASE_URL ?>/cart.php" class="d-inline-flex align-items-center justify-content-center">
                                                 <?= csrf_field() ?>
                                                 <input type="hidden" name="action" value="update_qty">
                                                 <input type="hidden" name="cart_item_id" value="<?= (int)$item['cart_item_id'] ?>">
-                                                <input type="number" name="quantity" class="form-control form-control-sm text-center" value="<?= (int)$item['quantity'] ?>" min="1" max="<?= (int)$item['stock_quantity'] ?>" style="width:65px;" onchange="this.form.submit()">
+                                                <div class="input-group input-group-sm" style="width:110px;">
+                                                    <button class="btn btn-outline-secondary px-2" type="button" onclick="const inp=this.nextElementSibling; if(parseInt(inp.value)>1){inp.value=parseInt(inp.value)-1; inp.form.submit();}" aria-label="Decrease quantity">-</button>
+                                                    <input type="number" name="quantity" class="form-control form-control-sm text-center fw-bold px-1" value="<?= (int)$item['quantity'] ?>" min="1" max="<?= (int)$item['stock_quantity'] ?>" onchange="this.form.submit()">
+                                                    <button class="btn btn-outline-secondary px-2" type="button" onclick="const inp=this.previousElementSibling; if(parseInt(inp.value)<parseInt(inp.max)){inp.value=parseInt(inp.value)+1; inp.form.submit();}" aria-label="Increase quantity">+</button>
+                                                </div>
                                             </form>
                                         </td>
                                         <td class="text-end">
