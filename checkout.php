@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ) VALUES (
                         ?, ?, ?, ?, ?,
                         ?, ?, ?, ?,
-                        'COD', 'Pending', ?, ?, ?,
+                        'COD', 'Unpaid', ?, ?, ?,
                         ?, ?, 'Pending', ?, NOW(), NOW()
                     )
                 ");
@@ -405,3 +405,4 @@ require_once INCLUDES_PATH . '/navbar.php';
 </div>
 
 <?php require_once INCLUDES_PATH . '/footer.php'; ?>
+

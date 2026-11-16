@@ -268,7 +268,7 @@ CREATE TABLE `orders` (
     `shipping_postal_code` VARCHAR(20) NOT NULL,
     `delivery_instructions` TEXT DEFAULT NULL,
     `payment_method` VARCHAR(40) NOT NULL DEFAULT 'COD',
-    `payment_status` ENUM('Pending', 'Paid', 'Refunded', 'Failed') NOT NULL DEFAULT 'Pending',
+    `payment_status` ENUM('Unpaid', 'Pending', 'Paid', 'Refunded', 'Failed') NOT NULL DEFAULT 'Unpaid',
     `subtotal` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
     `discount_amount` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
     `shipping_fee` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
@@ -291,6 +291,8 @@ CREATE TABLE `orders` (
         'Refunded'
     ) NOT NULL DEFAULT 'Pending',
     `notes` TEXT DEFAULT NULL,
+    `tracking_number` VARCHAR(100) DEFAULT NULL,
+    `courier_name` VARCHAR(80) DEFAULT 'BlueEx Express',
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT `fk_order_customer` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE SET NULL,

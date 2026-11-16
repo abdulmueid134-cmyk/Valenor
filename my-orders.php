@@ -46,7 +46,11 @@ require_once INCLUDES_PATH . '/navbar.php';
                         <div class="d-flex flex-wrap justify-content-between align-items-center pb-3 border-bottom mb-3" style="border-color:var(--border-beige) !important;">
                             <div>
                                 <span class="text-muted small text-uppercase" style="letter-spacing:0.08em;">Order</span>
-                                <h4 class="font-serif fw-bold mb-0" style="color:var(--caramel-dark);"><?= e($ord['order_number']) ?></h4>
+                                <h4 class="font-serif fw-bold mb-0">
+                                    <a href="<?= BASE_URL ?>/order-details.php?order=<?= urlencode($ord['order_number']) ?>" class="text-decoration-none" style="color:var(--caramel-dark);">
+                                        <?= e($ord['order_number']) ?>
+                                    </a>
+                                </h4>
                                 <span class="text-muted small"><?= format_date($ord['created_at']) ?></span>
                             </div>
                             <div class="mt-2 mt-md-0 text-md-end">
@@ -64,6 +68,9 @@ require_once INCLUDES_PATH . '/navbar.php';
                                 <span><i class="bi bi-cash me-1"></i> <?= e($ord['payment_method']) ?> (<?= e($ord['payment_status']) ?>)</span>
                             </div>
                             <div class="mt-2 mt-md-0 d-flex gap-2">
+                                <a href="<?= BASE_URL ?>/order-details.php?order=<?= urlencode($ord['order_number']) ?>" class="btn btn-sm btn-dark rounded-pill" style="font-size:0.8rem;">
+                                    <i class="bi bi-eye me-1"></i> View Details
+                                </a>
                                 <a href="<?= BASE_URL ?>/track-order.php?order_number=<?= urlencode($ord['order_number']) ?>" class="btn btn-sm btn-outline-dark rounded-pill" style="border-color:var(--border-beige); font-size:0.8rem;">
                                     <i class="bi bi-geo-alt me-1"></i> Track Order
                                 </a>

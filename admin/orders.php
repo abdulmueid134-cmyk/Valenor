@@ -13,8 +13,9 @@ $adminPageHeader = 'Client Order Management';
 $adminPageSub    = 'Track order fulfillment, 14 order statuses, courier tracking, and payment verification.';
 
 // Filter parameters
-$statusFilter = sanitize($_GET['status'] ?? '');
-$search       = sanitize($_GET['q'] ?? '');
+$statusFilter  = sanitize($_GET['status'] ?? '');
+$paymentFilter = sanitize($_GET['payment_status'] ?? '');
+$search        = sanitize($_GET['q'] ?? '');
 
 $where = ['1=1'];
 $params = [];
@@ -22,6 +23,11 @@ $params = [];
 if (!empty($statusFilter)) {
     $where[] = "o.order_status = ?";
     $params[] = $statusFilter;
+}
+
+if (!empty($paymentFilter)) {
+    $where[] = "o.payment_status = ?";
+    $params[] = $paymentFilter;
 }
 
 if (!empty($search)) {
@@ -81,20 +87,28 @@ require_once __DIR__ . '/includes/navbar.php';
 <div class="card border-0 shadow-sm mb-4" style="border:1px solid var(--border-beige) !important;">
     <div class="card-body p-3">
         <form method="GET" action="<?= ADMIN_URL ?>/orders.php" class="row g-2 align-items-center">
-            <div class="col-md-5">
-                <input type="text" name="q" class="form-control form-control-sm" placeholder="Search order #, customer name, phone, email..." value="<?= e($search) ?>">
-            </div>
             <div class="col-md-4">
+                <input type="text" name="q" class="form-control form-control-sm" placeholder="Order #, name, phone, email..." value="<?= e($search) ?>">
+            </div>
+            <div class="col-md-3">
                 <select name="status" class="form-select form-select-sm">
-                    <option value="">All 14 Statuses</option>
+                    <option value="">All Fulfillment Statuses</option>
                     <?php foreach ($allStatuses as $st): ?>
                         <option value="<?= e($st) ?>" <?= $statusFilter === $st ? 'selected' : '' ?>><?= e($st) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
-            <div class="col-md-3 d-flex gap-1">
-                <button type="submit" class="btn btn-sm btn-dark w-100">Filter Orders</button>
-                <?php if (!empty($search) || !empty($statusFilter)): ?>
+            <div class="col-md-3">
+                <select name="payment_status" class="form-select form-select-sm">
+                    <option value="">All Payment States</option>
+                    <option value="Unpaid" <?= $paymentFilter === 'Unpaid' ? 'selected' : '' ?>>Unpaid (COD)</option>
+                    <option value="Paid" <?= $paymentFilter === 'Paid' ? 'selected' : '' ?>>Paid</option>
+                    <option value="Refunded" <?= $paymentFilter === 'Refunded' ? 'selected' : '' ?>>Refunded</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex gap-1">
+                <button type="submit" class="btn btn-sm btn-dark w-100">Filter</button>
+                <?php if (!empty($search) || !empty($statusFilter) || !empty($paymentFilter)): ?>
                     <a href="<?= ADMIN_URL ?>/orders.php" class="btn btn-sm btn-outline-secondary"><i class="bi bi-x"></i></a>
                 <?php endif; ?>
             </div>
@@ -114,7 +128,7 @@ require_once __DIR__ . '/includes/navbar.php';
                     <th>Shipping City</th>
                     <th>Current Status</th>
                     <th>Date</th>
-                    <th style="width:140px;" class="text-end">Update Status</th>
+                    <th style="width:170px;" class="text-end">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -122,7 +136,9 @@ require_once __DIR__ . '/includes/navbar.php';
                     <?php foreach ($orders as $ord): ?>
                         <tr>
                             <td>
-                                <strong class="font-monospace" style="color:var(--caramel-dark);"><?= e($ord['order_number']) ?></strong>
+                                <a href="<?= ADMIN_URL ?>/order-details.php?id=<?= $ord['id'] ?>" class="text-decoration-none fw-bold font-monospace" style="color:var(--caramel-dark);">
+                                    <?= e($ord['order_number']) ?>
+                                </a>
                                 <div class="small text-muted"><?= (int)$ord['items_count'] ?> item(s)</div>
                             </td>
                             <td>
@@ -131,7 +147,9 @@ require_once __DIR__ . '/includes/navbar.php';
                             </td>
                             <td>
                                 <div class="fw-bold"><?= format_price($ord['total_amount']) ?></div>
-                                <span class="badge bg-light text-dark border"><?= strtoupper($ord['payment_method']) ?></span>
+                                <span class="badge <?= $ord['payment_status'] === 'Paid' ? 'bg-success' : 'bg-warning text-dark' ?>">
+                                    <?= e($ord['payment_status']) ?> (<?= e($ord['payment_method']) ?>)
+                                </span>
                             </td>
                             <td>
                                 <div><?= e($ord['shipping_city']) ?></div>
@@ -139,14 +157,23 @@ require_once __DIR__ . '/includes/navbar.php';
                             </td>
                             <td>
                                 <?= get_order_status_badge($ord['order_status']) ?>
+                                <?php if (!empty($ord['tracking_number'])): ?>
+                                    <div class="small text-muted" style="font-size:0.72rem;"><code><?= e($ord['tracking_number']) ?></code></div>
+                                <?php endif; ?>
                             </td>
                             <td class="small text-muted">
                                 <?= format_date($ord['created_at'], 'M d, Y') ?><br>
                                 <?= format_date($ord['created_at'], 'h:i A') ?>
                             </td>
                             <td class="text-end">
-                                <button type="button" class="btn btn-sm btn-outline-dark p-1 px-2" data-bs-toggle="modal" data-bs-target="#statusModal<?= $ord['id'] ?>">
-                                    <i class="bi bi-arrow-repeat me-1"></i> Status
+                                <a href="<?= ADMIN_URL ?>/order-details.php?id=<?= $ord['id'] ?>" class="btn btn-sm btn-dark p-1 px-2" title="View Order Details">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="<?= ADMIN_URL ?>/invoice.php?id=<?= $ord['id'] ?>" target="_blank" class="btn btn-sm btn-outline-secondary p-1 px-2" title="Print Invoice">
+                                    <i class="bi bi-printer"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-outline-dark p-1 px-2" data-bs-toggle="modal" data-bs-target="#statusModal<?= $ord['id'] ?>" title="Quick Status Update">
+                                    <i class="bi bi-arrow-repeat"></i>
                                 </button>
 
                                 <!-- Status Update Modal -->
