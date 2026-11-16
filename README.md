@@ -1,131 +1,168 @@
-# VALENOR Horology — Watch E-Commerce Storefront & Admin Dashboard
+# VALENOR Horology — Professional B2C Luxury E-Commerce Platform
 
-A full-stack, responsive B2C luxury watch storefront paired with a role-governed Admin Operations & Analytics Dashboard built on **Node.js**, **Express.js**, **MySQL / MariaDB**, **Chart.js**, and modular vanilla JavaScript.
+A complete, modern, fully functional B2C E-commerce platform with a separate Admin Panel built using **Core PHP (Structured Architecture)**, **MySQL / MariaDB**, **HTML5**, **CSS3**, **JavaScript**, and **Bootstrap 5**.
+
+The website features a **White & Caramel** luxury color aesthetic, mandatory customer login for shopping cart management, product comparison, dynamic price range filtering, server-side product image management (1–10 images), 14 order statuses, customer return management, verified reviews, and Cash on Delivery (COD) fulfillment.
 
 ---
 
-## Architecture Overview
+## 1. Design & Color Palette
+
+- **Primary Background:** Pure White (`#FFFFFF`)
+- **Secondary Background:** Warm Cream (`#F8F3EB`)
+- **Primary Caramel:** Luxury Caramel (`#B8895B`)
+- **Dark Caramel:** Deep Roast Caramel (`#8B6342`)
+- **Text:** Dark Charcoal (`#252525`)
+- **Borders & Dividers:** Light Beige (`#E8DED2`)
+- **Typography:** Cormorant Garamond (Display / Headings) & Inter (Body / UI)
+
+---
+
+## 2. Technology Stack
+
+- **Backend:** Core PHP 8.1+ (OOP/Structured PDO Architecture, Sessions, CSRF, Prepared Statements)
+- **Database:** MySQL 8.0+ or MariaDB 10.5+ / 11.4+ (InnoDB, UTF-8 mb4, Full Foreign Keys & Constraints)
+- **Frontend:** HTML5, CSS3, JavaScript (ES6+), Bootstrap 5.3, Bootstrap Icons
+- **Server:** Apache / XAMPP / WampServer / PHP Built-in Server (`php -S localhost:8000`)
+
+---
+
+## 3. Project Structure
 
 ```text
-watch-ecommerce/
-├── backend/
-│   ├── config/          # MySQL2 connection pool (utf8mb4)
-│   ├── controllers/     # Request/response controllers (MVC)
-│   ├── middleware/      # JWT auth, RBAC guards, CSP/security headers, rate limiters
-│   ├── models/          # Parameterized & transactional SQL queries
-│   ├── routes/          # REST API endpoints (/api/*, /api/admin/*)
-│   ├── uploads/         # Product, return proof, and branding image storage
-│   └── server.js        # Express application entry point
-├── database/
-│   ├── schema.sql       # Base relational catalog tables
-│   ├── migrations/      # Incremental SQL migrations (002–007)
-│   ├── seed.sql         # Demo catalog showcase seed (optional)
-│   ├── init_db.js       # Supports --schema-only, --seed-only, or combined init
-│   └── create_admin.js  # Secure CLI utility to create/promote admin users
-├── frontend/
-│   ├── index.html       # Storefront homepage
-│   ├── pages/           # Catalog, Product Detail, Auth, Account, Cart, Checkout, Track Order, Policies
-│   ├── admin/           # Separate protected Admin Portal (login + 17-item executive console)
-│   ├── components/      # Shared UI cards, XSS-safe escaper, header/footer shells
-│   └── assets/          # CSS, JS modules, product imagery, SVG brand assets
-├── .env.example
-└── package.json
+valenor-ecommerce/
+├── admin/                     # Protected Administrator Operations Console
+│   ├── includes/              # Admin Header, Sidebar, Footer, Breadcrumbs
+│   │   ├── header.php
+│   │   ├── sidebar.php
+│   │   └── footer.php
+│   ├── index.php              # Executive Dashboard with Live Analytics
+│   ├── products.php           # Product Management (List, Filter, Stock)
+│   ├── product-add.php        # Add Product with 1–10 Image Uploader
+│   ├── product-edit.php       # Edit Product, Reorder & Replace Images
+│   ├── categories.php         # Category CRUD & Image Management
+│   ├── orders.php             # Order Management & 14-Status Lifecycle Updates
+│   ├── order-detail.php       # Detailed Order Invoice & Tracking
+│   ├── returns.php            # Return Requests Review, Approval & Refunds
+│   ├── customers.php          # Customer Accounts & Purchase History
+│   ├── reviews.php            # Customer Reviews Moderation
+│   ├── coupons.php            # Promotional Discount Coupons CRUD
+│   ├── content.php            # Hero Banners, Announcements & Promotional Text
+│   ├── settings.php           # Store Name, Currency, Shipping & Return Policies
+│   ├── login.php              # Secure Admin Sign-In
+│   └── logout.php             # Admin Session Logout
+├── ajax/                      # Asynchronous Endpoints (Cart, Wishlist, Compare, Filter)
+│   ├── cart.php
+│   ├── wishlist.php
+│   ├── compare.php
+│   ├── filter-products.php
+│   └── coupon.php
+├── assets/                    # Compiled Presentation Assets
+│   ├── css/
+│   │   ├── style.css          # Customer Theme (White & Caramel)
+│   │   └── admin.css          # Admin Portal Theme
+│   ├── js/
+│   │   ├── main.js            # Storefront Interactions, Cart, Compare, Sliders
+│   │   └── admin.js           # Admin Dashboard Controls & Image Manager
+│   └── images/
+│       ├── logo.svg           # Luxury VALENOR Vector Identity
+│       ├── hero-banner.jpg
+│       └── promo-sale-banner.jpg
+├── config/                    # Core Infrastructure & Configuration
+│   ├── config.php             # Central System Settings, Paths & Constants
+│   ├── database.php           # Singleton PDO Connection (UTF-8 mb4, ErrorMode Exception)
+│   └── helpers.php            # Security (CSRF, XSS `e()`), Flash, Auth, Cart Merging, Uploads
+├── database/                  # Relational Database Definitions
+│   ├── schema.sql             # Full 22 Relational Tables (InnoDB, FK Constraints)
+│   ├── seed.sql               # 5 Categories, 10 Realistic Watches, Admin, Customer, Reviews
+│   └── init.php               # One-Click CLI / Web Database Setup Script
+├── includes/                  # Reusable Storefront Components
+│   ├── header.php             # Document Head, Fonts, Meta Tags, Flash Messages
+│   ├── navbar.php             # Announcement Bar, Brand Logo, Navigation, Search & Badges
+│   └── footer.php             # Luxury Footer, Policies, Newsletter & Scripts
+├── uploads/                   # Media Upload Storage
+│   ├── products/              # 1–10 Product Images per Timepiece
+│   ├── reviews/               # Verified Customer Review Photos
+│   └── returns/               # Defect / Return Proof Images
+├── .htaccess                  # Apache Security Directives & Security Headers
+├── .gitignore                 # Version Control Ignore Rules
+├── cart.php                   # Shopping Cart (Protected — Mandatory Customer Login)
+├── categories.php             # Full Category Showcase
+├── checkout.php               # Cash on Delivery (COD) Checkout & Summary
+├── compare.php                # Side-by-Side Product Comparison Table
+├── forgot-password.php        # Password Recovery Workflow
+├── index.php                  # Homepage (Hero, Featured, Arrivals, Best Sellers, Reviews)
+├── login.php                  # Customer Authentication & Session Login
+├── logout.php                 # Customer Logout
+├── my-account.php             # Customer Profile, Saved Addresses & Security
+├── my-orders.php              # Customer Order History & Tracking
+├── order-details.php          # Detailed Order Receipt & Invoice
+├── order-success.php          # Order Confirmation & Order Number
+├── product-detail.php         # Product Detail Page (1–10 Gallery, Specs, Reviews)
+├── products.php               # Product Catalog with Search, Dynamic Price Range & Filters
+├── register.php               # Customer Account Registration
+├── request-return.php         # 14-Day Hassle-Free Product Return Submission
+├── track-order.php            # Real-Time Order Status Tracker
+├── wishlist.php               # Customer Saved Timepieces
+└── README.md                  # System Documentation & Run Guide
 ```
 
 ---
 
-## Prerequisites & Setup
+## 4. Database Setup & Installation
 
-### 1. Node.js Setup
-- Install **Node.js v18+** (tested on **v22.14.0**) with `npm`.
-- Install backend dependencies from the project root:
-  ```bash
-  npm install
-  ```
-
-### 2. MySQL / MariaDB Database Setup
-- Ensure **MySQL 8.0+** or **MariaDB 11.4+** is running locally on port `3306` (or configure custom host/port in `.env`).
-
-### 3. Environment Configuration
-Copy `.env.example` to `.env` and fill in your credentials and cryptographic secrets:
+### Option A: Quick Automated Setup (Recommended)
+From the project root directory, run:
 ```bash
-cp .env.example .env
+php database/init.php
 ```
-Key variables in `.env`:
-- `PORT=5000`
-- `NODE_ENV=development` (set to `production` in deployment; `JWT_SECRET` becomes strictly mandatory)
-- `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME=valenor_watches`
-- `JWT_SECRET` — generate a long random hex secret (e.g. `node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"`)
-- `CORS_ORIGIN` — comma-separated allowed origins in production (e.g. `https://shop.yourdomain.com`)
+*Or open `http://localhost:8000/database/init.php` in your browser.*
 
-### 4. Initialize the Database (Demo vs Production Separation)
-VALENOR separates **clean production schema initialization** from **optional demo showcase data**:
+### Option B: Manual phpMyAdmin Import
+1. Open **phpMyAdmin** (`http://localhost/phpmyadmin`).
+2. Create a database named `valenor_ecommerce` with collation `utf8mb4_unicode_ci`.
+3. Import `database/schema.sql`.
+4. Import `database/seed.sql`.
 
-- **Clean Production Schema Only (no demo watches, reviews, or test orders):**
-  ```bash
-  npm run db:schema
-  ```
-- **Load Optional Demo Showcase Catalog (14 categories, 6 brands, 20 watches, reviews):**
-  ```bash
-  npm run db:seed-demo
-  ```
-- **Quick Local Full Setup (Schema + Migrations + Demo Catalog):**
-  ```bash
-  npm run db:init
-  ```
+---
 
-### 5. Create the First Super Admin Securely
-Never hardcode admin passwords inside frontend files. Provision your first **Super Admin** from the CLI using `bcryptjs` hashing:
+## 5. Starting the Local PHP Server
+
+Run PHP's built-in web server from the project directory:
 ```bash
-npm run admin:create -- --email=admin@yourdomain.com --password=StrongAdminPassword123 --name="Store Owner" --phone=+923000000001 --role=super_admin
+php -S localhost:8000
 ```
-Supported staff roles:
-- `super_admin` — Full access across Store Settings, Admin Staff, Role Permissions, Reports, Promotions, Orders, Customers, Products, and Inventory.
-- `manager` — Operational access across Catalog, Orders, Returns, Customers, Promotions, and Reports.
-- `order_manager` — Fulfillment & customer service access across Orders, Deliveries, Returns, Refunds, and Customers.
-- `inventory_manager` — Catalog, Product Types, Categories, Brands, Images, and Inventory control.
+Then visit:
+- **Customer Storefront:** `http://localhost:8000`
+- **Admin Portal:** `http://localhost:8000/admin/login.php`
 
 ---
 
-## Starting the Server
+## 6. Default Credentials
 
-- **Production:**
-  ```bash
-  npm start
-  ```
-- **Development (auto-reload with nodemon):**
-  ```bash
-  npm run dev
-  ```
-Health check endpoint: `http://localhost:5000/api/health`
+### Administrator
+- **URL:** `http://localhost:8000/admin/login.php`
+- **Email:** `admin@valenor.com`
+- **Password:** `Admin@12345`
 
----
-
-## Accessing Storefront & Admin Portal
-
-### Customer Storefront
-- **Homepage:** `http://localhost:5000/index.html`
-- **Full Catalog & Filters (Dynamic `0..max` price range):** `http://localhost:5000/pages/catalog.html`
-- **Product Detail Page:** `http://localhost:5000/pages/product.html?id=1`
-- **Customer Sign In / Register / Password Reset:** `http://localhost:5000/pages/auth.html`
-- **Collector Account Dashboard & Addresses:** `http://localhost:5000/pages/account.html`
-- **Shopping Cart & Checkout:** `http://localhost:5000/pages/cart.html` / `http://localhost:5000/pages/checkout.html`
-- **Live Order Tracking & Return Requests:** `http://localhost:5000/pages/track-order.html`
-- **Storefront Policies (Return, Privacy, Terms):** `http://localhost:5000/pages/policies.html`
-
-### Protected Admin Dashboard
-- **Admin Sign-In:** `http://localhost:5000/admin/login.html`
-- **Admin Executive Console:** `http://localhost:5000/admin/index.html`
-  - Unauthenticated visits automatically redirect to `/admin/login.html`.
-  - Ordinary `customer` accounts receive HTTP `403 Forbidden` on admin login and every `/api/admin/*` API route.
+### Demo Customer
+- **URL:** `http://localhost:8000/login.php`
+- **Email:** `customer@valenor.com`
+- **Password:** `Admin@12345`
 
 ---
 
-## Security Practices Implemented
-- **Password Hashing:** `bcryptjs` with per-user salts (`cost 10–12`), passwords never stored or returned in API payloads.
-- **SQL Injection Defense:** 100% parameterized prepared queries via `mysql2/promise`.
-- **XSS Protection:** HTML entity escaping (`escapeHtml` / `esc`) across dynamic UI renders; strict `Content-Security-Policy`, `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, and `Referrer-Policy` headers.
-- **File Upload Validation:** Multer disk storage restricted strictly to `.jpg`, `.jpeg`, `.png`, `.webp` (`<= 5 MB`), rejecting invalid MIME/extensions and SVG script payloads.
-- **Rate Limiting:** IP-based rate limiters protecting public API routes (`/api/*`), customer & admin login/registration, and password-reset endpoints (`HTTP 429`).
-- **Transactional Integrity:** MySQL InnoDB transactions (`FOR UPDATE` row locks) guard order creation, stock reservation, cancellation stock release, return restocking, and refund accounting.
+## 7. Development Phases
 
+| Phase | Milestone | Status |
+| :---: | :--- | :---: |
+| **01** | Project structure, 22-table database schema, and configuration | **COMPLETED & TESTED** |
+| **02** | Customer website design, White & Caramel styling, and homepage | Up Next |
+| **03** | Product categories and product detail pages (1–10 image gallery) | Scheduled |
+| **04** | Admin dashboard, executive analytics, and product management | Scheduled |
+| **05** | Image upload management (1–10 limits) and product comparison | Scheduled |
+| **06** | Search, multi-facet filters, and dynamic price range slider | Scheduled |
+| **07** | Mandatory login cart, cart merging, and Cash on Delivery checkout | Scheduled |
+| **08** | Order management, 14-status lifecycle, and customer tracking | Scheduled |
+| **09** | Returns & refunds workflow and customer reviews/ratings | Scheduled |
+| **10** | Security hardening, CSRF/XSS verification, and final quality audit | Scheduled |

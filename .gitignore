@@ -1,8 +1,19 @@
-node_modules/
+# Environment & Config
 .env
-backend/uploads/*
-!backend/uploads/.gitkeep
+.env.local
 *.log
+
+# OS & Editor
 .DS_Store
 Thumbs.db
+.idea/
+.vscode/
 
+# Archive
+_archive_node/
+
+# User uploads (keep sample seed images and .gitkeep)
+uploads/returns/*
+!uploads/returns/.gitkeep
+uploads/reviews/*
+!uploads/reviews/.gitkeep

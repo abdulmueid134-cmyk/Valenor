@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 60" width="320" height="60" fill="none">
+  <!-- Outer Crest Shield / Octagon -->
+  <polygon points="30,6 50,16 50,44 30,54 10,44 10,16" stroke="#B8895B" stroke-width="2.2" fill="#F8F3EB" stroke-linejoin="round"/>
+  <!-- Sub-dial ring -->
+  <circle cx="30" cy="30" r="14" stroke="#8B6342" stroke-width="1.2" stroke-dasharray="2 2" fill="none"/>
+  <!-- Diamond emblem -->
+  <polygon points="30,19 35,30 30,41 25,30" fill="#B8895B"/>
+  <!-- Watch Hands -->
+  <line x1="30" y1="30" x2="30" y2="22" stroke="#8B6342" stroke-width="2" stroke-linecap="round"/>
+  <line x1="30" y1="30" x2="37" y2="34" stroke="#8B6342" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="30" cy="30" r="2.5" fill="#252525"/>
+  
+  <!-- Typography -->
+  <text x="68" y="34" font-family="'Cormorant Garamond', 'Georgia', serif" font-size="28" font-weight="700" letter-spacing="4" fill="#252525">VALENOR</text>
+  <text x="70" y="48" font-family="'Inter', 'Helvetica Neue', sans-serif" font-size="8.5" font-weight="600" letter-spacing="3" fill="#8B6342">GENÈVE · HAUTE HORLOGERIE</text>
+</svg>
+

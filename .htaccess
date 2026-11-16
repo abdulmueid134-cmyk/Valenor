@@ -1,0 +1,29 @@
+# =============================================================================
+# VALENOR B2C E-COMMERCE PLATFORM — APACHE CONFIGURATION & SECURITY
+# =============================================================================
+
+# Disable directory browsing
+Options -Indexes
+
+# Set default charset
+AddDefaultCharset UTF-8
+
+# Prevent access to hidden files and sensitive extensions
+<FilesMatch "^\.|\.(bak|config|sql|fla|psd|ini|log|sh)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+

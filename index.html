@@ -1,0 +1,1506 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fine Swiss-Caliber Timepieces &amp; Luxury Watches — VALENOR Horology</title>
+    <meta name="description" content="VALENOR Horology — Discover luxury chronographs, automatic skeleton calibers, classic dress watches, and professional divers with insured nationwide Cash on Delivery.">
+    <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg">
+
+    <!-- Preconnect Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 CSS & Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <!-- Custom Luxury White & Caramel Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+
+<!-- 1. Top Luxury Announcement Strip -->
+<div class="announcement-bar">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div class="d-none d-md-block">
+            <span class="badge bg-light text-dark me-2" style="font-size:0.7rem; font-weight:700;">VALENOR PRIVILEGE</span>
+            <span>Complimentary Insured Delivery on orders over Rs. 15,000</span>
+        </div>
+        <div class="mx-auto mx-md-0 text-center">
+            <span>Special 20% Privilege Discount with code: <strong>VALENOR20</strong></span>
+            <a href="products.php?filter=sale">Shop 20% Sale</a>
+        </div>
+        <div class="d-none d-lg-flex align-items-center gap-3">
+            <a href="track-order.php" style="text-decoration:none;"><i class="bi bi-geo-alt me-1"></i>Track Order</a>
+            <span class="text-white-50">|</span>
+            <a href="admin/login.php" style="text-decoration:none;" target="_blank"><i class="bi bi-shield-lock me-1"></i>Staff Portal</a>
+        </div>
+    </div>
+</div>
+
+<!-- 2. Main Sticky Header -->
+<header class="site-header">
+    <div class="container py-2">
+        <div class="d-flex align-items-center justify-content-between gap-3">
+
+            <!-- Mobile Menu Toggle Button -->
+            <button class="btn btn-outline-dark d-lg-none p-1 border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenuOffcanvas" aria-controls="mobileMenuOffcanvas" aria-label="Toggle navigation">
+                <i class="bi bi-list fs-3" style="color:var(--caramel-dark);"></i>
+            </button>
+
+            <!-- Brand Logo -->
+            <a href="index.php" class="navbar-brand-logo">
+                <img src="assets/images/logo.svg" alt="VALENOR Horology" height="46">
+            </a>
+
+            <!-- Functional Search Bar -->
+            <form action="products.php" method="GET" class="header-search-form d-none d-md-block">
+                <input type="text" name="q" class="header-search-input" placeholder="Search chronographs, automatic, SKU, brand..." value="" autocomplete="off" required>
+                <button type="submit" class="header-search-btn" aria-label="Search">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+
+            <!-- Header Action Icons (Compare, Wishlist, Cart, Account) -->
+            <div class="d-flex align-items-center gap-2 gap-sm-3">
+
+                <!-- Comparison Icon with Badge -->
+                <a href="compare.php" class="header-action-btn d-none d-sm-inline-flex" title="Product Comparison" aria-label="Product Comparison">
+                    <i class="bi bi-arrow-left-right"></i>
+                    <span class="header-action-badge compare-badge">0</span>
+                </a>
+
+                <!-- Wishlist Icon with Badge -->
+                <a href="wishlist.php" class="header-action-btn d-none d-sm-inline-flex" title="Wishlist" aria-label="Wishlist">
+                    <i class="bi bi-heart"></i>
+                    <span class="header-action-badge wishlist-badge">0</span>
+                </a>
+
+                <!-- Shopping Bag Icon (Requires Login if Unauthenticated) -->
+                <a href="login.php?redirect=cart.php" class="header-action-btn" title="Sign in to view Shopping Bag" aria-label="Shopping Bag">
+                    <i class="bi bi-bag"></i>
+                    <span class="header-action-badge cart-badge d-none">0</span>
+                </a>
+
+                <!-- Customer Account Dropdown or Login/Register Links -->
+                                    <div class="d-flex align-items-center gap-1">
+                        <a href="login.php" class="btn btn-sm btn-outline-dark px-3 py-2 rounded-pill fw-semibold" style="font-size:0.82rem; border-color:var(--border-beige);">
+                            Sign In
+                        </a>
+                        <a href="register.php" class="btn btn-sm text-white px-3 py-2 rounded-pill fw-semibold d-none d-md-inline-block" style="background-color:var(--caramel-primary); font-size:0.82rem;">
+                            Register
+                        </a>
+                    </div>
+                
+            </div>
+
+        </div>
+
+        <!-- Mobile Search Row -->
+        <div class="d-md-none mt-2 pt-1 border-top" style="border-color:var(--border-beige) !important;">
+            <form action="products.php" method="GET" class="header-search-form">
+                <input type="text" name="q" class="header-search-input" placeholder="Search luxury timepieces..." value="" required>
+                <button type="submit" class="header-search-btn" aria-label="Search">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. Sub-Navbar Links (Section 3.A & Navigation requirement) -->
+    <nav class="sub-navbar d-none d-lg-block" aria-label="Main Category Navigation">
+        <div class="container d-flex align-items-center justify-content-center gap-1">
+            <a href="index.php" class="nav-link-valenor active">Home</a>
+            <a href="products.php" class="nav-link-valenor">Collections</a>
+
+            <!-- Categories Dropdown -->
+            <div class="dropdown d-inline-block">
+                <a class="nav-link-valenor dropdown-toggle" href="categories.php" id="catNavDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Categories
+                </a>
+                <ul class="dropdown-menu shadow border-0" aria-labelledby="catNavDropdown" style="font-size:0.85rem; min-width:220px;">
+                    <li><a class="dropdown-item py-2 fw-bold text-uppercase" style="color:var(--caramel-dark);" href="categories.php">All 5 Categories</a></li>
+                    <li><hr class="dropdown-divider my-1"></li>
+                                            <li><a class="dropdown-item py-2" href="products.php?category=chronographs">Chronographs</a></li>
+                                            <li><a class="dropdown-item py-2" href="products.php?category=automatic-luxury">Automatic Luxury</a></li>
+                                            <li><a class="dropdown-item py-2" href="products.php?category=classic-dress">Classic Dress</a></li>
+                                            <li><a class="dropdown-item py-2" href="products.php?category=divers-sports">Divers &amp; Sports</a></li>
+                                            <li><a class="dropdown-item py-2" href="products.php?category=minimalist-elegance">Minimalist Elegance</a></li>
+                                    </ul>
+            </div>
+
+            <a href="products.php?filter=new_arrivals" class="nav-link-valenor">New Arrivals</a>
+            <a href="products.php?filter=sale" class="nav-link-valenor sale-highlight"><i class="bi bi-tag-fill me-1"></i>Sale</a>
+            <a href="about.php" class="nav-link-valenor">About</a>
+            <a href="contact.php" class="nav-link-valenor">Contact</a>
+        </div>
+    </nav>
+</header>
+
+<!-- 4. Mobile Offcanvas Navigation Drawer -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="mobileMenuOffcanvas" aria-labelledby="mobileMenuOffcanvasLabel" style="background-color:var(--bg-cream); width:300px;">
+    <div class="offcanvas-header border-bottom" style="border-color:var(--border-beige) !important;">
+        <h5 class="offcanvas-title" id="mobileMenuOffcanvasLabel">
+            <img src="assets/images/logo.svg" alt="VALENOR" height="36">
+        </h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+        <ul class="list-group list-group-flush" style="background:transparent;">
+            <li class="list-group-item bg-transparent"><a href="index.php" class="nav-link-valenor px-0"><i class="bi bi-house me-2"></i>Home</a></li>
+            <li class="list-group-item bg-transparent"><a href="products.php" class="nav-link-valenor px-0"><i class="bi bi-grid me-2"></i>Collections</a></li>
+            <li class="list-group-item bg-transparent"><a href="categories.php" class="nav-link-valenor px-0"><i class="bi bi-bookmark me-2"></i>Categories</a></li>
+            <li class="list-group-item bg-transparent"><a href="products.php?filter=new_arrivals" class="nav-link-valenor px-0"><i class="bi bi-stars me-2"></i>New Arrivals</a></li>
+            <li class="list-group-item bg-transparent"><a href="products.php?filter=sale" class="nav-link-valenor sale-highlight px-0"><i class="bi bi-percent me-2"></i>Special Offers</a></li>
+            <li class="list-group-item bg-transparent"><a href="compare.php" class="nav-link-valenor px-0"><i class="bi bi-arrow-left-right me-2"></i>Compare (<span class="compare-badge">0</span>)</a></li>
+            <li class="list-group-item bg-transparent"><a href="wishlist.php" class="nav-link-valenor px-0"><i class="bi bi-heart me-2"></i>Wishlist (<span class="wishlist-badge">0</span>)</a></li>
+            <li class="list-group-item bg-transparent"><a href="login.php?redirect=cart.php" class="nav-link-valenor px-0"><i class="bi bi-bag me-2"></i>Shopping Bag (<span class="cart-badge">0</span>)</a></li>
+            <li class="list-group-item bg-transparent"><a href="about.php" class="nav-link-valenor px-0"><i class="bi bi-info-circle me-2"></i>About Us</a></li>
+            <li class="list-group-item bg-transparent"><a href="contact.php" class="nav-link-valenor px-0"><i class="bi bi-envelope me-2"></i>Contact Us</a></li>
+            <li class="list-group-item bg-transparent"><a href="track-order.php" class="nav-link-valenor px-0"><i class="bi bi-geo-alt me-2"></i>Track Order</a></li>
+        </ul>
+        <div class="p-3 border-top mt-3" style="border-color:var(--border-beige) !important;">
+                            <a href="login.php" class="btn btn-sm btn-dark w-100 mb-2">Sign In</a>
+                <a href="register.php" class="btn btn-sm text-white w-100" style="background:var(--caramel-primary);">Create Account</a>
+                    </div>
+    </div>
+</div>
+
+<!-- ===========================================================================
+     SECTION 6: HERO BANNER WITH PROMOTIONAL COUNTDOWN & CTA
+     =========================================================================== -->
+<section class="hero-wrapper" aria-label="Featured Campaign">
+    <div class="hero-slide">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="hero-content">
+                        <span class="hero-pill">
+                            <i class="bi bi-clock-history"></i> Haute Horlogerie &bull; Edition 2026
+                        </span>
+                        <h1 class="hero-title">
+                            The Precision of <span>Swiss Caliber</span> Engineering.
+                        </h1>
+                        <p class="hero-subtitle">
+                            Impeccably hand-calibrated mechanical movements, anti-glare sapphire crystal, and marine-grade surgical steel crafted for the discerning collector.
+                        </p>
+
+                        <!-- Dynamic Announcement Countdown -->
+                        <div class="d-flex align-items-center gap-3 mb-4">
+                            <span class="text-white-50 text-uppercase fw-semibold" style="font-size:0.75rem; letter-spacing:0.15em;">
+                                Special 20% Privilege Offer Ends In:
+                            </span>
+                        </div>
+                        <div class="countdown-container" aria-label="Campaign countdown timer">
+                            <div class="countdown-box">
+                                <span class="countdown-number" id="cd-days">02</span>
+                                <span class="countdown-label">Days</span>
+                            </div>
+                            <div class="countdown-box">
+                                <span class="countdown-number" id="cd-hours">14</span>
+                                <span class="countdown-label">Hours</span>
+                            </div>
+                            <div class="countdown-box">
+                                <span class="countdown-number" id="cd-mins">35</span>
+                                <span class="countdown-label">Mins</span>
+                            </div>
+                            <div class="countdown-box">
+                                <span class="countdown-number" id="cd-secs">00</span>
+                                <span class="countdown-label">Secs</span>
+                            </div>
+                        </div>
+
+                        <!-- Hero CTA Buttons -->
+                        <div class="d-flex flex-wrap gap-3">
+                            <a href="products.php" class="btn-valenor-primary">
+                                <i class="bi bi-collection"></i> Discover Collection
+                            </a>
+                            <a href="#categories" class="btn-valenor-outline">
+                                View 5 Categories &rarr;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===========================================================================
+     TRUST / VALUE PROPOSITION STRIP
+     =========================================================================== -->
+<div class="trust-strip">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-3 col-6">
+                <div class="trust-item">
+                    <div class="trust-icon"><i class="bi bi-shield-check"></i></div>
+                    <div>
+                        <h5 class="trust-title">2-Year Warranty</h5>
+                        <p class="trust-desc">International movement protection</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="trust-item">
+                    <div class="trust-icon"><i class="bi bi-truck"></i></div>
+                    <div>
+                        <h5 class="trust-title">Free Delivery</h5>
+                        <p class="trust-desc">On orders over Rs. 15,000</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="trust-item">
+                    <div class="trust-icon"><i class="bi bi-arrow-counterclockwise"></i></div>
+                    <div>
+                        <h5 class="trust-title">14-Day Inspection</h5>
+                        <p class="trust-desc">Guaranteed hassle-free returns</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="trust-item">
+                    <div class="trust-icon"><i class="bi bi-cash-stack"></i></div>
+                    <div>
+                        <h5 class="trust-title">Cash on Delivery</h5>
+                        <p class="trust-desc">Pay upon doorstep receipt</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===========================================================================
+     SECTION 7: FIVE MAIN PRODUCT CATEGORIES (Section 3.B)
+     =========================================================================== -->
+<section id="categories" class="py-5" style="background-color: var(--bg-white); border-bottom: 1px solid var(--border-beige);">
+    <div class="container py-4">
+        <div class="section-header">
+            <span class="section-eyebrow">Distinctive Horological Styles</span>
+            <h2 class="section-title">Five Curated Categories</h2>
+            <p class="section-subtitle">
+                Each category is engineered to strict mechanical and aesthetic standards. Explore master timepieces tailored for every occasion.
+            </p>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="row g-4">
+                            <div class="col-lg col-md-4 col-sm-6">
+                    <a href="products.php?category=chronographs" class="category-card" title="View Chronographs Collection">
+                        <div class="category-img-box">
+                            <img src="uploads/products/watch-mens-chronograph.jpg" alt="Chronographs" loading="lazy">
+                        </div>
+                        <div class="category-body">
+                            <h3 class="category-name">Chronographs</h3>
+                            <p class="category-desc">Precision multi-dial chronographs with tachymeter scales, split-second stopwatch functions, and anti-reflective sapphire crystals.</p>
+                            <span class="category-link">
+                                Explore <i class="bi bi-arrow-right"></i>
+                            </span>
+                        </div>
+                    </a>
+                </div>
+                            <div class="col-lg col-md-4 col-sm-6">
+                    <a href="products.php?category=automatic-luxury" class="category-card" title="View Automatic Luxury Collection">
+                        <div class="category-img-box">
+                            <img src="uploads/products/watch-skeleton-tourbillon.jpg" alt="Automatic Luxury" loading="lazy">
+                        </div>
+                        <div class="category-body">
+                            <h3 class="category-name">Automatic Luxury</h3>
+                            <p class="category-desc">Masterful self-winding mechanical calibers showcasing open-heart balances, skeleton tourbillon architecture, and exhibition glass casebacks.</p>
+                            <span class="category-link">
+                                Explore <i class="bi bi-arrow-right"></i>
+                            </span>
+                        </div>
+                    </a>
+                </div>
+                            <div class="col-lg col-md-4 col-sm-6">
+                    <a href="products.php?category=classic-dress" class="category-card" title="View Classic Dress Collection">
+                        <div class="category-img-box">
+                            <img src="uploads/products/watch-leather-dress.jpg" alt="Classic Dress" loading="lazy">
+                        </div>
+                        <div class="category-body">
+                            <h3 class="category-name">Classic Dress</h3>
+                            <p class="category-desc">Distinguished slimline luxury timepieces crafted with fluted bezels, sunburst champagne dials, and genuine hand-stitched Italian leather.</p>
+                            <span class="category-link">
+                                Explore <i class="bi bi-arrow-right"></i>
+                            </span>
+                        </div>
+                    </a>
+                </div>
+                            <div class="col-lg col-md-4 col-sm-6">
+                    <a href="products.php?category=divers-sports" class="category-card" title="View Divers &amp; Sports Collection">
+                        <div class="category-img-box">
+                            <img src="uploads/products/watch-diver-steel.jpg" alt="Divers &amp; Sports" loading="lazy">
+                        </div>
+                        <div class="category-body">
+                            <h3 class="category-name">Divers &amp; Sports</h3>
+                            <p class="category-desc">High-performance marine instruments with 300M water resistance, unidirectional ceramic diving bezels, and luminous Super-LumiNova indices.</p>
+                            <span class="category-link">
+                                Explore <i class="bi bi-arrow-right"></i>
+                            </span>
+                        </div>
+                    </a>
+                </div>
+                            <div class="col-lg col-md-4 col-sm-6">
+                    <a href="products.php?category=minimalist-elegance" class="category-card" title="View Minimalist Elegance Collection">
+                        <div class="category-img-box">
+                            <img src="uploads/products/watch-mens-black.jpg" alt="Minimalist Elegance" loading="lazy">
+                        </div>
+                        <div class="category-body">
+                            <h3 class="category-name">Minimalist Elegance</h3>
+                            <p class="category-desc">Modern Scandinavian and Swiss-inspired minimalist timepieces with sunray dials, Milanese stainless mesh bracelets, and sapphire crystal.</p>
+                            <span class="category-link">
+                                Explore <i class="bi bi-arrow-right"></i>
+                            </span>
+                        </div>
+                    </a>
+                </div>
+                    </div>
+    </div>
+</section>
+
+<!-- ===========================================================================
+     SECTION 8: NEW ARRIVALS
+     =========================================================================== -->
+<section id="new-arrivals" class="py-5">
+    <div class="container py-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-end mb-4">
+            <div>
+                <span class="section-eyebrow" style="text-align:left;">Fresh From Geneva</span>
+                <h2 class="section-title" style="text-align:left; margin-bottom:0;">New Arrivals</h2>
+            </div>
+            <div class="mt-3 mt-md-0">
+                <a href="products.php?filter=new_arrivals" class="btn btn-outline-dark rounded-pill px-4" style="border-color:var(--border-beige); font-size:0.85rem;">
+                    View All New Timepieces &rarr;
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4">
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="product-card">
+        <!-- Thumbnail Container -->
+        <div class="product-thumb">
+            <!-- Badges Stack -->
+            <div class="badge-stack">
+                                    <span class="valenor-badge valenor-badge-sale">-20% OFF</span>
+                                                    <span class="valenor-badge valenor-badge-new">New Arrival</span>
+                                                    <span class="valenor-badge valenor-badge-bestseller">Best Seller</span>
+                            </div>
+
+            <!-- Main Product Image -->
+            <a href="product-detail.php?id=1" title="VALENOR Carrera Tachymeter Chronograph">
+                <img src="uploads/products/watch-mens-chronograph.jpg" alt="VALENOR Carrera Tachymeter Chronograph" loading="lazy">
+            </a>
+
+            <!-- Quick Action Overlay Buttons (Wishlist, Compare, Quick View) -->
+            <div class="product-quick-actions">
+                <button type="button" class="quick-action-btn btn-toggle-wishlist " data-product-id="1" title="Add to Wishlist" aria-label="Add to Wishlist">
+                    <i class="bi bi-heart"></i>
+                </button>
+                <button type="button" class="quick-action-btn btn-toggle-compare " data-product-id="1" title="Add to Compare" aria-label="Compare Product">
+                    <i class="bi bi-arrow-left-right"></i>
+                </button>
+                <a href="product-detail.php?id=1" class="quick-action-btn" title="View Details" aria-label="View Product Details">
+                    <i class="bi bi-eye"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Product Card Body -->
+        <div class="product-content">
+            <span class="product-cat-name">Chronographs</span>
+            
+            <h4 class="product-name-heading">
+                <a href="product-detail.php?id=1" class="product-name-link" title="VALENOR Carrera Tachymeter Chronograph">
+                    VALENOR Carrera Tachymeter Chronograph                </a>
+            </h4>
+
+            <!-- Star Rating (Section 3.C) -->
+            <div class="mb-2">
+                <div class="star-rating d-inline-flex align-items-center gap-1" title="5.0 out of 5 stars"><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><span class="ms-1 text-muted small">(1)</span></div>            </div>
+
+            <!-- Short Description (Section 3.C) -->
+            <p class="product-short-desc">
+                High-precision Swiss quartz chronograph with triple sub-dials, tachymeter ceramic bezel, and brushed surgical steel bracelet.            </p>
+
+            <!-- Price Row (Section 3.C) -->
+            <div class="product-price-row">
+                <div>
+                    <span class="price-current">Rs. 38,800.00</span>
+                                            <span class="price-regular">Rs. 48,500.00</span>
+                                    </div>
+                <div>
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:0.7rem;">In Stock</span>
+                                    </div>
+            </div>
+
+            <!-- Action Buttons: Add to Cart & View Details (Section 3.C) -->
+            <div class="product-card-actions">
+                <button type="button" class="btn-add-cart" data-product-id="1" data-quantity="1" >
+                    <i class="bi bi-bag-plus"></i> Add to Cart
+                </button>
+                <a href="product-detail.php?id=1" class="btn-view-details" title="Full Specifications & Gallery">
+                    Details
+                </a>
+            </div>
+        </div>
+    </div>
+                    </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="product-card">
+        <!-- Thumbnail Container -->
+        <div class="product-thumb">
+            <!-- Badges Stack -->
+            <div class="badge-stack">
+                                    <span class="valenor-badge valenor-badge-sale">-21% OFF</span>
+                                                    <span class="valenor-badge valenor-badge-new">New Arrival</span>
+                                                    <span class="valenor-badge valenor-badge-bestseller">Best Seller</span>
+                            </div>
+
+            <!-- Main Product Image -->
+            <a href="product-detail.php?id=3" title="VALENOR Royal Skeleton Caliber 88 Automatic">
+                <img src="uploads/products/watch-skeleton-tourbillon.jpg" alt="VALENOR Royal Skeleton Caliber 88 Automatic" loading="lazy">
+            </a>
+
+            <!-- Quick Action Overlay Buttons (Wishlist, Compare, Quick View) -->
+            <div class="product-quick-actions">
+                <button type="button" class="quick-action-btn btn-toggle-wishlist " data-product-id="3" title="Add to Wishlist" aria-label="Add to Wishlist">
+                    <i class="bi bi-heart"></i>
+                </button>
+                <button type="button" class="quick-action-btn btn-toggle-compare " data-product-id="3" title="Add to Compare" aria-label="Compare Product">
+                    <i class="bi bi-arrow-left-right"></i>
+                </button>
+                <a href="product-detail.php?id=3" class="quick-action-btn" title="View Details" aria-label="View Product Details">
+                    <i class="bi bi-eye"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Product Card Body -->
+        <div class="product-content">
+            <span class="product-cat-name">Automatic Luxury</span>
+            
+            <h4 class="product-name-heading">
+                <a href="product-detail.php?id=3" class="product-name-link" title="VALENOR Royal Skeleton Caliber 88 Automatic">
+                    VALENOR Royal Skeleton Caliber 88 Automatic                </a>
+            </h4>
+
+            <!-- Star Rating (Section 3.C) -->
+            <div class="mb-2">
+                <div class="star-rating d-inline-flex align-items-center gap-1" title="5.0 out of 5 stars"><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><span class="ms-1 text-muted small">(1)</span></div>            </div>
+
+            <!-- Short Description (Section 3.C) -->
+            <p class="product-short-desc">
+                Mesmerizing skeletonized self-winding timepiece showcasing an open-work movement, 42-hour power reserve, and exhibition back.            </p>
+
+            <!-- Price Row (Section 3.C) -->
+            <div class="product-price-row">
+                <div>
+                    <span class="price-current">Rs. 99,000.00</span>
+                                            <span class="price-regular">Rs. 125,000.00</span>
+                                    </div>
+                <div>
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:0.7rem;">In Stock</span>
+                                    </div>
+            </div>
+
+            <!-- Action Buttons: Add to Cart & View Details (Section 3.C) -->
+            <div class="product-card-actions">
+                <button type="button" class="btn-add-cart" data-product-id="3" data-quantity="1" >
+                    <i class="bi bi-bag-plus"></i> Add to Cart
+                </button>
+                <a href="product-detail.php?id=3" class="btn-view-details" title="Full Specifications & Gallery">
+                    Details
+                </a>
+            </div>
+        </div>
+    </div>
+                    </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="product-card">
+        <!-- Thumbnail Container -->
+        <div class="product-thumb">
+            <!-- Badges Stack -->
+            <div class="badge-stack">
+                                    <span class="valenor-badge valenor-badge-sale">-16% OFF</span>
+                                                    <span class="valenor-badge valenor-badge-new">New Arrival</span>
+                                            </div>
+
+            <!-- Main Product Image -->
+            <a href="product-detail.php?id=6" title="VALENOR Vendome Classic Roman Dial">
+                <img src="uploads/products/watch-leather-dress.jpg" alt="VALENOR Vendome Classic Roman Dial" loading="lazy">
+            </a>
+
+            <!-- Quick Action Overlay Buttons (Wishlist, Compare, Quick View) -->
+            <div class="product-quick-actions">
+                <button type="button" class="quick-action-btn btn-toggle-wishlist " data-product-id="6" title="Add to Wishlist" aria-label="Add to Wishlist">
+                    <i class="bi bi-heart"></i>
+                </button>
+                <button type="button" class="quick-action-btn btn-toggle-compare " data-product-id="6" title="Add to Compare" aria-label="Compare Product">
+                    <i class="bi bi-arrow-left-right"></i>
+                </button>
+                <a href="product-detail.php?id=6" class="quick-action-btn" title="View Details" aria-label="View Product Details">
+                    <i class="bi bi-eye"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Product Card Body -->
+        <div class="product-content">
+            <span class="product-cat-name">Classic Dress</span>
+            
+            <h4 class="product-name-heading">
+                <a href="product-detail.php?id=6" class="product-name-link" title="VALENOR Vendome Classic Roman Dial">
+                    VALENOR Vendome Classic Roman Dial                </a>
+            </h4>
+
+            <!-- Star Rating (Section 3.C) -->
+            <div class="mb-2">
+                <div class="star-rating d-inline-flex align-items-center gap-1" title="4.9 out of 5 stars"><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><span class="ms-1 text-muted small">(14)</span></div>            </div>
+
+            <!-- Short Description (Section 3.C) -->
+            <p class="product-short-desc">
+                Heritage formal watch with fluted coin-edge bezel, deep lacquer Roman numerals, and quick-set date window at 3 o&#039;clock.            </p>
+
+            <!-- Price Row (Section 3.C) -->
+            <div class="product-price-row">
+                <div>
+                    <span class="price-current">Rs. 26,000.00</span>
+                                            <span class="price-regular">Rs. 31,000.00</span>
+                                    </div>
+                <div>
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:0.7rem;">In Stock</span>
+                                    </div>
+            </div>
+
+            <!-- Action Buttons: Add to Cart & View Details (Section 3.C) -->
+            <div class="product-card-actions">
+                <button type="button" class="btn-add-cart" data-product-id="6" data-quantity="1" >
+                    <i class="bi bi-bag-plus"></i> Add to Cart
+                </button>
+                <a href="product-detail.php?id=6" class="btn-view-details" title="Full Specifications & Gallery">
+                    Details
+                </a>
+            </div>
+        </div>
+    </div>
+                    </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="product-card">
+        <!-- Thumbnail Container -->
+        <div class="product-thumb">
+            <!-- Badges Stack -->
+            <div class="badge-stack">
+                                    <span class="valenor-badge valenor-badge-sale">-19% OFF</span>
+                                                    <span class="valenor-badge valenor-badge-new">New Arrival</span>
+                                                    <span class="valenor-badge valenor-badge-bestseller">Best Seller</span>
+                            </div>
+
+            <!-- Main Product Image -->
+            <a href="product-detail.php?id=7" title="VALENOR Submariner Pro Diver 300M">
+                <img src="uploads/products/watch-diver-steel.jpg" alt="VALENOR Submariner Pro Diver 300M" loading="lazy">
+            </a>
+
+            <!-- Quick Action Overlay Buttons (Wishlist, Compare, Quick View) -->
+            <div class="product-quick-actions">
+                <button type="button" class="quick-action-btn btn-toggle-wishlist " data-product-id="7" title="Add to Wishlist" aria-label="Add to Wishlist">
+                    <i class="bi bi-heart"></i>
+                </button>
+                <button type="button" class="quick-action-btn btn-toggle-compare " data-product-id="7" title="Add to Compare" aria-label="Compare Product">
+                    <i class="bi bi-arrow-left-right"></i>
+                </button>
+                <a href="product-detail.php?id=7" class="quick-action-btn" title="View Details" aria-label="View Product Details">
+                    <i class="bi bi-eye"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Product Card Body -->
+        <div class="product-content">
+            <span class="product-cat-name">Divers &amp; Sports</span>
+            
+            <h4 class="product-name-heading">
+                <a href="product-detail.php?id=7" class="product-name-link" title="VALENOR Submariner Pro Diver 300M">
+                    VALENOR Submariner Pro Diver 300M                </a>
+            </h4>
+
+            <!-- Star Rating (Section 3.C) -->
+            <div class="mb-2">
+                <div class="star-rating d-inline-flex align-items-center gap-1" title="5.0 out of 5 stars"><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><span class="ms-1 text-muted small">(1)</span></div>            </div>
+
+            <!-- Short Description (Section 3.C) -->
+            <p class="product-short-desc">
+                Professional-grade 300-meter saturation dive watch with 120-click ceramic bezel, helium release valve, and diver extension clasp.            </p>
+
+            <!-- Price Row (Section 3.C) -->
+            <div class="product-price-row">
+                <div>
+                    <span class="price-current">Rs. 52,000.00</span>
+                                            <span class="price-regular">Rs. 64,000.00</span>
+                                    </div>
+                <div>
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:0.7rem;">In Stock</span>
+                                    </div>
+            </div>
+
+            <!-- Action Buttons: Add to Cart & View Details (Section 3.C) -->
+            <div class="product-card-actions">
+                <button type="button" class="btn-add-cart" data-product-id="7" data-quantity="1" >
+                    <i class="bi bi-bag-plus"></i> Add to Cart
+                </button>
+                <a href="product-detail.php?id=7" class="btn-view-details" title="Full Specifications & Gallery">
+                    Details
+                </a>
+            </div>
+        </div>
+    </div>
+                    </div>
+                    </div>
+    </div>
+</section>
+
+<!-- ===========================================================================
+     SECTION 9: FEATURED PRODUCTS
+     =========================================================================== -->
+<section id="featured-products" class="py-5" style="background-color: var(--bg-white); border-top: 1px solid var(--border-beige); border-bottom: 1px solid var(--border-beige);">
+    <div class="container py-4">
+        <div class="section-header">
+            <span class="section-eyebrow">Collector Highlights</span>
+            <h2 class="section-title">Featured Timepieces</h2>
+            <p class="section-subtitle">
+                Masterfully proportioned horological icons recognized for mechanical ingenuity and aesthetic balance.
+            </p>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="row g-4">
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="product-card">
+        <!-- Thumbnail Container -->
+        <div class="product-thumb">
+            <!-- Badges Stack -->
+            <div class="badge-stack">
+                                    <span class="valenor-badge valenor-badge-sale">-20% OFF</span>
+                                                    <span class="valenor-badge valenor-badge-new">New Arrival</span>
+                                                    <span class="valenor-badge valenor-badge-bestseller">Best Seller</span>
+                            </div>
+
+            <!-- Main Product Image -->
+            <a href="product-detail.php?id=1" title="VALENOR Carrera Tachymeter Chronograph">
+                <img src="uploads/products/watch-mens-chronograph.jpg" alt="VALENOR Carrera Tachymeter Chronograph" loading="lazy">
+            </a>
+
+            <!-- Quick Action Overlay Buttons (Wishlist, Compare, Quick View) -->
+            <div class="product-quick-actions">
+                <button type="button" class="quick-action-btn btn-toggle-wishlist " data-product-id="1" title="Add to Wishlist" aria-label="Add to Wishlist">
+                    <i class="bi bi-heart"></i>
+                </button>
+                <button type="button" class="quick-action-btn btn-toggle-compare " data-product-id="1" title="Add to Compare" aria-label="Compare Product">
+                    <i class="bi bi-arrow-left-right"></i>
+                </button>
+                <a href="product-detail.php?id=1" class="quick-action-btn" title="View Details" aria-label="View Product Details">
+                    <i class="bi bi-eye"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Product Card Body -->
+        <div class="product-content">
+            <span class="product-cat-name">Chronographs</span>
+            
+            <h4 class="product-name-heading">
+                <a href="product-detail.php?id=1" class="product-name-link" title="VALENOR Carrera Tachymeter Chronograph">
+                    VALENOR Carrera Tachymeter Chronograph                </a>
+            </h4>
+
+            <!-- Star Rating (Section 3.C) -->
+            <div class="mb-2">
+                <div class="star-rating d-inline-flex align-items-center gap-1" title="5.0 out of 5 stars"><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><span class="ms-1 text-muted small">(1)</span></div>            </div>
+
+            <!-- Short Description (Section 3.C) -->
+            <p class="product-short-desc">
+                High-precision Swiss quartz chronograph with triple sub-dials, tachymeter ceramic bezel, and brushed surgical steel bracelet.            </p>
+
+            <!-- Price Row (Section 3.C) -->
+            <div class="product-price-row">
+                <div>
+                    <span class="price-current">Rs. 38,800.00</span>
+                                            <span class="price-regular">Rs. 48,500.00</span>
+                                    </div>
+                <div>
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:0.7rem;">In Stock</span>
+                                    </div>
+            </div>
+
+            <!-- Action Buttons: Add to Cart & View Details (Section 3.C) -->
+            <div class="product-card-actions">
+                <button type="button" class="btn-add-cart" data-product-id="1" data-quantity="1" >
+                    <i class="bi bi-bag-plus"></i> Add to Cart
+                </button>
+                <a href="product-detail.php?id=1" class="btn-view-details" title="Full Specifications & Gallery">
+                    Details
+                </a>
+            </div>
+        </div>
+    </div>
+                    </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="product-card">
+        <!-- Thumbnail Container -->
+        <div class="product-thumb">
+            <!-- Badges Stack -->
+            <div class="badge-stack">
+                                    <span class="valenor-badge valenor-badge-sale">-15% OFF</span>
+                                                                    <span class="valenor-badge valenor-badge-bestseller">Best Seller</span>
+                            </div>
+
+            <!-- Main Product Image -->
+            <a href="product-detail.php?id=2" title="VALENOR Monaco Split-Second Chronometer">
+                <img src="uploads/products/watch-mens-chronograph.jpg" alt="VALENOR Monaco Split-Second Chronometer" loading="lazy">
+            </a>
+
+            <!-- Quick Action Overlay Buttons (Wishlist, Compare, Quick View) -->
+            <div class="product-quick-actions">
+                <button type="button" class="quick-action-btn btn-toggle-wishlist " data-product-id="2" title="Add to Wishlist" aria-label="Add to Wishlist">
+                    <i class="bi bi-heart"></i>
+                </button>
+                <button type="button" class="quick-action-btn btn-toggle-compare " data-product-id="2" title="Add to Compare" aria-label="Compare Product">
+                    <i class="bi bi-arrow-left-right"></i>
+                </button>
+                <a href="product-detail.php?id=2" class="quick-action-btn" title="View Details" aria-label="View Product Details">
+                    <i class="bi bi-eye"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Product Card Body -->
+        <div class="product-content">
+            <span class="product-cat-name">Chronographs</span>
+            
+            <h4 class="product-name-heading">
+                <a href="product-detail.php?id=2" class="product-name-link" title="VALENOR Monaco Split-Second Chronometer">
+                    VALENOR Monaco Split-Second Chronometer                </a>
+            </h4>
+
+            <!-- Star Rating (Section 3.C) -->
+            <div class="mb-2">
+                <div class="star-rating d-inline-flex align-items-center gap-1" title="4.9 out of 5 stars"><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><span class="ms-1 text-muted small">(14)</span></div>            </div>
+
+            <!-- Short Description (Section 3.C) -->
+            <p class="product-short-desc">
+                Square-cased vintage racing chronograph with dual sub-registers, sunburst sunray dial, and racing rally calfskin strap.            </p>
+
+            <!-- Price Row (Section 3.C) -->
+            <div class="product-price-row">
+                <div>
+                    <span class="price-current">Rs. 47,600.00</span>
+                                            <span class="price-regular">Rs. 56,000.00</span>
+                                    </div>
+                <div>
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:0.7rem;">In Stock</span>
+                                    </div>
+            </div>
+
+            <!-- Action Buttons: Add to Cart & View Details (Section 3.C) -->
+            <div class="product-card-actions">
+                <button type="button" class="btn-add-cart" data-product-id="2" data-quantity="1" >
+                    <i class="bi bi-bag-plus"></i> Add to Cart
+                </button>
+                <a href="product-detail.php?id=2" class="btn-view-details" title="Full Specifications & Gallery">
+                    Details
+                </a>
+            </div>
+        </div>
+    </div>
+                    </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="product-card">
+        <!-- Thumbnail Container -->
+        <div class="product-thumb">
+            <!-- Badges Stack -->
+            <div class="badge-stack">
+                                    <span class="valenor-badge valenor-badge-sale">-21% OFF</span>
+                                                    <span class="valenor-badge valenor-badge-new">New Arrival</span>
+                                                    <span class="valenor-badge valenor-badge-bestseller">Best Seller</span>
+                            </div>
+
+            <!-- Main Product Image -->
+            <a href="product-detail.php?id=3" title="VALENOR Royal Skeleton Caliber 88 Automatic">
+                <img src="uploads/products/watch-skeleton-tourbillon.jpg" alt="VALENOR Royal Skeleton Caliber 88 Automatic" loading="lazy">
+            </a>
+
+            <!-- Quick Action Overlay Buttons (Wishlist, Compare, Quick View) -->
+            <div class="product-quick-actions">
+                <button type="button" class="quick-action-btn btn-toggle-wishlist " data-product-id="3" title="Add to Wishlist" aria-label="Add to Wishlist">
+                    <i class="bi bi-heart"></i>
+                </button>
+                <button type="button" class="quick-action-btn btn-toggle-compare " data-product-id="3" title="Add to Compare" aria-label="Compare Product">
+                    <i class="bi bi-arrow-left-right"></i>
+                </button>
+                <a href="product-detail.php?id=3" class="quick-action-btn" title="View Details" aria-label="View Product Details">
+                    <i class="bi bi-eye"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Product Card Body -->
+        <div class="product-content">
+            <span class="product-cat-name">Automatic Luxury</span>
+            
+            <h4 class="product-name-heading">
+                <a href="product-detail.php?id=3" class="product-name-link" title="VALENOR Royal Skeleton Caliber 88 Automatic">
+                    VALENOR Royal Skeleton Caliber 88 Automatic                </a>
+            </h4>
+
+            <!-- Star Rating (Section 3.C) -->
+            <div class="mb-2">
+                <div class="star-rating d-inline-flex align-items-center gap-1" title="5.0 out of 5 stars"><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><span class="ms-1 text-muted small">(1)</span></div>            </div>
+
+            <!-- Short Description (Section 3.C) -->
+            <p class="product-short-desc">
+                Mesmerizing skeletonized self-winding timepiece showcasing an open-work movement, 42-hour power reserve, and exhibition back.            </p>
+
+            <!-- Price Row (Section 3.C) -->
+            <div class="product-price-row">
+                <div>
+                    <span class="price-current">Rs. 99,000.00</span>
+                                            <span class="price-regular">Rs. 125,000.00</span>
+                                    </div>
+                <div>
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:0.7rem;">In Stock</span>
+                                    </div>
+            </div>
+
+            <!-- Action Buttons: Add to Cart & View Details (Section 3.C) -->
+            <div class="product-card-actions">
+                <button type="button" class="btn-add-cart" data-product-id="3" data-quantity="1" >
+                    <i class="bi bi-bag-plus"></i> Add to Cart
+                </button>
+                <a href="product-detail.php?id=3" class="btn-view-details" title="Full Specifications & Gallery">
+                    Details
+                </a>
+            </div>
+        </div>
+    </div>
+                    </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="product-card">
+        <!-- Thumbnail Container -->
+        <div class="product-thumb">
+            <!-- Badges Stack -->
+            <div class="badge-stack">
+                                    <span class="valenor-badge valenor-badge-sale">-16% OFF</span>
+                                                            </div>
+
+            <!-- Main Product Image -->
+            <a href="product-detail.php?id=4" title="VALENOR Imperial Open-Heart Heritage Automatic">
+                <img src="uploads/products/watch-skeleton-tourbillon.jpg" alt="VALENOR Imperial Open-Heart Heritage Automatic" loading="lazy">
+            </a>
+
+            <!-- Quick Action Overlay Buttons (Wishlist, Compare, Quick View) -->
+            <div class="product-quick-actions">
+                <button type="button" class="quick-action-btn btn-toggle-wishlist " data-product-id="4" title="Add to Wishlist" aria-label="Add to Wishlist">
+                    <i class="bi bi-heart"></i>
+                </button>
+                <button type="button" class="quick-action-btn btn-toggle-compare " data-product-id="4" title="Add to Compare" aria-label="Compare Product">
+                    <i class="bi bi-arrow-left-right"></i>
+                </button>
+                <a href="product-detail.php?id=4" class="quick-action-btn" title="View Details" aria-label="View Product Details">
+                    <i class="bi bi-eye"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Product Card Body -->
+        <div class="product-content">
+            <span class="product-cat-name">Automatic Luxury</span>
+            
+            <h4 class="product-name-heading">
+                <a href="product-detail.php?id=4" class="product-name-link" title="VALENOR Imperial Open-Heart Heritage Automatic">
+                    VALENOR Imperial Open-Heart Heritage Automatic                </a>
+            </h4>
+
+            <!-- Star Rating (Section 3.C) -->
+            <div class="mb-2">
+                <div class="star-rating d-inline-flex align-items-center gap-1" title="4.9 out of 5 stars"><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><span class="ms-1 text-muted small">(14)</span></div>            </div>
+
+            <!-- Short Description (Section 3.C) -->
+            <p class="product-short-desc">
+                Luxury automatic dress watch featuring an open balance aperture at 9 o&#039;clock, Guilloché textured dial, and blued hands.            </p>
+
+            <!-- Price Row (Section 3.C) -->
+            <div class="product-price-row">
+                <div>
+                    <span class="price-current">Rs. 75,000.00</span>
+                                            <span class="price-regular">Rs. 89,000.00</span>
+                                    </div>
+                <div>
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:0.7rem;">In Stock</span>
+                                    </div>
+            </div>
+
+            <!-- Action Buttons: Add to Cart & View Details (Section 3.C) -->
+            <div class="product-card-actions">
+                <button type="button" class="btn-add-cart" data-product-id="4" data-quantity="1" >
+                    <i class="bi bi-bag-plus"></i> Add to Cart
+                </button>
+                <a href="product-detail.php?id=4" class="btn-view-details" title="Full Specifications & Gallery">
+                    Details
+                </a>
+            </div>
+        </div>
+    </div>
+                    </div>
+                    </div>
+    </div>
+</section>
+
+<!-- ===========================================================================
+     SECTION 11: SPECIAL DISCOUNT & PRIVILEGE COUPON BANNER
+     =========================================================================== -->
+<section class="special-offer-banner" aria-label="Privilege Promotion">
+    <div class="container">
+        <div class="special-offer-box">
+            <span class="valenor-badge valenor-badge-sale mb-3 d-inline-block">Limited Collector Privilege</span>
+            <h2 style="font-family:var(--font-serif); font-size:3.2rem; font-weight:700; margin-bottom:14px;">
+                20% OFF Exceptional Timepieces
+            </h2>
+            <p style="font-size:1.05rem; color:#E8DED2; max-width:540px; margin:0 auto 20px auto; line-height:1.6;">
+                Apply your exclusive privilege code at checkout to enjoy 20% savings on qualifying orders over Rs. 25,000, accompanied by complimentary insured courier delivery.
+            </p>
+
+            <!-- Click to Copy Coupon Code -->
+            <div>
+                <button type="button" class="coupon-pill coupon-copy-btn" data-code="VALENOR20" title="Click to copy coupon code">
+                    <span>Code:</span>
+                    <span class="coupon-code">VALENOR20</span>
+                    <i class="bi bi-clipboard ms-1"></i>
+                </button>
+            </div>
+
+            <div class="mt-3">
+                <a href="products.php?filter=sale" class="btn-valenor-primary" style="background:#FFFFFF; color:var(--text-charcoal); border-color:#FFFFFF;">
+                    Shop Special Offers &rarr;
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===========================================================================
+     SECTION 10: BEST-SELLING PRODUCTS
+     =========================================================================== -->
+<section id="best-sellers" class="py-5">
+    <div class="container py-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-end mb-4">
+            <div>
+                <span class="section-eyebrow" style="text-align:left;">Most Coveted</span>
+                <h2 class="section-title" style="text-align:left; margin-bottom:0;">Best-Selling Watches</h2>
+            </div>
+            <div class="mt-3 mt-md-0">
+                <a href="products.php?filter=best_sellers" class="btn btn-outline-dark rounded-pill px-4" style="border-color:var(--border-beige); font-size:0.85rem;">
+                    Explore Best Sellers &rarr;
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4">
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="product-card">
+        <!-- Thumbnail Container -->
+        <div class="product-thumb">
+            <!-- Badges Stack -->
+            <div class="badge-stack">
+                                    <span class="valenor-badge valenor-badge-sale">-20% OFF</span>
+                                                    <span class="valenor-badge valenor-badge-new">New Arrival</span>
+                                                    <span class="valenor-badge valenor-badge-bestseller">Best Seller</span>
+                            </div>
+
+            <!-- Main Product Image -->
+            <a href="product-detail.php?id=1" title="VALENOR Carrera Tachymeter Chronograph">
+                <img src="uploads/products/watch-mens-chronograph.jpg" alt="VALENOR Carrera Tachymeter Chronograph" loading="lazy">
+            </a>
+
+            <!-- Quick Action Overlay Buttons (Wishlist, Compare, Quick View) -->
+            <div class="product-quick-actions">
+                <button type="button" class="quick-action-btn btn-toggle-wishlist " data-product-id="1" title="Add to Wishlist" aria-label="Add to Wishlist">
+                    <i class="bi bi-heart"></i>
+                </button>
+                <button type="button" class="quick-action-btn btn-toggle-compare " data-product-id="1" title="Add to Compare" aria-label="Compare Product">
+                    <i class="bi bi-arrow-left-right"></i>
+                </button>
+                <a href="product-detail.php?id=1" class="quick-action-btn" title="View Details" aria-label="View Product Details">
+                    <i class="bi bi-eye"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Product Card Body -->
+        <div class="product-content">
+            <span class="product-cat-name">Chronographs</span>
+            
+            <h4 class="product-name-heading">
+                <a href="product-detail.php?id=1" class="product-name-link" title="VALENOR Carrera Tachymeter Chronograph">
+                    VALENOR Carrera Tachymeter Chronograph                </a>
+            </h4>
+
+            <!-- Star Rating (Section 3.C) -->
+            <div class="mb-2">
+                <div class="star-rating d-inline-flex align-items-center gap-1" title="5.0 out of 5 stars"><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><span class="ms-1 text-muted small">(1)</span></div>            </div>
+
+            <!-- Short Description (Section 3.C) -->
+            <p class="product-short-desc">
+                High-precision Swiss quartz chronograph with triple sub-dials, tachymeter ceramic bezel, and brushed surgical steel bracelet.            </p>
+
+            <!-- Price Row (Section 3.C) -->
+            <div class="product-price-row">
+                <div>
+                    <span class="price-current">Rs. 38,800.00</span>
+                                            <span class="price-regular">Rs. 48,500.00</span>
+                                    </div>
+                <div>
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:0.7rem;">In Stock</span>
+                                    </div>
+            </div>
+
+            <!-- Action Buttons: Add to Cart & View Details (Section 3.C) -->
+            <div class="product-card-actions">
+                <button type="button" class="btn-add-cart" data-product-id="1" data-quantity="1" >
+                    <i class="bi bi-bag-plus"></i> Add to Cart
+                </button>
+                <a href="product-detail.php?id=1" class="btn-view-details" title="Full Specifications & Gallery">
+                    Details
+                </a>
+            </div>
+        </div>
+    </div>
+                    </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="product-card">
+        <!-- Thumbnail Container -->
+        <div class="product-thumb">
+            <!-- Badges Stack -->
+            <div class="badge-stack">
+                                    <span class="valenor-badge valenor-badge-sale">-15% OFF</span>
+                                                                    <span class="valenor-badge valenor-badge-bestseller">Best Seller</span>
+                            </div>
+
+            <!-- Main Product Image -->
+            <a href="product-detail.php?id=2" title="VALENOR Monaco Split-Second Chronometer">
+                <img src="uploads/products/watch-mens-chronograph.jpg" alt="VALENOR Monaco Split-Second Chronometer" loading="lazy">
+            </a>
+
+            <!-- Quick Action Overlay Buttons (Wishlist, Compare, Quick View) -->
+            <div class="product-quick-actions">
+                <button type="button" class="quick-action-btn btn-toggle-wishlist " data-product-id="2" title="Add to Wishlist" aria-label="Add to Wishlist">
+                    <i class="bi bi-heart"></i>
+                </button>
+                <button type="button" class="quick-action-btn btn-toggle-compare " data-product-id="2" title="Add to Compare" aria-label="Compare Product">
+                    <i class="bi bi-arrow-left-right"></i>
+                </button>
+                <a href="product-detail.php?id=2" class="quick-action-btn" title="View Details" aria-label="View Product Details">
+                    <i class="bi bi-eye"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Product Card Body -->
+        <div class="product-content">
+            <span class="product-cat-name">Chronographs</span>
+            
+            <h4 class="product-name-heading">
+                <a href="product-detail.php?id=2" class="product-name-link" title="VALENOR Monaco Split-Second Chronometer">
+                    VALENOR Monaco Split-Second Chronometer                </a>
+            </h4>
+
+            <!-- Star Rating (Section 3.C) -->
+            <div class="mb-2">
+                <div class="star-rating d-inline-flex align-items-center gap-1" title="4.9 out of 5 stars"><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><span class="ms-1 text-muted small">(14)</span></div>            </div>
+
+            <!-- Short Description (Section 3.C) -->
+            <p class="product-short-desc">
+                Square-cased vintage racing chronograph with dual sub-registers, sunburst sunray dial, and racing rally calfskin strap.            </p>
+
+            <!-- Price Row (Section 3.C) -->
+            <div class="product-price-row">
+                <div>
+                    <span class="price-current">Rs. 47,600.00</span>
+                                            <span class="price-regular">Rs. 56,000.00</span>
+                                    </div>
+                <div>
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:0.7rem;">In Stock</span>
+                                    </div>
+            </div>
+
+            <!-- Action Buttons: Add to Cart & View Details (Section 3.C) -->
+            <div class="product-card-actions">
+                <button type="button" class="btn-add-cart" data-product-id="2" data-quantity="1" >
+                    <i class="bi bi-bag-plus"></i> Add to Cart
+                </button>
+                <a href="product-detail.php?id=2" class="btn-view-details" title="Full Specifications & Gallery">
+                    Details
+                </a>
+            </div>
+        </div>
+    </div>
+                    </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="product-card">
+        <!-- Thumbnail Container -->
+        <div class="product-thumb">
+            <!-- Badges Stack -->
+            <div class="badge-stack">
+                                    <span class="valenor-badge valenor-badge-sale">-21% OFF</span>
+                                                    <span class="valenor-badge valenor-badge-new">New Arrival</span>
+                                                    <span class="valenor-badge valenor-badge-bestseller">Best Seller</span>
+                            </div>
+
+            <!-- Main Product Image -->
+            <a href="product-detail.php?id=3" title="VALENOR Royal Skeleton Caliber 88 Automatic">
+                <img src="uploads/products/watch-skeleton-tourbillon.jpg" alt="VALENOR Royal Skeleton Caliber 88 Automatic" loading="lazy">
+            </a>
+
+            <!-- Quick Action Overlay Buttons (Wishlist, Compare, Quick View) -->
+            <div class="product-quick-actions">
+                <button type="button" class="quick-action-btn btn-toggle-wishlist " data-product-id="3" title="Add to Wishlist" aria-label="Add to Wishlist">
+                    <i class="bi bi-heart"></i>
+                </button>
+                <button type="button" class="quick-action-btn btn-toggle-compare " data-product-id="3" title="Add to Compare" aria-label="Compare Product">
+                    <i class="bi bi-arrow-left-right"></i>
+                </button>
+                <a href="product-detail.php?id=3" class="quick-action-btn" title="View Details" aria-label="View Product Details">
+                    <i class="bi bi-eye"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Product Card Body -->
+        <div class="product-content">
+            <span class="product-cat-name">Automatic Luxury</span>
+            
+            <h4 class="product-name-heading">
+                <a href="product-detail.php?id=3" class="product-name-link" title="VALENOR Royal Skeleton Caliber 88 Automatic">
+                    VALENOR Royal Skeleton Caliber 88 Automatic                </a>
+            </h4>
+
+            <!-- Star Rating (Section 3.C) -->
+            <div class="mb-2">
+                <div class="star-rating d-inline-flex align-items-center gap-1" title="5.0 out of 5 stars"><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><span class="ms-1 text-muted small">(1)</span></div>            </div>
+
+            <!-- Short Description (Section 3.C) -->
+            <p class="product-short-desc">
+                Mesmerizing skeletonized self-winding timepiece showcasing an open-work movement, 42-hour power reserve, and exhibition back.            </p>
+
+            <!-- Price Row (Section 3.C) -->
+            <div class="product-price-row">
+                <div>
+                    <span class="price-current">Rs. 99,000.00</span>
+                                            <span class="price-regular">Rs. 125,000.00</span>
+                                    </div>
+                <div>
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:0.7rem;">In Stock</span>
+                                    </div>
+            </div>
+
+            <!-- Action Buttons: Add to Cart & View Details (Section 3.C) -->
+            <div class="product-card-actions">
+                <button type="button" class="btn-add-cart" data-product-id="3" data-quantity="1" >
+                    <i class="bi bi-bag-plus"></i> Add to Cart
+                </button>
+                <a href="product-detail.php?id=3" class="btn-view-details" title="Full Specifications & Gallery">
+                    Details
+                </a>
+            </div>
+        </div>
+    </div>
+                    </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="product-card">
+        <!-- Thumbnail Container -->
+        <div class="product-thumb">
+            <!-- Badges Stack -->
+            <div class="badge-stack">
+                                    <span class="valenor-badge valenor-badge-sale">-14% OFF</span>
+                                                                    <span class="valenor-badge valenor-badge-bestseller">Best Seller</span>
+                            </div>
+
+            <!-- Main Product Image -->
+            <a href="product-detail.php?id=5" title="VALENOR Geneve Ultra-Slim Rose Gold">
+                <img src="uploads/products/watch-leather-dress.jpg" alt="VALENOR Geneve Ultra-Slim Rose Gold" loading="lazy">
+            </a>
+
+            <!-- Quick Action Overlay Buttons (Wishlist, Compare, Quick View) -->
+            <div class="product-quick-actions">
+                <button type="button" class="quick-action-btn btn-toggle-wishlist " data-product-id="5" title="Add to Wishlist" aria-label="Add to Wishlist">
+                    <i class="bi bi-heart"></i>
+                </button>
+                <button type="button" class="quick-action-btn btn-toggle-compare " data-product-id="5" title="Add to Compare" aria-label="Compare Product">
+                    <i class="bi bi-arrow-left-right"></i>
+                </button>
+                <a href="product-detail.php?id=5" class="quick-action-btn" title="View Details" aria-label="View Product Details">
+                    <i class="bi bi-eye"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Product Card Body -->
+        <div class="product-content">
+            <span class="product-cat-name">Classic Dress</span>
+            
+            <h4 class="product-name-heading">
+                <a href="product-detail.php?id=5" class="product-name-link" title="VALENOR Geneve Ultra-Slim Rose Gold">
+                    VALENOR Geneve Ultra-Slim Rose Gold                </a>
+            </h4>
+
+            <!-- Star Rating (Section 3.C) -->
+            <div class="mb-2">
+                <div class="star-rating d-inline-flex align-items-center gap-1" title="4.9 out of 5 stars"><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><span class="ms-1 text-muted small">(14)</span></div>            </div>
+
+            <!-- Short Description (Section 3.C) -->
+            <p class="product-short-desc">
+                Impossibly slim 6.8mm profile formal timepiece in 18K rose gold electroplate with warm cream enamel dial and croc leather strap.            </p>
+
+            <!-- Price Row (Section 3.C) -->
+            <div class="product-price-row">
+                <div>
+                    <span class="price-current">Rs. 29,500.00</span>
+                                            <span class="price-regular">Rs. 34,500.00</span>
+                                    </div>
+                <div>
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size:0.7rem;">In Stock</span>
+                                    </div>
+            </div>
+
+            <!-- Action Buttons: Add to Cart & View Details (Section 3.C) -->
+            <div class="product-card-actions">
+                <button type="button" class="btn-add-cart" data-product-id="5" data-quantity="1" >
+                    <i class="bi bi-bag-plus"></i> Add to Cart
+                </button>
+                <a href="product-detail.php?id=5" class="btn-view-details" title="Full Specifications & Gallery">
+                    Details
+                </a>
+            </div>
+        </div>
+    </div>
+                    </div>
+                    </div>
+    </div>
+</section>
+
+<!-- ===========================================================================
+     SECTION 12: CUSTOMER REVIEWS PREVIEW
+     =========================================================================== -->
+<section id="reviews" class="py-5" style="background-color: var(--bg-white); border-top: 1px solid var(--border-beige); border-bottom: 1px solid var(--border-beige);">
+    <div class="container py-4">
+        <div class="section-header">
+            <span class="section-eyebrow">Verified Collector Feedback</span>
+            <h2 class="section-title">Client Testimonials</h2>
+            <p class="section-subtitle">
+                Over 18,000 connoisseurs nationwide trust VALENOR for authentic horological craftsmanship and attentive concierge service.
+            </p>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="row g-4">
+                                                <div class="col-lg-4 col-md-6">
+                        <div class="review-card">
+                            <div class="review-quote-icon">
+                                <i class="bi bi-quote"></i>
+                            </div>
+                            <div class="mb-2">
+                                <div class="star-rating d-inline-flex align-items-center gap-1" title="5.0 out of 5 stars"><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i></div>                            </div>
+                            <h3 class="review-title">Unbeatable dive watch quality</h3>
+                            <p class="review-text">
+                                "300 meters depth rating with a genuine ceramic bezel at this price point is unmatched in Pakistan. The blue lume lasts the entire night. Highly recommended!"
+                            </p>
+                            <div class="reviewer-meta">
+                                <div class="reviewer-avatar">
+                                    H                                </div>
+                                <div>
+                                    <h4 class="reviewer-name">Hamza T.</h4>
+                                    <div class="verified-badge">
+                                        <i class="bi bi-patch-check-fill"></i> Verified Collector &bull; VALENOR Submariner Pro Diver 300M                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                    <div class="col-lg-4 col-md-6">
+                        <div class="review-card">
+                            <div class="review-quote-icon">
+                                <i class="bi bi-quote"></i>
+                            </div>
+                            <div class="mb-2">
+                                <div class="star-rating d-inline-flex align-items-center gap-1" title="5.0 out of 5 stars"><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i></div>                            </div>
+                            <h3 class="review-title">Breathtaking mechanical artwork</h3>
+                            <p class="review-text">
+                                "The skeleton movement Caliber 88 is absolutely mesmerizing in person. You can see every beat and gear interaction. I receive compliments every single time I wear it to formal dinners."
+                            </p>
+                            <div class="reviewer-meta">
+                                <div class="reviewer-avatar">
+                                    H                                </div>
+                                <div>
+                                    <h4 class="reviewer-name">Hamza T.</h4>
+                                    <div class="verified-badge">
+                                        <i class="bi bi-patch-check-fill"></i> Verified Collector &bull; VALENOR Royal Skeleton Caliber 88 Automatic                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                    <div class="col-lg-4 col-md-6">
+                        <div class="review-card">
+                            <div class="review-quote-icon">
+                                <i class="bi bi-quote"></i>
+                            </div>
+                            <div class="mb-2">
+                                <div class="star-rating d-inline-flex align-items-center gap-1" title="5.0 out of 5 stars"><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i></div>                            </div>
+                            <h3 class="review-title">Outstanding craftsmanship and presence!</h3>
+                            <p class="review-text">
+                                "The Carrera Chronograph exceeded all my expectations. The weight, the sapphire dome, and the tactile click of the chronograph pushers feel like a five-figure luxury watch. Delivery was fast and securely packaged."
+                            </p>
+                            <div class="reviewer-meta">
+                                <div class="reviewer-avatar">
+                                    H                                </div>
+                                <div>
+                                    <h4 class="reviewer-name">Hamza T.</h4>
+                                    <div class="verified-badge">
+                                        <i class="bi bi-patch-check-fill"></i> Verified Collector &bull; VALENOR Carrera Tachymeter Chronograph                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                    </div>
+    </div>
+</section>
+
+<!-- ===========================================================================
+     SECTION 13: NEWSLETTER SUBSCRIPTION
+     =========================================================================== -->
+<section class="newsletter-section">
+    <div class="container">
+        <div class="newsletter-box">
+            <span class="section-eyebrow">Private Correspondence</span>
+            <h2 style="font-family:var(--font-serif); font-size:2.4rem; font-weight:700; margin-bottom:10px;">
+                Join The VALENOR Horology Gazette
+            </h2>
+            <p class="text-muted" style="font-size:0.92rem; line-height:1.6;">
+                Subscribe to receive private invitations to limited-edition watch releases, horological insights, and an immediate 10% welcome privilege code.
+            </p>
+
+            <form id="newsletter-form" class="newsletter-form">
+                <input type="email" id="newsletter-email" name="email" class="newsletter-input" placeholder="Enter your email address..." required>
+                <button type="submit" class="btn-valenor-primary" style="white-space:nowrap; padding:13px 24px;">
+                    <i class="bi bi-envelope-paper me-1"></i> Subscribe
+                </button>
+            </form>
+            <div class="mt-3 text-muted small">
+                <i class="bi bi-lock me-1"></i> We respect your privacy. Unsubscribe at any time.
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ===========================================================================
+     SITE FOOTER
+     =========================================================================== -->
+<footer class="site-footer">
+    <div class="container">
+        <div class="row g-4">
+
+            <!-- Col 1: Brand Info -->
+            <div class="col-lg-4 col-md-6">
+                <div class="footer-brand-title">VALENOR</div>
+                <span class="footer-brand-sub">Genève &bull; Haute Horlogerie</span>
+                <p style="color:#A8A096; line-height:1.7; font-size:0.86rem; max-width:320px;">
+                    Dedicated to the enduring art of classical and modern mechanical watchmaking. Hand-assembled luxury timepieces engineered with sapphire crystal and surgical-grade steel.
+                </p>
+                <div class="social-links">
+                    <a href="https://instagram.com" target="_blank" rel="noopener" class="social-btn" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="https://facebook.com" target="_blank" rel="noopener" class="social-btn" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="https://youtube.com" target="_blank" rel="noopener" class="social-btn" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+                    <a href="https://linkedin.com" target="_blank" rel="noopener" class="social-btn" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+
+            <!-- Col 2: Navigation Links -->
+            <div class="col-lg-2 col-md-6 col-6">
+                <h5 class="footer-heading">Collections</h5>
+                <ul class="footer-links">
+                    <li><a href="products.php?category=chronographs"><i class="bi bi-chevron-right small"></i>Chronographs</a></li>
+                    <li><a href="products.php?category=automatic-luxury"><i class="bi bi-chevron-right small"></i>Automatic Luxury</a></li>
+                    <li><a href="products.php?category=classic-dress"><i class="bi bi-chevron-right small"></i>Classic Dress</a></li>
+                    <li><a href="products.php?category=divers-sports"><i class="bi bi-chevron-right small"></i>Divers &amp; Sports</a></li>
+                    <li><a href="products.php?category=minimalist-elegance"><i class="bi bi-chevron-right small"></i>Minimalist</a></li>
+                    <li><a href="products.php?filter=sale" style="color:var(--caramel-light);"><i class="bi bi-tag-fill small me-1"></i>20% Privilege Sale</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 3: Customer Care & Services -->
+            <div class="col-lg-3 col-md-6 col-6">
+                <h5 class="footer-heading">Client Services</h5>
+                <ul class="footer-links">
+                    <li><a href="track-order.php"><i class="bi bi-geo-alt me-1 text-warning"></i>Live Order Tracking</a></li>
+                    <li><a href="request-return.php"><i class="bi bi-arrow-counterclockwise me-1"></i>14-Day Return Guarantee</a></li>
+                    <li><a href="compare.php"><i class="bi bi-arrow-left-right me-1"></i>Product Comparison</a></li>
+                    <li><a href="wishlist.php"><i class="bi bi-heart me-1"></i>Collector Wishlist</a></li>
+                    <li><a href="about.php"><i class="bi bi-award me-1"></i>Swiss Heritage &amp; Quality</a></li>
+                    <li><a href="contact.php"><i class="bi bi-envelope me-1"></i>Concierge Support</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 4: Boutique Concierge Contact -->
+            <div class="col-lg-3 col-md-6">
+                <h5 class="footer-heading">Boutique Concierge</h5>
+                <div class="footer-contact-item">
+                    <i class="bi bi-geo-alt-fill"></i>
+                    <div>Suite 402, Executive Horology Tower, Blue Area, Islamabad, Pakistan</div>
+                </div>
+                <div class="footer-contact-item">
+                    <i class="bi bi-telephone-fill"></i>
+                    <div>+92 300 000 8253</div>
+                </div>
+                <div class="footer-contact-item">
+                    <i class="bi bi-envelope-fill"></i>
+                    <div>concierge@valenor.com</div>
+                </div>
+                <div class="mt-3">
+                    <span class="badge" style="background:var(--caramel-dark); font-size:0.75rem; padding:6px 10px;">
+                        <i class="bi bi-cash me-1"></i> Cash on Delivery Available
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Bottom Copyright and Payment Icons -->
+        <div class="footer-bottom d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div>
+                &copy; 2026 <strong>VALENOR Horology</strong>. All Rights Reserved. Engineered with Core PHP &amp; MySQL.
+            </div>
+            <div class="d-flex align-items-center gap-3" style="font-size:0.78rem;">
+                <span class="text-white-50"><i class="bi bi-shield-lock me-1 text-success"></i> 256-Bit SSL Secured</span>
+                <span class="text-white-50">&bull;</span>
+                <span class="text-white-50"><i class="bi bi-truck me-1"></i> Insured BlueEx Courier</span>
+                <span class="text-white-50">&bull;</span>
+                <span class="text-white-50">Cash on Delivery (COD)</span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Toast Notifications Container -->
+<div class="valenor-toast-container" aria-live="polite" aria-atomic="true"></div>
+
+<!-- Bootstrap 5 Bundle JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom Storefront JS -->
+<script src="assets/js/main.js"></script>
+</body>
+</html>
