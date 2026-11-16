@@ -57,3 +57,4 @@ try {
 
 header('Location: ' . ADMIN_URL . '/categories.php');
 exit;
+

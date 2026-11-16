@@ -356,6 +356,135 @@ function merge_guest_cart_to_db($customerId) {
     }
 }
 
+/**
+ * Merges guest session wishlist items into customer's database wishlist upon login or registration.
+ */
+function merge_guest_wishlist_to_db($customerId) {
+    if (empty($_SESSION['wishlist']) || !is_array($_SESSION['wishlist'])) {
+        return;
+    }
+
+    $db = getDB();
+
+    try {
+        $stmt = $db->prepare("SELECT id FROM wishlists WHERE customer_id = ? LIMIT 1");
+        $stmt->execute([(int)$customerId]);
+        $wishlistId = $stmt->fetchColumn();
+
+        if (!$wishlistId) {
+            $stmt = $db->prepare("INSERT INTO wishlists (customer_id, created_at, updated_at) VALUES (?, NOW(), NOW())");
+            $stmt->execute([(int)$customerId]);
+            $wishlistId = $db->lastInsertId();
+        }
+
+        foreach ($_SESSION['wishlist'] as $prodId) {
+            $prodId = (int)$prodId;
+            if ($prodId <= 0) continue;
+
+            $chk = $db->prepare("SELECT id FROM wishlist_items WHERE wishlist_id = ? AND product_id = ? LIMIT 1");
+            $chk->execute([$wishlistId, $prodId]);
+            if (!$chk->fetchColumn()) {
+                $ins = $db->prepare("INSERT INTO wishlist_items (wishlist_id, product_id, created_at) VALUES (?, ?, NOW())");
+                $ins->execute([$wishlistId, $prodId]);
+            }
+        }
+
+        unset($_SESSION['wishlist']);
+    } catch (Exception $e) {
+        error_log("Failed to merge guest wishlist: " . $e->getMessage());
+    }
+}
+
+/**
+ * Moves a product from wishlist to cart for an authenticated customer or guest.
+ * Returns array with success status, message, and updated counts.
+ */
+function move_wishlist_to_cart($productId, $customerId = null) {
+    $db = getDB();
+    $productId = (int)$productId;
+    if ($productId <= 0) {
+        return ['success' => false, 'message' => 'Invalid product specified.'];
+    }
+
+    // Check stock & active status
+    $stmt = $db->prepare("SELECT id, name, stock_quantity, status FROM products WHERE id = ? LIMIT 1");
+    $stmt->execute([$productId]);
+    $prod = $stmt->fetch();
+    if (!$prod || $prod['status'] !== 'active') {
+        return ['success' => false, 'message' => 'This timepiece is currently unavailable.'];
+    }
+    if ($prod['stock_quantity'] < 1) {
+        return ['success' => false, 'message' => 'This timepiece is currently out of stock.'];
+    }
+
+    if (is_logged_in() || $customerId) {
+        $cid = $customerId ?: current_user_id();
+
+        // 1. Ensure cart exists
+        $stmt = $db->prepare("SELECT id FROM carts WHERE customer_id = ? LIMIT 1");
+        $stmt->execute([$cid]);
+        $cartId = $stmt->fetchColumn();
+        if (!$cartId) {
+            $stmt = $db->prepare("INSERT INTO carts (customer_id, created_at, updated_at) VALUES (?, NOW(), NOW())");
+            $stmt->execute([$cid]);
+            $cartId = $db->lastInsertId();
+        }
+
+        // 2. Add or increment in cart_items
+        $stmt = $db->prepare("SELECT id, quantity FROM cart_items WHERE cart_id = ? AND product_id = ? AND variant_id IS NULL LIMIT 1");
+        $stmt->execute([$cartId, $productId]);
+        $existing = $stmt->fetch();
+        if ($existing) {
+            $db->prepare("UPDATE cart_items SET quantity = quantity + 1, updated_at = NOW() WHERE id = ?")->execute([$existing['id']]);
+        } else {
+            $db->prepare("INSERT INTO cart_items (cart_id, product_id, quantity, created_at, updated_at) VALUES (?, ?, 1, NOW(), NOW())")->execute([$cartId, $productId]);
+        }
+        $db->prepare("UPDATE carts SET updated_at = NOW() WHERE id = ?")->execute([$cartId]);
+
+        // 3. Remove from wishlist_items
+        $stmt = $db->prepare("SELECT id FROM wishlists WHERE customer_id = ? LIMIT 1");
+        $stmt->execute([$cid]);
+        $wishlistId = $stmt->fetchColumn();
+        if ($wishlistId) {
+            $db->prepare("DELETE FROM wishlist_items WHERE wishlist_id = ? AND product_id = ?")->execute([$wishlistId, $productId]);
+        }
+
+        return [
+            'success'        => true,
+            'message'        => '<strong>' . e($prod['name']) . '</strong> moved to your shopping bag.',
+            'cart_count'     => get_cart_count(),
+            'wishlist_count' => get_wishlist_count()
+        ];
+    } else {
+        // Guest mode fallback
+        if (!isset($_SESSION['guest_cart'])) $_SESSION['guest_cart'] = [];
+        $cartKey = (string)$productId;
+        if (isset($_SESSION['guest_cart'][$cartKey])) {
+            $_SESSION['guest_cart'][$cartKey]['quantity'] += 1;
+        } else {
+            $_SESSION['guest_cart'][$cartKey] = [
+                'product_id' => $productId,
+                'variant_id' => null,
+                'quantity'   => 1,
+                'added_at'   => time()
+            ];
+        }
+        if (isset($_SESSION['wishlist']) && is_array($_SESSION['wishlist'])) {
+            $pos = array_search($productId, $_SESSION['wishlist']);
+            if ($pos !== false) {
+                unset($_SESSION['wishlist'][$pos]);
+                $_SESSION['wishlist'] = array_values($_SESSION['wishlist']);
+            }
+        }
+        return [
+            'success'        => true,
+            'message'        => '<strong>' . e($prod['name']) . '</strong> moved to your shopping bag.',
+            'cart_count'     => get_cart_count(),
+            'wishlist_count' => count($_SESSION['wishlist'] ?? [])
+        ];
+    }
+}
+
 // =============================================================================
 // WISHLIST & COMPARISON HELPERS
 // =============================================================================

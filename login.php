@@ -37,8 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['customer_id'] = (int)$customer['id'];
                     $_SESSION['customer_name'] = $customer['first_name'] . ' ' . $customer['last_name'];
 
-                    // MERGE GUEST CART INTO MYSQL (Section 20 requirement)
+                    // MERGE GUEST CART & WISHLIST INTO MYSQL
                     merge_guest_cart_to_db($customer['id']);
+                    merge_guest_wishlist_to_db($customer['id']);
 
                     set_flash('success', 'Welcome back, ' . $customer['first_name'] . '! You are now signed in.');
                     header('Location: ' . BASE_URL . '/' . ltrim($redirect, '/'));
@@ -70,6 +71,11 @@ require_once INCLUDES_PATH . '/navbar.php';
                     <div class="alert alert-info py-2 px-3 small d-flex align-items-center gap-2 mb-4" role="alert" style="background-color:var(--bg-cream); border-color:var(--border-beige); color:var(--caramel-dark);">
                         <i class="bi bi-bag-check fs-5"></i>
                         <div>Please sign in to view and manage your shopping bag. Your items are safely saved.</div>
+                    </div>
+                <?php elseif ($redirect === 'wishlist.php'): ?>
+                    <div class="alert alert-info py-2 px-3 small d-flex align-items-center gap-2 mb-4" role="alert" style="background-color:var(--bg-cream); border-color:var(--border-beige); color:var(--caramel-dark);">
+                        <i class="bi bi-heart fs-5"></i>
+                        <div>Please sign in to access your saved timepieces. Your curated wishlist is protected.</div>
                     </div>
                 <?php endif; ?>
 

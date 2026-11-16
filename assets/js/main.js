@@ -225,6 +225,126 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // -------------------------------------------------------------------------
+    // 5B. WISHLIST: MOVE TO CART & REMOVE ACTIONS
+    // -------------------------------------------------------------------------
+    document.addEventListener('click', function (e) {
+        // Move to Bag Handler
+        const moveBtn = e.target.closest('.btn-move-cart');
+        if (moveBtn) {
+            e.preventDefault();
+            const productId = moveBtn.dataset.productId;
+            if (!productId) return;
+
+            const origHtml = moveBtn.innerHTML;
+            moveBtn.disabled = true;
+            moveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status"></span> Moving...';
+
+            const formData = new FormData();
+            formData.append('action', 'move_to_cart');
+            formData.append('product_id', productId);
+
+            fetch('ajax/wishlist.php', {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                moveBtn.disabled = false;
+                moveBtn.innerHTML = origHtml;
+
+                if (data.success) {
+                    // Update badges
+                    document.querySelectorAll('.cart-badge').forEach(b => {
+                        b.textContent = data.cart_count;
+                        b.classList.remove('d-none');
+                    });
+                    document.querySelectorAll('.wishlist-badge').forEach(b => {
+                        b.textContent = data.wishlist_count;
+                    });
+
+                    // Remove row from UI
+                    const row = document.getElementById(`wishlist-row-${productId}`);
+                    const rowM = document.getElementById(`wishlist-row-m-${productId}`);
+                    if (row) {
+                        row.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                        row.style.opacity = '0';
+                        setTimeout(() => row.remove(), 300);
+                    }
+                    if (rowM) {
+                        rowM.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                        rowM.style.opacity = '0';
+                        setTimeout(() => rowM.remove(), 300);
+                    }
+
+                    const viewBagLink = '<a href="cart.php" class="btn btn-sm btn-dark mt-1 py-1 px-2" style="font-size:0.75rem;">View Bag &rarr;</a>';
+                    showToast(data.message, 'success', viewBagLink);
+
+                    if (data.wishlist_count === 0) {
+                        setTimeout(() => location.reload(), 600);
+                    }
+                } else {
+                    showToast(data.message || 'Could not move timepiece to bag.', 'warning');
+                }
+            })
+            .catch(() => {
+                moveBtn.disabled = false;
+                moveBtn.innerHTML = origHtml;
+                showToast('Server communication failed.', 'danger');
+            });
+            return;
+        }
+
+        // Remove from Wishlist Handler
+        const remBtn = e.target.closest('.btn-remove-wishlist');
+        if (remBtn) {
+            e.preventDefault();
+            const productId = remBtn.dataset.productId;
+            if (!productId) return;
+
+            const formData = new FormData();
+            formData.append('action', 'remove');
+            formData.append('product_id', productId);
+
+            fetch('ajax/wishlist.php', {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.querySelectorAll('.wishlist-badge').forEach(b => {
+                        b.textContent = data.wishlist_count;
+                    });
+
+                    const row = document.getElementById(`wishlist-row-${productId}`);
+                    const rowM = document.getElementById(`wishlist-row-m-${productId}`);
+                    if (row) {
+                        row.style.transition = 'opacity 0.3s ease';
+                        row.style.opacity = '0';
+                        setTimeout(() => row.remove(), 300);
+                    }
+                    if (rowM) {
+                        rowM.style.transition = 'opacity 0.3s ease';
+                        rowM.style.opacity = '0';
+                        setTimeout(() => rowM.remove(), 300);
+                    }
+
+                    showToast(data.message, 'info');
+
+                    if (data.wishlist_count === 0) {
+                        setTimeout(() => location.reload(), 500);
+                    }
+                }
+            })
+            .catch(() => {
+                showToast('Failed to remove item.', 'danger');
+            });
+        }
+    });
+
+    // -------------------------------------------------------------------------
     // 6. COUPON COPY INTERACTION
     // -------------------------------------------------------------------------
     document.querySelectorAll('.coupon-copy-btn').forEach(btn => {

@@ -94,6 +94,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['image_action'])) {
             }
         }
 
+        // 2B. REPLACE INDIVIDUAL IMAGE (Phase 05)
+        if ($imgAction === 'replace_image') {
+            $imgId = (int)($_POST['image_id'] ?? 0);
+            $file = $_FILES['replacement_image'] ?? null;
+
+            if (!$file || empty($file['name'])) {
+                $errors[] = 'Please select a replacement image file.';
+            } else {
+                $imgRow = $db->prepare("SELECT * FROM product_images WHERE id = ? AND product_id = ? LIMIT 1");
+                $imgRow->execute([$imgId, $id]);
+                $imgData = $imgRow->fetch();
+
+                if (!$imgData) {
+                    $errors[] = 'Specified image not found.';
+                } else {
+                    $res = upload_image($file, PRODUCT_UPLOADS_PATH, 'watch');
+                    if (!$res['success']) {
+                        $errors[] = 'Failed to replace image: ' . $res['error'];
+                    } else {
+                        // Remove old file if custom upload
+                        if (str_starts_with($imgData['image_path'], 'uploads/products/img_') || str_starts_with($imgData['image_path'], 'uploads/products/watch_')) {
+                            $oldFile = ROOT_PATH . '/' . ltrim($imgData['image_path'], '/');
+                            if (is_file($oldFile)) @unlink($oldFile);
+                        }
+
+                        // Update path in database
+                        $db->prepare("UPDATE product_images SET image_path = ?, created_at = NOW() WHERE id = ?")
+                           ->execute([$res['rel_path'], $imgId]);
+
+                        set_flash('success', 'Product photo replaced successfully.');
+                        header('Location: ' . ADMIN_URL . '/product-edit.php?id=' . $id);
+                        exit;
+                    }
+                }
+            }
+        }
+
         // 3. UPLOAD ADDITIONAL IMAGES (Section 4: up to 10 total)
         if ($imgAction === 'upload_extra_images') {
             $currentCount = (int)$db->query("SELECT COUNT(*) FROM product_images WHERE product_id = {$id}")->fetchColumn();
@@ -409,6 +446,9 @@ require_once __DIR__ . '/includes/navbar.php';
 
                         <!-- Quick Actions Overlay -->
                         <div class="img-actions">
+                            <button type="button" class="btn btn-sm btn-light p-1" data-bs-toggle="modal" data-bs-target="#replaceImgModal<?= $img['id'] ?>" title="Replace this photo">
+                                <i class="bi bi-arrow-repeat"></i>
+                            </button>
                             <?php if (!$img['is_primary']): ?>
                                 <button type="submit" form="setPrimaryForm<?= $img['id'] ?>" class="btn btn-sm btn-light p-1" title="Make Primary Featured Image">
                                     <i class="bi bi-star"></i>
@@ -451,6 +491,36 @@ require_once __DIR__ . '/includes/navbar.php';
             <input type="hidden" name="image_action" value="delete_image">
             <input type="hidden" name="image_id" value="<?= $img['id'] ?>">
         </form>
+
+        <!-- Replace Image Modal -->
+        <div class="modal fade" id="replaceImgModal<?= $img['id'] ?>" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header py-2" style="background-color:var(--bg-cream); border-color:var(--border-beige);">
+                        <h6 class="modal-title font-serif fw-bold mb-0" style="color:var(--caramel-dark);">Replace Photograph</h6>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" action="<?= ADMIN_URL ?>/product-edit.php?id=<?= $id ?>" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <?= csrf_field() ?>
+                            <input type="hidden" name="image_action" value="replace_image">
+                            <input type="hidden" name="image_id" value="<?= $img['id'] ?>">
+                            <div class="text-center mb-3">
+                                <img src="<?= e(BASE_URL . '/' . ltrim($img['image_path'], '/')) ?>" alt="Current angle" class="rounded border" style="width:110px; height:110px; object-fit:cover; border-color:var(--border-beige) !important;">
+                                <div class="small text-muted mt-1">Current Image</div>
+                            </div>
+                            <label class="form-label small fw-bold text-uppercase">New Image File</label>
+                            <input type="file" name="replacement_image" class="form-control form-control-sm" accept="image/jpeg,image/png,image/webp" required>
+                            <div class="form-text small" style="font-size:0.7rem;">Permitted formats: JPG, PNG, WebP (Max 5MB).</div>
+                        </div>
+                        <div class="modal-footer py-2">
+                            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-sm btn-dark">Replace Now</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     <?php endforeach; ?>
 </div>
 
@@ -689,3 +759,4 @@ document.addEventListener('click', (e) => {
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
+

@@ -52,8 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['customer_id'] = (int)$newId;
                 $_SESSION['customer_name'] = $firstName . ' ' . $lastName;
 
-                // Merge guest cart if any
+                // Merge guest cart & wishlist if any
                 merge_guest_cart_to_db($newId);
+                merge_guest_wishlist_to_db($newId);
 
                 set_flash('success', 'Account created successfully! Welcome to VALENOR Horology.');
                 header('Location: ' . BASE_URL . '/' . ltrim($redirect, '/'));
