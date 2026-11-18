@@ -70,6 +70,98 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_order'])) {
     }
 }
 
+// Check Return Eligibility (Phase 09)
+$returnIneligibilityReason = '';
+$eligibleForReturn = is_order_eligible_for_return($order, $returnIneligibilityReason);
+
+// Check if return request already exists
+$stmtRet = $db->prepare("SELECT * FROM return_requests WHERE order_id = ? ORDER BY id DESC LIMIT 1");
+$stmtRet->execute([(int)$order['id']]);
+$existingReturn = $stmtRet->fetch();
+
+// Handle Return Request Submission by Customer
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_return'])) {
+    if (!verify_csrf()) {
+        set_flash('danger', 'Security session expired.');
+    } elseif (!$eligibleForReturn) {
+        set_flash('danger', $returnIneligibilityReason ?: 'This order is not eligible for return.');
+    } else {
+        $reason = sanitize($_POST['return_reason'] ?? '');
+        $description = sanitize($_POST['return_description'] ?? '');
+        $selectedItemIds = $_POST['return_items'] ?? [];
+
+        if (empty($reason) || empty($description)) {
+            set_flash('danger', 'Please select a return reason and describe the issue with your timepiece.');
+        } else {
+            // Handle supporting image upload
+            $proofImagePath = null;
+            $proofImagesList = [];
+
+            if (!empty($_FILES['proof_image']) && $_FILES['proof_image']['error'] !== UPLOAD_ERR_NO_FILE) {
+                $upRes = upload_image($_FILES['proof_image'], UPLOADS_PATH . '/returns', 'ret');
+                if ($upRes['success']) {
+                    $proofImagePath = $upRes['rel_path'];
+                    $proofImagesList[] = $upRes['rel_path'];
+                } else {
+                    set_flash('danger', 'Photo upload failed: ' . $upRes['error']);
+                    header('Location: ' . BASE_URL . '/order-details.php?order=' . urlencode($order['order_number']));
+                    exit;
+                }
+            }
+
+            $refundAmount = (float)$order['total_amount'];
+            $returnNumber = sprintf('RET-%s-%04d', date('Ymd'), rand(1000, 9999));
+
+            // Insert into return_requests
+            $insRet = $db->prepare("
+                INSERT INTO return_requests 
+                (return_number, order_id, customer_id, reason, description, proof_image, proof_images, status, refund_amount, refund_status, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, 'Return Requested', ?, 'Pending', NOW(), NOW())
+            ");
+            $insRet->execute([
+                $returnNumber,
+                (int)$order['id'],
+                $customerId,
+                $reason,
+                $description,
+                $proofImagePath,
+                !empty($proofImagesList) ? json_encode($proofImagesList) : null,
+                $refundAmount
+            ]);
+            $returnReqId = (int)$db->lastInsertId();
+
+            // Insert into return_items
+            $orderItems = $db->prepare("SELECT id, product_id, quantity, total_price FROM order_items WHERE order_id = ?");
+            $orderItems->execute([(int)$order['id']]);
+            $oItems = $orderItems->fetchAll();
+
+            $insRItem = $db->prepare("
+                INSERT INTO return_items (return_request_id, order_item_id, product_id, quantity, refund_amount, created_at)
+                VALUES (?, ?, ?, ?, ?, NOW())
+            ");
+            foreach ($oItems as $oi) {
+                if (empty($selectedItemIds) || in_array((string)$oi['id'], (array)$selectedItemIds, true)) {
+                    $insRItem->execute([$returnReqId, $oi['id'], $oi['product_id'], $oi['quantity'], $oi['total_price']]);
+                }
+            }
+
+            // Update order status to 'Return Requested'
+            $db->prepare("UPDATE orders SET order_status = 'Return Requested', updated_at = NOW() WHERE id = ?")
+               ->execute([(int)$order['id']]);
+
+            // Add history audit
+            $db->prepare("
+                INSERT INTO order_status_history (order_id, status, comment, updated_by, created_at)
+                VALUES (?, 'Return Requested', ?, 'customer', NOW())
+            ")->execute([(int)$order['id'], "Client submitted return request #{$returnNumber}: {$reason}"]);
+
+            set_flash('success', "Return request #{$returnNumber} submitted successfully. Valenor Concierge will review your request within 24 hours.");
+            header('Location: ' . BASE_URL . '/order-details.php?order=' . urlencode($order['order_number']));
+            exit;
+        }
+    }
+}
+
 // Fetch Items & History
 $itemsStmt = $db->prepare("
     SELECT oi.*, 
@@ -400,6 +492,181 @@ require_once INCLUDES_PATH . '/navbar.php';
                 </div>
             <?php endif; ?>
 
+            <!-- Return Status Card if Return Request Exists -->
+            <?php if (!empty($existingReturn)): ?>
+                <div class="card p-4 bg-white border shadow-sm mb-4" style="border-color:var(--border-beige) !important; border-radius:8px;">
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom flex-wrap gap-2" style="border-color:var(--border-beige) !important;">
+                        <div>
+                            <span class="small text-muted text-uppercase fw-bold" style="font-size:0.7rem;">After-Sales Concierge</span>
+                            <h5 class="font-serif fw-bold mb-0" style="color:var(--caramel-dark);">
+                                <i class="bi bi-arrow-return-left me-1"></i> Return Request <?= e($existingReturn['return_number']) ?>
+                            </h5>
+                        </div>
+                        <div>
+                            <?= get_return_status_badge($existingReturn['status']) ?>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small text-muted d-block">Return Reason</label>
+                            <div class="fw-semibold small"><?= e($existingReturn['reason']) ?></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small text-muted d-block">Requested On</label>
+                            <div class="small"><?= format_date($existingReturn['created_at'], 'M d, Y h:i A') ?></div>
+                        </div>
+                        <div class="col-12">
+                            <label class="small text-muted d-block">Client Explanation</label>
+                            <div class="small p-2 rounded bg-light border" style="border-color:var(--border-beige) !important;">
+                                <?= nl2br(e($existingReturn['description'])) ?>
+                            </div>
+                        </div>
+                        <?php if (!empty($existingReturn['proof_image'])): 
+                            $proofSrc = BASE_URL . '/' . ltrim($existingReturn['proof_image'], '/');
+                        ?>
+                            <div class="col-12">
+                                <label class="small text-muted d-block">Uploaded Photo Evidence</label>
+                                <a href="<?= e($proofSrc) ?>" target="_blank" class="d-inline-block">
+                                    <img src="<?= e($proofSrc) ?>" alt="Return Proof" class="rounded border shadow-sm" style="max-height:90px; object-fit:cover;">
+                                </a>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- Status Specific Guidance Alert -->
+                    <?php if ($existingReturn['status'] === 'Return Rejected'): ?>
+                        <div class="alert alert-danger mb-0 d-flex align-items-center gap-2">
+                            <i class="bi bi-x-octagon-fill fs-5"></i>
+                            <div>
+                                <strong>Return Request Rejected:</strong> <?= e($existingReturn['rejection_reason'] ?: 'This timepiece does not meet return eligibility criteria.') ?>
+                            </div>
+                        </div>
+                    <?php elseif ($existingReturn['status'] === 'Return Approved'): ?>
+                        <div class="alert alert-info mb-0 d-flex align-items-center gap-2">
+                            <i class="bi bi-info-circle-fill fs-5"></i>
+                            <div>
+                                <strong>Return Approved by Concierge:</strong> Please prepare the timepiece with its original presentation box and warranty papers. Our courier representative will contact you for pickup.
+                            </div>
+                        </div>
+                    <?php elseif ($existingReturn['status'] === 'Return in Transit'): ?>
+                        <div class="alert alert-primary mb-0 d-flex align-items-center gap-2">
+                            <i class="bi bi-truck fs-5"></i>
+                            <div>
+                                <strong>Return in Transit:</strong> Your timepiece is being transported to our vault inspection center.
+                            </div>
+                        </div>
+                    <?php elseif ($existingReturn['status'] === 'Returned'): ?>
+                        <div class="alert alert-secondary mb-0 d-flex align-items-center gap-2">
+                            <i class="bi bi-box-seam fs-5"></i>
+                            <div>
+                                <strong>Timepiece Received at Vault:</strong> Technical inspection is in progress before refund release.
+                            </div>
+                        </div>
+                    <?php elseif ($existingReturn['status'] === 'Refund Processing'): ?>
+                        <div class="alert alert-warning mb-0 d-flex align-items-center gap-2 text-dark">
+                            <i class="bi bi-cash-stack fs-5"></i>
+                            <div>
+                                <strong>Refund Processing:</strong> Financial settlement of <?= format_price($existingReturn['refund_amount']) ?> is being authorized.
+                            </div>
+                        </div>
+                    <?php elseif ($existingReturn['status'] === 'Refunded'): ?>
+                        <div class="alert alert-success mb-0 d-flex align-items-center gap-2">
+                            <i class="bi bi-check-circle-fill fs-5"></i>
+                            <div>
+                                <strong>Refund Completed:</strong> Settlement of <?= format_price($existingReturn['refund_amount']) ?> released via <?= e($existingReturn['refund_method'] ?? 'Bank Transfer / Original Payment') ?> on <?= format_date($existingReturn['refunded_at']) ?>.
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <div class="alert alert-warning mb-0 d-flex align-items-center gap-2 text-dark">
+                            <i class="bi bi-hourglass-split fs-5"></i>
+                            <div>
+                                <strong>Return Under Review:</strong> Our horological concierge team is currently assessing your request.
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            <?php elseif ($eligibleForReturn): ?>
+                <!-- Return Request Option if Eligible (Delivered & within return window) -->
+                <div class="card p-4 bg-white border shadow-sm mb-4" style="border-color:var(--border-beige) !important; border-radius:8px;">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <div>
+                            <h6 class="font-serif fw-bold mb-1" style="color:var(--caramel-dark);">
+                                <i class="bi bi-arrow-return-left me-1"></i> Complimentary <?= (int)get_setting('return_window_days', 14) ?>-Day Return Privilege
+                            </h6>
+                            <p class="small text-muted mb-0">Delivered timepieces in unworn condition are eligible for return under our VIP concierge policy.</p>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#returnModal">
+                            Request Return
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Return Modal -->
+                <div class="modal fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <form method="POST" action="<?= BASE_URL ?>/order-details.php?order=<?= urlencode($order['order_number']) ?>" enctype="multipart/form-data">
+                                <?= csrf_field() ?>
+                                <input type="hidden" name="request_return" value="1">
+
+                                <div class="modal-header" style="background:var(--bg-cream); border-color:var(--border-beige);">
+                                    <h5 class="modal-title font-serif fw-bold" id="returnModalLabel">Request Timepiece Return</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body p-4">
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-bold text-uppercase">Reason for Return <span class="text-danger">*</span></label>
+                                        <select name="return_reason" class="form-select" required>
+                                            <option value="">Select Primary Reason</option>
+                                            <option value="Defective Movement / Mechanical Malfunction">Defective Movement / Mechanical Malfunction</option>
+                                            <option value="Transit Damage / Scratched Case">Transit Damage / Scratched Case</option>
+                                            <option value="Incorrect Model or Dial Delivered">Incorrect Model or Dial Delivered</option>
+                                            <option value="Strap / Bracelet Sizing Flaw">Strap / Bracelet Sizing Flaw</option>
+                                            <option value="Aesthetic Flaw / Finishing Imperfection">Aesthetic Flaw / Finishing Imperfection</option>
+                                            <option value="Customer Changed Preference / Unsatisfied">Customer Changed Preference / Unsatisfied</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-bold text-uppercase">Timepiece(s) to Return</label>
+                                        <div class="p-3 bg-light rounded border" style="border-color:var(--border-beige) !important;">
+                                            <?php foreach ($items as $rit): ?>
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="checkbox" name="return_items[]" value="<?= $rit['id'] ?>" id="retItem<?= $rit['id'] ?>" checked>
+                                                    <label class="form-check-label small" for="retItem<?= $rit['id'] ?>">
+                                                        <strong><?= e($rit['product_name']) ?></strong> (Qty: <?= (int)$rit['quantity'] ?> &bull; <?= format_price($rit['total_price']) ?>)
+                                                    </label>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-bold text-uppercase">Detailed Problem Description <span class="text-danger">*</span></label>
+                                        <textarea name="return_description" class="form-control" rows="4" placeholder="Please elaborate on the observed issue, operational flaw, or defect in detail..." required></textarea>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-bold text-uppercase">Supporting Image Evidence</label>
+                                        <input type="file" name="proof_image" class="form-control" accept="image/jpeg,image/png,image/webp">
+                                        <small class="text-muted d-block mt-1">Upload clear photo of the timepiece, defect, or packaging (JPG, PNG, WebP up to 5MB).</small>
+                                    </div>
+
+                                    <div class="p-3 rounded bg-warning-subtle text-dark small">
+                                        <i class="bi bi-shield-exclamation me-1"></i> <strong>Inspection Requirement:</strong> Returned watches must include all original box components, warranty documents, and tags in undamaged state.
+                                    </div>
+                                </div>
+                                <div class="modal-footer" style="border-color:var(--border-beige);">
+                                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-dark rounded-pill px-4">Submit Return Request</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
         </div>
 
         <!-- Right: Delivery Details & Payment Info -->
@@ -460,3 +727,4 @@ require_once INCLUDES_PATH . '/navbar.php';
 </div>
 
 <?php require_once INCLUDES_PATH . '/footer.php'; ?>
+

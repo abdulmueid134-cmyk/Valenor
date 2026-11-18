@@ -41,6 +41,29 @@ if (!empty($stockErrors)) {
     exit;
 }
 
+// Handle Coupon Application/Removal during Checkout
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['checkout_coupon_action'])) {
+    if (verify_csrf()) {
+        $couponAction = sanitize($_POST['checkout_coupon_action'] ?? '');
+        if ($couponAction === 'apply') {
+            $code = strtoupper(sanitize($_POST['checkout_coupon_code'] ?? ''));
+            $rawTotals = calculate_cart_totals(null);
+            $cRes = validate_coupon_code($code, $rawTotals['subtotal'], $customerId);
+            if ($cRes['valid']) {
+                $_SESSION['applied_coupon'] = $cRes['coupon'];
+                set_flash('success', $cRes['message']);
+            } else {
+                set_flash('danger', $cRes['message']);
+            }
+        } elseif ($couponAction === 'remove') {
+            unset($_SESSION['applied_coupon']);
+            set_flash('info', 'Privilege coupon removed.');
+        }
+    }
+    header('Location: ' . BASE_URL . '/checkout.php');
+    exit;
+}
+
 // Calculate totals using validated database prices
 $appliedCoupon = $_SESSION['applied_coupon'] ?? null;
 $totals = calculate_cart_totals($appliedCoupon);
@@ -53,7 +76,7 @@ $defaultAddr = $stmtAddr->fetch();
 $error = '';
 
 // 4. Handle Order Placement POST Submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['checkout_coupon_action'])) {
     if (!verify_csrf()) {
         $error = 'Security session expired. Please resubmit your order.';
     } else {
@@ -74,6 +97,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             try {
                 $db->beginTransaction();
+
+                // Re-verify coupon eligibility at final checkout submission
+                if ($appliedCoupon) {
+                    $cVal = validate_coupon_code($appliedCoupon['code'], $totals['subtotal'], $customerId);
+                    if (!$cVal['valid']) {
+                        unset($_SESSION['applied_coupon']);
+                        throw new Exception('Coupon rule violation: ' . $cVal['message']);
+                    }
+                }
 
                 // Generate unique order number (format: VAL-YYYYMMDD-XXXX)
                 $orderNumber = sprintf('VAL-%s-%04d', date('Ymd'), rand(1000, 9999));
@@ -366,9 +398,29 @@ require_once INCLUDES_PATH . '/navbar.php';
                         <span class="fw-semibold text-dark"><?= format_price($totals['subtotal']) ?></span>
                     </div>
 
+                    <!-- Privilege Coupon Section -->
+                    <div class="py-2 border-bottom" style="border-color:var(--border-beige) !important;">
+                        <?php if (!empty($appliedCoupon)): ?>
+                            <div class="d-flex align-items-center justify-content-between p-2 rounded" style="background:var(--bg-cream); border:1px dashed var(--caramel-primary);">
+                                <div>
+                                    <span class="badge" style="background:var(--caramel-dark);"><i class="bi bi-tag-fill me-1"></i><?= e($appliedCoupon['code']) ?></span>
+                                    <span class="small text-success fw-bold ms-1">-<?= format_price($totals['discount']) ?></span>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-danger p-0 px-2" onclick="submitCouponAction('remove')" title="Remove Coupon">
+                                    <i class="bi bi-x"></i> Remove
+                                </button>
+                            </div>
+                        <?php else: ?>
+                            <div class="input-group input-group-sm">
+                                <input type="text" id="checkoutCouponInput" class="form-control text-uppercase" placeholder="Privilege Code (e.g. VALENOR20)">
+                                <button type="button" class="btn btn-dark" onclick="submitCouponAction('apply')">Apply</button>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
                     <?php if ($totals['discount'] > 0): ?>
                         <div class="d-flex justify-content-between py-2 border-bottom text-success small" style="border-color:var(--border-beige) !important;">
-                            <span>Privilege Discount (<?= e($appliedCoupon['code'] ?? '') ?>):</span>
+                            <span>Privilege Discount:</span>
                             <span class="fw-semibold">-<?= format_price($totals['discount']) ?></span>
                         </div>
                     <?php endif; ?>
@@ -403,6 +455,29 @@ require_once INCLUDES_PATH . '/navbar.php';
 
     </form>
 </div>
+
+<!-- Hidden standalone form for Coupon Actions during checkout -->
+<form id="hiddenCouponForm" method="POST" action="<?= BASE_URL ?>/checkout.php" style="display:none;">
+    <?= csrf_field() ?>
+    <input type="hidden" name="checkout_coupon_action" id="hiddenCouponAction" value="">
+    <input type="hidden" name="checkout_coupon_code" id="hiddenCouponCode" value="">
+</form>
+
+<script>
+function submitCouponAction(action) {
+    document.getElementById('hiddenCouponAction').value = action;
+    if (action === 'apply') {
+        const input = document.getElementById('checkoutCouponInput');
+        const val = input ? input.value.trim() : '';
+        if (!val) {
+            alert('Please enter a privilege coupon code.');
+            return;
+        }
+        document.getElementById('hiddenCouponCode').value = val;
+    }
+    document.getElementById('hiddenCouponForm').submit();
+}
+</script>
 
 <?php require_once INCLUDES_PATH . '/footer.php'; ?>
 

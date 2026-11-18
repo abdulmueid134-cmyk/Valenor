@@ -181,6 +181,7 @@ require_once __DIR__ . '/includes/navbar.php';
                 </div>
                 <div class="stat-icon text-danger bg-danger-subtle"><i class="bi bi-arrow-counterclockwise"></i></div>
             </div>
+            <a href="<?= ADMIN_URL ?>/returns.php" class="stretched-link"></a>
         </div>
     </div>
 

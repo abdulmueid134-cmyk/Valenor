@@ -81,6 +81,28 @@ $revStmt = $db->prepare("
 $revStmt->execute([$productId]);
 $reviews = $revStmt->fetchAll();
 
+// Check logged in user status & review eligibility
+$loggedInCustomerId = is_logged_in() ? (int)current_user_id() : 0;
+$hasDeliveredPurchase = false;
+$myExistingReview = null;
+
+if ($loggedInCustomerId > 0) {
+    // Verified Delivered purchase check
+    $dpStmt = $db->prepare("
+        SELECT o.id 
+        FROM order_items oi
+        JOIN orders o ON oi.order_id = o.id
+        WHERE oi.product_id = ? AND o.customer_id = ? AND o.order_status = 'Delivered'
+        LIMIT 1
+    ");
+    $dpStmt->execute([$productId, $loggedInCustomerId]);
+    $hasDeliveredPurchase = (bool)$dpStmt->fetch();
+
+    $myRevStmt = $db->prepare("SELECT * FROM product_reviews WHERE product_id = ? AND customer_id = ? LIMIT 1");
+    $myRevStmt->execute([$productId, $loggedInCustomerId]);
+    $myExistingReview = $myRevStmt->fetch();
+}
+
 // Compute average rating and count
 $totalRatings = count($reviews);
 $avgRating = $totalRatings > 0 ? array_sum(array_column($reviews, 'rating')) / $totalRatings : 5.0;
@@ -410,16 +432,40 @@ require_once INCLUDES_PATH . '/navbar.php';
                             </div>
                         </div>
                         <div>
-                            <button type="button" class="btn btn-dark rounded-pill px-4 py-2" data-bs-toggle="modal" data-bs-target="#reviewModal">
-                                <i class="bi bi-pencil-square me-1"></i> Write a Client Review
-                            </button>
+                            <?php if (!empty($myExistingReview)): ?>
+                                <button type="button" class="btn btn-outline-dark rounded-pill px-4 py-2 edit-my-review-btn" 
+                                    data-rating="<?= (int)$myExistingReview['rating'] ?>"
+                                    data-title="<?= htmlspecialchars($myExistingReview['title'], ENT_QUOTES, 'UTF-8') ?>"
+                                    data-text="<?= htmlspecialchars($myExistingReview['review_text'], ENT_QUOTES, 'UTF-8') ?>"
+                                    data-id="<?= (int)$myExistingReview['id'] ?>"
+                                    data-image="<?= htmlspecialchars($myExistingReview['review_image'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                                    <i class="bi bi-pencil me-1"></i> Edit Your Review
+                                </button>
+                            <?php elseif ($hasDeliveredPurchase): ?>
+                                <button type="button" class="btn btn-dark rounded-pill px-4 py-2" data-bs-toggle="modal" data-bs-target="#reviewModal" onclick="resetReviewModal()">
+                                    <i class="bi bi-patch-check-fill text-warning me-1"></i> Write a Verified Review
+                                </button>
+                            <?php elseif (!is_logged_in()): ?>
+                                <a href="<?= BASE_URL ?>/login.php?redirect=product-detail.php?id=<?= $productId ?>" class="btn btn-outline-dark rounded-pill px-4 py-2">
+                                    <i class="bi bi-box-arrow-in-right me-1"></i> Sign In to Review
+                                </a>
+                            <?php else: ?>
+                                <div class="text-end">
+                                    <button type="button" class="btn btn-outline-secondary rounded-pill px-3 py-2 disabled" title="Available to verified owners after order delivery">
+                                        <i class="bi bi-shield-lock me-1"></i> Verified Buyer Exclusive
+                                    </button>
+                                    <div class="small text-muted mt-1" style="font-size:0.72rem;">Available after delivery completion.</div>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
 
                     <!-- Reviews List -->
                     <?php if (!empty($reviews)): ?>
-                        <?php foreach ($reviews as $rev): ?>
-                            <div class="p-4 bg-white border rounded mb-3" style="border-color:var(--border-beige) !important;">
+                        <?php foreach ($reviews as $rev): 
+                            $isMyRev = ($loggedInCustomerId > 0 && (int)$rev['customer_id'] === $loggedInCustomerId);
+                        ?>
+                            <div class="p-4 bg-white border rounded mb-3 <?= $isMyRev ? 'border-primary-subtle shadow-sm' : '' ?>" style="border-color:var(--border-beige) !important;">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <div class="d-flex align-items-center gap-2">
                                         <div class="rounded-circle bg-light d-flex align-items-center justify-content-center fw-bold" style="width:36px; height:36px; color:var(--caramel-dark); border:1px solid var(--border-beige);">
@@ -430,13 +476,39 @@ require_once INCLUDES_PATH . '/navbar.php';
                                             <?php if ($rev['is_verified_purchase']): ?>
                                                 <span class="badge bg-success-subtle text-success small ms-2"><i class="bi bi-patch-check-fill me-1"></i>Verified Buyer</span>
                                             <?php endif; ?>
+                                            <?php if ($isMyRev): ?>
+                                                <span class="badge bg-primary-subtle text-primary small ms-1">Your Review</span>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
-                                    <span class="text-muted small"><?= format_date($rev['created_at'], 'M d, Y') ?></span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="text-muted small"><?= format_date($rev['created_at'], 'M d, Y') ?></span>
+                                        <?php if ($isMyRev): ?>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary p-0 px-2 edit-my-review-btn" 
+                                                data-rating="<?= (int)$rev['rating'] ?>"
+                                                data-title="<?= htmlspecialchars($rev['title'], ENT_QUOTES, 'UTF-8') ?>"
+                                                data-text="<?= htmlspecialchars($rev['review_text'], ENT_QUOTES, 'UTF-8') ?>"
+                                                data-id="<?= (int)$rev['id'] ?>"
+                                                data-image="<?= htmlspecialchars($rev['review_image'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                                                title="Edit Review">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                                 <div class="mb-2"><?= star_rating_html($rev['rating']) ?></div>
                                 <h6 class="fw-bold mb-1" style="color:var(--text-charcoal);"><?= e($rev['title']) ?></h6>
-                                <p class="text-muted small mb-0" style="line-height:1.6;"><?= e($rev['review_text']) ?></p>
+                                <p class="text-muted small mb-2" style="line-height:1.6;"><?= e($rev['review_text']) ?></p>
+
+                                <?php if (!empty($rev['review_image'])): 
+                                    $revImgSrc = BASE_URL . '/' . ltrim($rev['review_image'], '/');
+                                ?>
+                                    <div class="mt-2">
+                                        <a href="<?= e($revImgSrc) ?>" target="_blank" class="d-inline-block text-decoration-none" title="View Customer Photo">
+                                            <img src="<?= e($revImgSrc) ?>" alt="Customer Photo" class="rounded border shadow-sm" style="height:70px; width:70px; object-fit:cover; border-color:var(--border-beige) !important;">
+                                        </a>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
@@ -444,9 +516,15 @@ require_once INCLUDES_PATH . '/navbar.php';
                             <i class="bi bi-chat-heart fs-1 text-muted d-block mb-2"></i>
                             <h5 class="font-serif">No Reviews Yet</h5>
                             <p class="text-muted small mb-3">Be the first distinguished owner to share your experience with this timepiece.</p>
-                            <button type="button" class="btn btn-outline-dark rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#reviewModal">
-                                Leave the First Review
-                            </button>
+                            <?php if ($hasDeliveredPurchase): ?>
+                                <button type="button" class="btn btn-outline-dark rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#reviewModal" onclick="resetReviewModal()">
+                                    Leave the First Review
+                                </button>
+                            <?php elseif (!is_logged_in()): ?>
+                                <a href="<?= BASE_URL ?>/login.php?redirect=product-detail.php?id=<?= $productId ?>" class="btn btn-outline-dark rounded-pill px-4">
+                                    Sign In to Review
+                                </a>
+                            <?php endif; ?>
                         </div>
                     <?php endif; ?>
 
@@ -492,7 +570,7 @@ require_once INCLUDES_PATH . '/navbar.php';
 </div>
 
 <!-- ======================================================================
-     REVIEW SUBMISSION MODAL
+     REVIEW SUBMISSION & EDIT MODAL
      ====================================================================== -->
 <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -501,9 +579,11 @@ require_once INCLUDES_PATH . '/navbar.php';
                 <h5 class="modal-title font-serif fw-bold" id="reviewModalLabel">Submit Horological Review</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="reviewSubmitForm">
+            <form id="reviewSubmitForm" enctype="multipart/form-data">
                 <div class="modal-body p-4">
                     <input type="hidden" name="product_id" value="<?= $productId ?>">
+                    <input type="hidden" name="action" id="reviewFormAction" value="create">
+                    <input type="hidden" name="review_id" id="reviewFormId" value="">
                     
                     <?php if (!is_logged_in()): ?>
                         <div class="alert alert-warning small mb-3">
@@ -532,10 +612,17 @@ require_once INCLUDES_PATH . '/navbar.php';
                         <label for="reviewTextInput" class="form-label small fw-bold text-uppercase">Your Detailed Experience</label>
                         <textarea name="review_text" id="reviewTextInput" class="form-control" rows="4" placeholder="Detail your thoughts regarding case finishing, caliber accuracy, and strap comfort..." required></textarea>
                     </div>
+
+                    <div class="mb-3">
+                        <label for="reviewImageInput" class="form-label small fw-bold text-uppercase">Customer Wristshot / Supporting Photo</label>
+                        <input type="file" name="review_image" id="reviewImageInput" class="form-control form-control-sm" accept="image/jpeg,image/png,image/webp">
+                        <small class="text-muted d-block mt-1" style="font-size:0.75rem;">Optional photo showing case detail or wrist presence (JPG, PNG, WebP up to 5MB).</small>
+                        <div id="reviewImageCurrentPreview" class="mt-2"></div>
+                    </div>
                 </div>
                 <div class="modal-footer" style="border-color:var(--border-beige);">
                     <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-dark rounded-pill px-4" <?= !is_logged_in() ? 'disabled' : '' ?>>
+                    <button type="submit" id="reviewSubmitBtn" class="btn btn-dark rounded-pill px-4" <?= !is_logged_in() ? 'disabled' : '' ?>>
                         Publish Review
                     </button>
                 </div>
@@ -687,25 +774,71 @@ document.getElementById('btn-buy-now')?.addEventListener('click', function () {
 });
 
 // 7. Interactive Star Rating in Review Modal
+function setModalStars(rating) {
+    document.getElementById('selectedRatingInput').value = rating;
+    document.querySelectorAll('#starSelector i').forEach((s, idx) => {
+        s.className = (idx < rating) ? 'bi bi-star-fill' : 'bi bi-star';
+    });
+}
+
 const stars = document.querySelectorAll('#starSelector i');
 stars.forEach(star => {
     star.addEventListener('click', function () {
         const rating = parseInt(this.dataset.rating);
-        document.getElementById('selectedRatingInput').value = rating;
-        stars.forEach((s, idx) => {
-            if (idx < rating) {
-                s.className = 'bi bi-star-fill';
-            } else {
-                s.className = 'bi bi-star';
-            }
-        });
+        setModalStars(rating);
     });
 });
 
-// 8. Review Form Submission (AJAX)
+function resetReviewModal() {
+    document.getElementById('reviewModalLabel').textContent = 'Submit Horological Review';
+    document.getElementById('reviewSubmitBtn').textContent = 'Publish Review';
+    document.getElementById('reviewFormAction').value = 'create';
+    document.getElementById('reviewFormId').value = '';
+    document.getElementById('reviewTitleInput').value = '';
+    document.getElementById('reviewTextInput').value = '';
+    document.getElementById('reviewImageInput').value = '';
+    document.getElementById('reviewImageCurrentPreview').innerHTML = '';
+    setModalStars(5);
+}
+
+// Edit Existing Review handler
+document.querySelectorAll('.edit-my-review-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+        const rating = parseInt(this.dataset.rating) || 5;
+        const title = this.dataset.title || '';
+        const text = this.dataset.text || '';
+        const revId = this.dataset.id || '';
+        const img = this.dataset.image || '';
+
+        document.getElementById('reviewModalLabel').textContent = 'Edit Your Horological Review';
+        document.getElementById('reviewSubmitBtn').textContent = 'Update Review';
+        document.getElementById('reviewFormAction').value = 'edit';
+        document.getElementById('reviewFormId').value = revId;
+        document.getElementById('reviewTitleInput').value = title;
+        document.getElementById('reviewTextInput').value = text;
+        document.getElementById('reviewImageInput').value = '';
+
+        const prevContainer = document.getElementById('reviewImageCurrentPreview');
+        if (img) {
+            prevContainer.innerHTML = `<div class="small text-muted mb-1">Current Image:</div><img src="${img.startsWith('http') ? img : '<?= BASE_URL ?>/' + img}" class="rounded border" style="height:60px; object-fit:cover;">`;
+        } else {
+            prevContainer.innerHTML = '';
+        }
+
+        setModalStars(rating);
+
+        const modal = new bootstrap.Modal(document.getElementById('reviewModal'));
+        modal.show();
+    });
+});
+
+// 8. Review Form Submission (AJAX with FormData for File Uploads)
 document.getElementById('reviewSubmitForm')?.addEventListener('submit', function (e) {
     e.preventDefault();
     const formData = new FormData(this);
+    const submitBtn = document.getElementById('reviewSubmitBtn');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Saving...';
     
     fetch('<?= BASE_URL ?>/ajax/review.php', {
         method: 'POST',
@@ -713,15 +846,21 @@ document.getElementById('reviewSubmitForm')?.addEventListener('submit', function
     })
     .then(r => r.json())
     .then(data => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Publish Review';
         if (data.success) {
             showValenorToast(data.message, 'success');
             bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
-            setTimeout(() => location.reload(), 1200);
+            setTimeout(() => location.reload(), 1000);
         } else {
             showValenorToast(data.message, 'danger');
         }
     })
-    .catch(() => showValenorToast('Failed to submit review.', 'danger'));
+    .catch(() => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Publish Review';
+        showValenorToast('Failed to submit review. Please try again.', 'danger');
+    });
 });
 </script>
 

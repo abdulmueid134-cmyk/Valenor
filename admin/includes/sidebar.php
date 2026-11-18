@@ -47,6 +47,16 @@ $currentScript = basename($_SERVER['PHP_SELF']);
             <span>Orders</span>
         </a>
 
+        <a class="nav-link <?= in_array($currentScript, ['returns.php', 'return-details.php']) ? 'active' : '' ?>" href="<?= ADMIN_URL ?>/returns.php">
+            <i class="bi bi-arrow-return-left"></i>
+            <span>Returns &amp; Refunds</span>
+        </a>
+
+        <a class="nav-link <?= $currentScript === 'coupons.php' ? 'active' : '' ?>" href="<?= ADMIN_URL ?>/coupons.php">
+            <i class="bi bi-ticket-perforated"></i>
+            <span>Coupons</span>
+        </a>
+
         <a class="nav-link <?= $currentScript === 'customers.php' ? 'active' : '' ?>" href="<?= ADMIN_URL ?>/customers.php">
             <i class="bi bi-people"></i>
             <span>Customers</span>

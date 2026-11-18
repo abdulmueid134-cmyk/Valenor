@@ -95,6 +95,7 @@ $cartUrl = is_logged_in() ? BASE_URL . '/cart.php' : BASE_URL . '/login.php?redi
                             </li>
                             <li><a class="dropdown-item py-2" href="<?= BASE_URL ?>/my-account.php"><i class="bi bi-person me-2 text-muted"></i>My Account</a></li>
                             <li><a class="dropdown-item py-2" href="<?= BASE_URL ?>/my-orders.php"><i class="bi bi-box-seam me-2 text-muted"></i>My Orders</a></li>
+                            <li><a class="dropdown-item py-2" href="<?= BASE_URL ?>/my-returns.php"><i class="bi bi-arrow-return-left me-2 text-muted"></i>Returns &amp; Refunds</a></li>
                             <li><a class="dropdown-item py-2" href="<?= BASE_URL ?>/wishlist.php"><i class="bi bi-heart me-2 text-muted"></i>Wishlist</a></li>
                             <li><hr class="dropdown-divider my-1"></li>
                             <li><a class="dropdown-item py-2 text-danger" href="<?= BASE_URL ?>/logout.php"><i class="bi bi-box-arrow-right me-2"></i>Sign Out</a></li>

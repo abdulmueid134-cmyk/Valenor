@@ -88,7 +88,7 @@ require_once INCLUDES_PATH . '/navbar.php';
                     <li class="mb-2"><a href="<?= BASE_URL ?>/my-account.php" class="fw-bold" style="color:var(--caramel-dark);"><i class="bi bi-person me-2"></i>Account Overview</a></li>
                     <li class="mb-2"><a href="<?= BASE_URL ?>/my-orders.php" class="text-muted"><i class="bi bi-box-seam me-2"></i>My Orders (<?= $totalOrders ?>)</a></li>
                     <li class="mb-2"><a href="<?= BASE_URL ?>/wishlist.php" class="text-muted"><i class="bi bi-heart me-2"></i>Wishlist</a></li>
-                    <li class="mb-2"><a href="<?= BASE_URL ?>/request-return.php" class="text-muted"><i class="bi bi-arrow-counterclockwise me-2"></i>Return Request</a></li>
+                    <li class="mb-2"><a href="<?= BASE_URL ?>/my-returns.php" class="text-muted"><i class="bi bi-arrow-return-left me-2"></i>Returns &amp; Refunds</a></li>
                     <li class="pt-2 border-top" style="border-color:var(--border-beige) !important;">
                         <a href="<?= BASE_URL ?>/logout.php" class="text-danger"><i class="bi bi-box-arrow-right me-2"></i>Sign Out</a>
                     </li>

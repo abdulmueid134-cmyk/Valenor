@@ -53,19 +53,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'apply_coupon') {
         $code = strtoupper(sanitize($_POST['coupon_code'] ?? ''));
-        if (empty($code)) {
-            set_flash('warning', 'Please enter a valid privilege coupon code.');
-        } else {
-            $stmt = $db->prepare("SELECT * FROM coupons WHERE code = ? AND status = 'active' AND expiry_date >= CURDATE() LIMIT 1");
-            $stmt->execute([$code]);
-            $coupon = $stmt->fetch();
+        $rawTotals = calculate_cart_totals(null);
+        $result = validate_coupon_code($code, $rawTotals['subtotal'], $customerId);
 
-            if ($coupon) {
-                $_SESSION['applied_coupon'] = $coupon;
-                set_flash('success', 'Privilege code ' . e($code) . ' applied successfully.');
-            } else {
-                set_flash('danger', 'Invalid or expired coupon code.');
-            }
+        if ($result['valid']) {
+            $_SESSION['applied_coupon'] = $result['coupon'];
+            set_flash('success', $result['message']);
+        } else {
+            set_flash('danger', $result['message']);
         }
         header('Location: ' . BASE_URL . '/cart.php');
         exit;

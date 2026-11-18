@@ -269,6 +269,9 @@ function calculate_cart_totals($coupon = null) {
     if ($coupon && !empty($coupon['code'])) {
         if ($coupon['discount_type'] === 'percentage') {
             $discount = ($subtotal * (float)$coupon['discount_value']) / 100.0;
+            if (!empty($coupon['max_discount_value']) && (float)$coupon['max_discount_value'] > 0) {
+                $discount = min($discount, (float)$coupon['max_discount_value']);
+            }
         } else {
             $discount = (float)$coupon['discount_value'];
         }
@@ -565,7 +568,7 @@ function star_rating_html($rating, $reviewsCount = null) {
     return $html;
 }
 
-// 14 Order Statuses (Section 10)
+// Order Statuses (Section 10 & Phase 09)
 function get_order_statuses() {
     return [
         'Pending',
@@ -580,7 +583,9 @@ function get_order_statuses() {
         'Return Requested',
         'Return Approved',
         'Return Rejected',
+        'Return in Transit',
         'Returned',
+        'Refund Processing',
         'Refunded'
     ];
 }
@@ -597,13 +602,166 @@ function get_order_status_badge($status) {
         'Delivered'            => 'bg-success text-white',
         'Cancelled'            => 'bg-danger text-white',
         'Return Requested'     => 'bg-warning text-dark',
-        'Return Approved'      => 'bg-info text-white',
+        'Return Approved'      => 'bg-info text-dark',
         'Return Rejected'      => 'bg-dark text-white',
+        'Return in Transit'    => 'bg-primary text-white',
         'Returned'             => 'bg-secondary text-white',
+        'Refund Processing'    => 'bg-warning text-dark',
         'Refunded'             => 'bg-success text-white',
     ];
     $cls = $map[$status] ?? 'bg-secondary text-white';
     return '<span class="badge ' . $cls . '">' . e($status) . '</span>';
+}
+
+function get_return_status_badge($status) {
+    $map = [
+        'Return Requested'  => 'bg-warning text-dark',
+        'Return Approved'   => 'bg-info text-dark',
+        'Return Rejected'   => 'bg-danger text-white',
+        'Return in Transit' => 'bg-primary text-white',
+        'Returned'          => 'bg-secondary text-white',
+        'Refund Processing' => 'bg-warning text-dark',
+        'Refunded'          => 'bg-success text-white',
+    ];
+    $cls = $map[$status] ?? 'bg-secondary text-white';
+    return '<span class="badge ' . $cls . '">' . e($status) . '</span>';
+}
+
+/**
+ * Get setting value from website_settings table.
+ */
+function get_setting($key, $default = null) {
+    try {
+        $db = getDB();
+        $stmt = $db->prepare("SELECT setting_value FROM website_settings WHERE setting_key = ? LIMIT 1");
+        $stmt->execute([$key]);
+        $val = $stmt->fetchColumn();
+        return ($val !== false && $val !== null) ? $val : $default;
+    } catch (Exception $e) {
+        return $default;
+    }
+}
+
+/**
+ * Validate a coupon code against business rules on the server.
+ * Checks active status, date validity, minimum order value, usage limits.
+ *
+ * @param string $code
+ * @param float $subtotal
+ * @param int|null $customerId
+ * @return array ['valid' => bool, 'coupon' => array|null, 'discount' => float, 'message' => string]
+ */
+function validate_coupon_code($code, $subtotal, $customerId = null) {
+    $code = strtoupper(trim((string)$code));
+    if (empty($code)) {
+        return ['valid' => false, 'coupon' => null, 'discount' => 0.0, 'message' => 'Please enter a coupon code.'];
+    }
+
+    try {
+        $db = getDB();
+        $stmt = $db->prepare("SELECT * FROM coupons WHERE UPPER(code) = ? LIMIT 1");
+        $stmt->execute([$code]);
+        $coupon = $stmt->fetch();
+
+        if (!$coupon) {
+            return ['valid' => false, 'coupon' => null, 'discount' => 0.0, 'message' => 'Invalid privilege coupon code.'];
+        }
+
+        if ($coupon['status'] !== 'active') {
+            return ['valid' => false, 'coupon' => null, 'discount' => 0.0, 'message' => 'This coupon is no longer active.'];
+        }
+
+        $today = date('Y-m-d');
+        if (!empty($coupon['start_date']) && $coupon['start_date'] > $today) {
+            return ['valid' => false, 'coupon' => null, 'discount' => 0.0, 'message' => 'This promotional coupon is not yet active.'];
+        }
+
+        if (!empty($coupon['expiry_date']) && $coupon['expiry_date'] < $today) {
+            return ['valid' => false, 'coupon' => null, 'discount' => 0.0, 'message' => 'This coupon expired on ' . date('M d, Y', strtotime($coupon['expiry_date'])) . '.'];
+        }
+
+        $minOrder = (float)($coupon['min_order_value'] ?? 0);
+        if ($subtotal < $minOrder) {
+            return [
+                'valid' => false, 
+                'coupon' => null, 
+                'discount' => 0.0, 
+                'message' => 'Minimum order amount of ' . format_price($minOrder) . ' is required for this privilege coupon.'
+            ];
+        }
+
+        if (!empty($coupon['usage_limit']) && (int)$coupon['usage_limit'] > 0) {
+            if ((int)$coupon['usage_count'] >= (int)$coupon['usage_limit']) {
+                return ['valid' => false, 'coupon' => null, 'discount' => 0.0, 'message' => 'This coupon has reached its maximum redemption limit.'];
+            }
+        }
+
+        // Calculate discount
+        $discount = 0.0;
+        if ($coupon['discount_type'] === 'percentage') {
+            $discount = ($subtotal * (float)$coupon['discount_value']) / 100.0;
+            if (!empty($coupon['max_discount_value']) && (float)$coupon['max_discount_value'] > 0) {
+                $discount = min($discount, (float)$coupon['max_discount_value']);
+            }
+        } else {
+            $discount = (float)$coupon['discount_value'];
+        }
+        $discount = min($discount, $subtotal);
+
+        return [
+            'valid' => true,
+            'coupon' => $coupon,
+            'discount' => $discount,
+            'message' => 'Privilege coupon applied successfully: saved ' . format_price($discount) . '.'
+        ];
+    } catch (Exception $e) {
+        return ['valid' => false, 'coupon' => null, 'discount' => 0.0, 'message' => 'Could not validate coupon. Please try again.'];
+    }
+}
+
+/**
+ * Check if an order is eligible for return based on status and configurable return window.
+ *
+ * @param array $order
+ * @param string &$ineligibilityReason
+ * @return bool
+ */
+function is_order_eligible_for_return($order, &$ineligibilityReason = '') {
+    if (empty($order)) {
+        $ineligibilityReason = 'Invalid order reference.';
+        return false;
+    }
+
+    if ($order['order_status'] !== 'Delivered') {
+        $ineligibilityReason = 'Returns can only be requested after timepiece delivery has been completed.';
+        return false;
+    }
+
+    // Check return window days
+    $windowDays = (int)get_setting('return_window_days', 14);
+    $orderDate = !empty($order['updated_at']) ? strtotime($order['updated_at']) : strtotime($order['created_at']);
+    $deadline = $orderDate + ($windowDays * 86400);
+
+    if (time() > $deadline) {
+        $ineligibilityReason = "The {$windowDays}-day return eligibility window for this order has expired.";
+        return false;
+    }
+
+    // Check if there is already an active or completed return for this order
+    try {
+        $db = getDB();
+        $stmt = $db->prepare("SELECT id, status FROM return_requests WHERE order_id = ? AND status != 'Return Rejected' LIMIT 1");
+        $stmt->execute([(int)$order['id']]);
+        $existing = $stmt->fetch();
+        if ($existing) {
+            $ineligibilityReason = "A return request is already in progress ({$existing['status']}) for this order.";
+            return false;
+        }
+    } catch (Exception $e) {
+        // fail safe
+    }
+
+    return true;
 }
 
 // =============================================================================
