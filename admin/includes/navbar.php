@@ -3,6 +3,7 @@
 // VALENOR HOROLOGY — ADMIN PANEL TOPBAR
 // =============================================================================
 ?>
+<div class="admin-main">
 <header class="admin-topbar">
     <div class="d-flex align-items-center gap-3">
         <button class="btn btn-outline-dark d-lg-none p-1 border-0" id="sidebarToggleBtn" type="button" aria-label="Toggle sidebar">

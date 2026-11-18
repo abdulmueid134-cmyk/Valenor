@@ -152,7 +152,7 @@ require_once __DIR__ . '/includes/navbar.php';
 <div class="card border-0 shadow-sm mb-4 bg-white p-3">
     <form method="GET" action="<?= ADMIN_URL ?>/reviews.php" class="row g-2 align-items-center">
         <div class="col-md-4">
-            <select name="status" class="form-select form-select-sm">
+            <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
                 <option value="">All Publishing Statuses</option>
                 <option value="approved" <?= $filterStatus === 'approved' ? 'selected' : '' ?>>Approved Only</option>
                 <option value="pending" <?= $filterStatus === 'pending' ? 'selected' : '' ?>>Pending Moderation</option>
@@ -160,7 +160,7 @@ require_once __DIR__ . '/includes/navbar.php';
             </select>
         </div>
         <div class="col-md-4">
-            <select name="rating" class="form-select form-select-sm">
+            <select name="rating" class="form-select form-select-sm" onchange="this.form.submit()">
                 <option value="0">All Star Ratings</option>
                 <option value="5" <?= $filterRating === 5 ? 'selected' : '' ?>>5 Stars Only</option>
                 <option value="4" <?= $filterRating === 4 ? 'selected' : '' ?>>4 Stars Only</option>

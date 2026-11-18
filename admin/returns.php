@@ -369,7 +369,7 @@ require_once __DIR__ . '/includes/navbar.php';
             </div>
         </div>
         <div class="col-md-4">
-            <select name="status" class="form-select form-select-sm">
+            <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
                 <option value="">All Return Statuses</option>
                 <?php 
                 $statuses = ['Return Requested', 'Return Approved', 'Return Rejected', 'Return in Transit', 'Returned', 'Refund Processing', 'Refunded'];

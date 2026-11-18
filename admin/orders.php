@@ -91,7 +91,7 @@ require_once __DIR__ . '/includes/navbar.php';
                 <input type="text" name="q" class="form-control form-control-sm" placeholder="Order #, name, phone, email..." value="<?= e($search) ?>">
             </div>
             <div class="col-md-3">
-                <select name="status" class="form-select form-select-sm">
+                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
                     <option value="">All Fulfillment Statuses</option>
                     <?php foreach ($allStatuses as $st): ?>
                         <option value="<?= e($st) ?>" <?= $statusFilter === $st ? 'selected' : '' ?>><?= e($st) ?></option>
@@ -99,7 +99,7 @@ require_once __DIR__ . '/includes/navbar.php';
                 </select>
             </div>
             <div class="col-md-3">
-                <select name="payment_status" class="form-select form-select-sm">
+                <select name="payment_status" class="form-select form-select-sm" onchange="this.form.submit()">
                     <option value="">All Payment States</option>
                     <option value="Unpaid" <?= $paymentFilter === 'Unpaid' ? 'selected' : '' ?>>Unpaid (COD)</option>
                     <option value="Paid" <?= $paymentFilter === 'Paid' ? 'selected' : '' ?>>Paid</option>

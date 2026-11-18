@@ -9,6 +9,38 @@ require_admin();
 
 $db = getDB();
 
+// Handle POST Actions (e.g. Quick Toggle Status Active/Inactive)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verify_csrf()) {
+        set_flash('danger', 'Security verification token invalid. Please try again.');
+        header('Location: ' . ADMIN_URL . '/categories.php');
+        exit;
+    }
+
+    $action = sanitize($_POST['action'] ?? '');
+
+    if ($action === 'toggle_status') {
+        $categoryId = (int)($_POST['category_id'] ?? 0);
+        $stmt = $db->prepare("SELECT id, name, status FROM categories WHERE id = ?");
+        $stmt->execute([$categoryId]);
+        $cat = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($cat) {
+            $newStatus = ($cat['status'] === 'active') ? 'inactive' : 'active';
+            $update = $db->prepare("UPDATE categories SET status = ?, updated_at = NOW() WHERE id = ?");
+            $update->execute([$newStatus, $categoryId]);
+
+            $statusLabel = ($newStatus === 'active') ? 'ACTIVE' : 'INACTIVE';
+            set_flash('success', "Collection '{$cat['name']}' status updated to {$statusLabel}.");
+        } else {
+            set_flash('danger', 'Specified category record not found.');
+        }
+
+        header('Location: ' . ADMIN_URL . '/categories.php');
+        exit;
+    }
+}
+
 $adminTitle      = 'Manage Categories';
 $adminPageHeader = 'Master Horology Collections';
 $adminPageSub    = 'Configure master categories, assign sort priority, upload banner artwork, and track assigned timepieces.';
@@ -80,15 +112,37 @@ require_once __DIR__ . '/includes/navbar.php';
                             <td class="text-center fw-bold">
                                 <?= (int)$cat['sort_order'] ?>
                             </td>
+                            <!-- Status (1-Click Toggle) -->
                             <td>
-                                <?php if ($cat['status'] === 'active'): ?>
-                                    <span class="badge bg-success">Active</span>
-                                <?php else: ?>
-                                    <span class="badge bg-secondary">Inactive</span>
-                                <?php endif; ?>
+                                <form method="POST" action="<?= ADMIN_URL ?>/categories.php" class="d-inline" onsubmit="event.stopPropagation();">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" name="action" value="toggle_status">
+                                    <input type="hidden" name="category_id" value="<?= $cat['id'] ?>">
+                                    <?php if ($cat['status'] === 'active'): ?>
+                                        <button type="submit" class="btn btn-sm btn-success py-1 px-2 rounded-pill fw-semibold shadow-none border-0" 
+                                                title="Status: Active. Click to switch to Inactive" style="font-size:0.75rem; min-width:82px;">
+                                            <i class="bi bi-check-circle-fill me-1"></i> Active
+                                        </button>
+                                    <?php else: ?>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger py-1 px-2 rounded-pill fw-semibold shadow-none" 
+                                                title="Status: Inactive. Click to switch to Active" style="font-size:0.75rem; min-width:82px; background:#fff;">
+                                            <i class="bi bi-slash-circle me-1"></i> Inactive
+                                        </button>
+                                    <?php endif; ?>
+                                </form>
                             </td>
                             <td class="text-end text-nowrap">
-                                <a href="<?= BASE_URL ?>/products.php?category=<?= urlencode($cat['slug']) ?>" target="_blank" class="btn btn-sm btn-outline-secondary p-1 px-2" title="View Collection on Storefront">
+                                <!-- 1-Click Status Toggle -->
+                                <form method="POST" action="<?= ADMIN_URL ?>/categories.php" class="d-inline" onsubmit="event.stopPropagation();">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" name="action" value="toggle_status">
+                                    <input type="hidden" name="category_id" value="<?= $cat['id'] ?>">
+                                    <button type="submit" class="btn btn-sm <?= $cat['status'] === 'active' ? 'btn-outline-warning' : 'btn-outline-success' ?> p-1 px-2" 
+                                            title="<?= $cat['status'] === 'active' ? 'Click to make Inactive' : 'Click to make Active' ?>">
+                                        <i class="bi <?= $cat['status'] === 'active' ? 'bi-pause-circle' : 'bi-play-circle' ?>"></i>
+                                    </button>
+                                </form>
+                                <a href="<?= BASE_URL ?>/products.php?category=<?= urlencode($cat['slug']) ?>" target="_blank" class="btn btn-sm btn-outline-secondary p-1 px-2 ms-1" title="View Collection on Storefront">
                                     <i class="bi bi-eye"></i>
                                 </a>
                                 <a href="<?= ADMIN_URL ?>/category-edit.php?id=<?= $cat['id'] ?>" class="btn btn-sm btn-outline-dark p-1 px-2 ms-1" title="Edit Category">

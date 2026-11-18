@@ -21,6 +21,17 @@ function sanitize($data) {
 }
 
 /**
+ * Truncate a string to a given length with an optional suffix.
+ */
+function truncate($string, $limit = 65, $suffix = '...') {
+    $string = (string)($string ?? '');
+    if (mb_strlen($string) <= $limit) {
+        return $string;
+    }
+    return mb_substr($string, 0, $limit) . $suffix;
+}
+
+/**
  * Generate or retrieve CSRF token from session.
  */
 function csrf_token() {

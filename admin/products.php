@@ -9,6 +9,42 @@ require_admin();
 
 $db = getDB();
 
+// Handle POST Actions (e.g. Quick Toggle Status Active/Inactive)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verify_csrf()) {
+        set_flash('danger', 'Security verification token invalid. Please try again.');
+        header('Location: ' . ADMIN_URL . '/products.php');
+        exit;
+    }
+
+    $action = sanitize($_POST['action'] ?? '');
+
+    if ($action === 'toggle_status') {
+        $productId = (int)($_POST['product_id'] ?? 0);
+        $stmt = $db->prepare("SELECT id, name, status FROM products WHERE id = ?");
+        $stmt->execute([$productId]);
+        $prod = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($prod) {
+            $newStatus = ($prod['status'] === 'active') ? 'inactive' : 'active';
+            $update = $db->prepare("UPDATE products SET status = ?, updated_at = NOW() WHERE id = ?");
+            $update->execute([$newStatus, $productId]);
+
+            $statusLabel = ($newStatus === 'active') ? 'ACTIVE (Visible in Storefront)' : 'INACTIVE (Hidden from Storefront)';
+            set_flash('success', "Timepiece '{$prod['name']}' status updated to {$statusLabel}.");
+        } else {
+            set_flash('danger', 'Specified timepiece record not found.');
+        }
+
+        $returnUrl = sanitize($_POST['return_url'] ?? '');
+        if (empty($returnUrl) || !str_contains($returnUrl, 'products.php')) {
+            $returnUrl = ADMIN_URL . '/products.php';
+        }
+        header('Location: ' . $returnUrl);
+        exit;
+    }
+}
+
 $adminTitle      = 'Manage Products';
 $adminPageHeader = 'Timepiece Inventory & Catalog';
 $adminPageSub    = 'Create, update, toggle visibility, and oversee product image galleries.';
@@ -91,7 +127,7 @@ require_once __DIR__ . '/includes/navbar.php';
                 </div>
             </div>
             <div class="col-md-3">
-                <select name="category_id" class="form-select form-select-sm">
+                <select name="category_id" class="form-select form-select-sm" onchange="this.form.submit()">
                     <option value="">All Categories</option>
                     <?php foreach ($categories as $c): ?>
                         <option value="<?= $c['id'] ?>" <?= $catId === (int)$c['id'] ? 'selected' : '' ?>><?= e($c['name']) ?></option>
@@ -99,7 +135,7 @@ require_once __DIR__ . '/includes/navbar.php';
                 </select>
             </div>
             <div class="col-md-2">
-                <select name="status" class="form-select form-select-sm">
+                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
                     <option value="">All Statuses</option>
                     <option value="active" <?= $status === 'active' ? 'selected' : '' ?>>Active</option>
                     <option value="draft" <?= $status === 'draft' ? 'selected' : '' ?>>Draft</option>
@@ -107,7 +143,7 @@ require_once __DIR__ . '/includes/navbar.php';
                 </select>
             </div>
             <div class="col-md-2">
-                <select name="stock" class="form-select form-select-sm">
+                <select name="stock" class="form-select form-select-sm" onchange="this.form.submit()">
                     <option value="">All Stock</option>
                     <option value="low" <?= $stockFilter === 'low' ? 'selected' : '' ?>>Low Stock (&le; 5)</option>
                     <option value="out" <?= $stockFilter === 'out' ? 'selected' : '' ?>>Out of Stock (0)</option>
@@ -202,20 +238,46 @@ require_once __DIR__ . '/includes/navbar.php';
                                 </div>
                             </td>
 
-                            <!-- Status -->
+                            <!-- Status (1-Click Toggle Button) -->
                             <td>
-                                <?php if ($p['status'] === 'active'): ?>
-                                    <span class="badge bg-success">Active</span>
-                                <?php elseif ($p['status'] === 'draft'): ?>
-                                    <span class="badge bg-secondary">Draft</span>
-                                <?php else: ?>
-                                    <span class="badge bg-danger">Inactive</span>
-                                <?php endif; ?>
+                                <form method="POST" action="<?= ADMIN_URL ?>/products.php" class="d-inline" onsubmit="event.stopPropagation();">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" name="action" value="toggle_status">
+                                    <input type="hidden" name="product_id" value="<?= $p['id'] ?>">
+                                    <input type="hidden" name="return_url" value="<?= e($_SERVER['REQUEST_URI']) ?>">
+                                    <?php if ($p['status'] === 'active'): ?>
+                                        <button type="submit" class="btn btn-sm btn-success py-1 px-2 rounded-pill fw-semibold shadow-none border-0" 
+                                                title="Status is ACTIVE. Click to switch to INACTIVE" style="font-size:0.75rem; min-width:82px;">
+                                            <i class="bi bi-check-circle-fill me-1"></i> Active
+                                        </button>
+                                    <?php elseif ($p['status'] === 'draft'): ?>
+                                        <button type="submit" class="btn btn-sm btn-secondary py-1 px-2 rounded-pill fw-semibold shadow-none border-0" 
+                                                title="Status is DRAFT. Click to switch to ACTIVE" style="font-size:0.75rem; min-width:82px;">
+                                            <i class="bi bi-file-earmark me-1"></i> Draft
+                                        </button>
+                                    <?php else: ?>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger py-1 px-2 rounded-pill fw-semibold shadow-none" 
+                                                title="Status is INACTIVE. Click to switch to ACTIVE" style="font-size:0.75rem; min-width:82px; background:#fff;">
+                                            <i class="bi bi-slash-circle me-1"></i> Inactive
+                                        </button>
+                                    <?php endif; ?>
+                                </form>
                             </td>
 
                             <!-- Actions -->
                             <td class="text-end text-nowrap">
-                                <a href="<?= BASE_URL ?>/product-detail.php?id=<?= $p['id'] ?>" target="_blank" class="btn btn-sm btn-outline-secondary p-1 px-2" title="View on Storefront">
+                                <!-- 1-Click Status Toggle Quick Action -->
+                                <form method="POST" action="<?= ADMIN_URL ?>/products.php" class="d-inline" onsubmit="event.stopPropagation();">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" name="action" value="toggle_status">
+                                    <input type="hidden" name="product_id" value="<?= $p['id'] ?>">
+                                    <input type="hidden" name="return_url" value="<?= e($_SERVER['REQUEST_URI']) ?>">
+                                    <button type="submit" class="btn btn-sm <?= $p['status'] === 'active' ? 'btn-outline-warning' : 'btn-outline-success' ?> p-1 px-2" 
+                                            title="<?= $p['status'] === 'active' ? 'Click to make Inactive' : 'Click to make Active' ?>">
+                                        <i class="bi <?= $p['status'] === 'active' ? 'bi-pause-circle' : 'bi-play-circle' ?>"></i>
+                                    </button>
+                                </form>
+                                <a href="<?= BASE_URL ?>/product-detail.php?id=<?= $p['id'] ?>" target="_blank" class="btn btn-sm btn-outline-secondary p-1 px-2 ms-1" title="View on Storefront">
                                     <i class="bi bi-eye"></i>
                                 </a>
                                 <a href="<?= ADMIN_URL ?>/product-edit.php?id=<?= $p['id'] ?>" class="btn btn-sm btn-outline-dark p-1 px-2 ms-1" title="Edit Timepiece">
