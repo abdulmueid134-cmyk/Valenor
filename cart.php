@@ -124,7 +124,7 @@ require_once INCLUDES_PATH . '/navbar.php';
                                         <td>
                                             <div class="d-flex align-items-center gap-3">
                                                 <a href="<?= BASE_URL ?>/product-detail.php?id=<?= (int)$item['product_id'] ?>">
-                                                    <img src="<?= e($imgUrl) ?>" alt="<?= e($item['name']) ?>" class="rounded border" style="width:72px; height:72px; object-fit:cover; border-color:var(--border-beige) !important;">
+                                                    <img src="<?= e($imgUrl) ?>" alt="<?= e($item['name']) ?>" loading="lazy" class="rounded border" style="width:72px; height:72px; object-fit:cover; border-color:var(--border-beige) !important;">
                                                 </a>
                                                 <div>
                                                     <a href="<?= BASE_URL ?>/product-detail.php?id=<?= (int)$item['product_id'] ?>" class="fw-bold text-dark text-decoration-none font-serif fs-6">

@@ -7,11 +7,7 @@
 require_once __DIR__ . '/config/config.php';
 
 // Mandatory login requirement for accessing private wishlist
-if (!is_logged_in()) {
-    set_flash('info', 'Please sign in to access your private horological wishlist.');
-    header('Location: ' . BASE_URL . '/login.php?redirect=wishlist.php');
-    exit;
-}
+require_login('wishlist.php');
 
 $db = getDB();
 $customerId = current_user_id();

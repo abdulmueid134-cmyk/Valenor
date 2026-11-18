@@ -380,7 +380,7 @@ require_once INCLUDES_PATH . '/navbar.php';
                             $img = BASE_URL . '/' . ltrim($it['primary_image'] ?: 'assets/images/watch-mens-chronograph.jpg', '/');
                         ?>
                             <div class="d-flex align-items-center gap-3 py-2 border-bottom" style="border-color:var(--border-beige) !important;">
-                                <img src="<?= e($img) ?>" alt="<?= e($it['name']) ?>" class="rounded border" style="width:56px; height:56px; object-fit:cover; border-color:var(--border-beige) !important;">
+                                <img src="<?= e($img) ?>" alt="<?= e($it['name']) ?>" loading="lazy" class="rounded border" style="width:56px; height:56px; object-fit:cover; border-color:var(--border-beige) !important;">
                                 <div class="flex-grow-1">
                                     <div class="fw-bold font-serif small mb-0 text-truncate" style="max-width:210px;"><?= e($it['name']) ?></div>
                                     <div class="text-muted small">Qty: <?= (int)$it['quantity'] ?> &bull; Ref: <?= e($it['sku']) ?></div>

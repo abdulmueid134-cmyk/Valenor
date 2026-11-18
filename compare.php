@@ -231,7 +231,7 @@ require_once INCLUDES_PATH . '/navbar.php';
                                     <div class="position-relative p-2">
                                         <a href="<?= BASE_URL ?>/compare.php?remove=<?= (int)$p['id'] ?>" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 border-0 fs-5 p-1" title="Remove timepiece">&times;</a>
                                         <a href="<?= BASE_URL ?>/product-detail.php?id=<?= (int)$p['id'] ?>">
-                                            <img src="<?= e($imgSrc) ?>" alt="<?= e($p['name']) ?>" class="rounded border mb-2" style="width:120px; height:120px; object-fit:cover; border-color:var(--border-beige) !important;">
+                                            <img src="<?= e($imgSrc) ?>" alt="<?= e($p['name']) ?>" loading="lazy" class="rounded border mb-2" style="width:120px; height:120px; object-fit:cover; border-color:var(--border-beige) !important;">
                                         </a>
                                         <h5 class="font-serif fw-bold mb-1" style="font-size:1.05rem; line-height:1.3;">
                                             <a href="<?= BASE_URL ?>/product-detail.php?id=<?= (int)$p['id'] ?>" class="text-decoration-none" style="color:var(--text-dark);">

@@ -400,7 +400,7 @@ require_once INCLUDES_PATH . '/navbar.php';
                                 <tr>
                                     <td class="ps-3 py-3">
                                         <div class="d-flex align-items-center gap-3">
-                                            <img src="<?= e($imgSrc) ?>" alt="<?= e($it['product_name']) ?>" class="rounded border" style="width:64px; height:64px; object-fit:cover; border-color:var(--border-beige) !important;">
+                                            <img src="<?= e($imgSrc) ?>" alt="<?= e($it['product_name']) ?>" loading="lazy" class="rounded border" style="width:64px; height:64px; object-fit:cover; border-color:var(--border-beige) !important;">
                                             <div>
                                                 <div class="fw-bold font-serif fs-6"><?= e($it['product_name']) ?></div>
                                                 <div class="small text-muted">SKU: <code><?= e($it['product_sku']) ?></code></div>
